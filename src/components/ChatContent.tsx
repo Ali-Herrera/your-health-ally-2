@@ -2,12 +2,11 @@ import { Avatar, Group, Stack, Text } from '@mantine/core';
 
 import { UserButton } from '@clerk/nextjs';
 import { theme } from '~/config/theme';
-
-type Author = 'User' | 'AI';
+import { type Author } from '~/utils/types';
 
 export type ChatItem = {
   author: Author;
-  content: string;
+  content?: string;
   isError?: boolean;
 };
 
@@ -39,7 +38,9 @@ export const ChatContent = ({ chatItems }: Props) =>
               : colors?.darkPink?.[6]
           }
         >
-          {chatItem.author === 'User' ? <UserButton /> : 'AI'}
+          {chatItem.author === 'User'
+            ? 'User' /* TODO: <UserButton /> */
+            : 'AI'}
         </Avatar>
         {chatItem.author === 'User' ? (
           <Text c='dimmed'>{chatItem.content}</Text>

@@ -3,6 +3,7 @@ import Image from 'next/image';
 import { Box, Button, Space, Title, Text } from '@mantine/core';
 import { theme } from '../config/theme';
 import GreenLogo from '../../public/logo/logo-green.png';
+import { useMediaQuery } from '@mantine/hooks';
 // import WelcomeImg from '../../public/images/unsplashphoto-welcome.jpg';
 // image org size = 6000x4000
 
