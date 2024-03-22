@@ -15,7 +15,7 @@ const inter = Inter({
 const MyApp: AppType = ({ Component, pageProps }) => {
   return (
     <>
-      {/* <ClerkProvider> */}
+      {/* <ClerkProvider {...pageProps}> */}
       <MantineProvider>
         <main className={inter.className}>
           <Component {...pageProps} />

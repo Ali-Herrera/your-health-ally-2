@@ -6,12 +6,6 @@
  * TL;DR - This is where all the tRPC server stuff is created and plugged in. The pieces you will
  * need to use are documented accordingly near the end.
  */
-import { initTRPC } from "@trpc/server";
-import { type CreateNextContextOptions } from "@trpc/server/adapters/next";
-import superjson from "superjson";
-import { ZodError } from "zod";
-
-import { db } from "~/server/db";
 
 /**
  * 1. CONTEXT
@@ -20,6 +14,9 @@ import { db } from "~/server/db";
  *
  * These allow you to access things when processing a request, like the database, the session, etc.
  */
+import { type CreateNextContextOptions } from '@trpc/server/adapters/next';
+
+import { prisma } from '~/server/db';
 
 type CreateContextOptions = Record<string, never>;
 
@@ -31,11 +28,11 @@ type CreateContextOptions = Record<string, never>;
  * - testing, so we don't have to mock Next.js' req/res
  * - tRPC's `createSSGHelpers`, where we don't have req/res
  *
- * @see https://create.t3.gg/en/usage/trpc#-serverapitrpcts
+ * @see https://create.t3.gg/en/usage/trpc#-servertrpccontextts
  */
 const createInnerTRPCContext = (_opts: CreateContextOptions) => {
   return {
-    db,
+    prisma,
   };
 };
 
@@ -56,6 +53,9 @@ export const createTRPCContext = (_opts: CreateNextContextOptions) => {
  * ZodErrors so that you get typesafety on the frontend if your procedure fails due to validation
  * errors on the backend.
  */
+import { initTRPC } from '@trpc/server';
+import superjson from 'superjson';
+import { ZodError } from 'zod';
 
 const t = initTRPC.context<typeof createTRPCContext>().create({
   transformer: superjson,
@@ -70,13 +70,6 @@ const t = initTRPC.context<typeof createTRPCContext>().create({
     };
   },
 });
-
-/**
- * Create a server-side caller.
- *
- * @see https://trpc.io/docs/server/server-side-calls
- */
-export const createCallerFactory = t.createCallerFactory;
 
 /**
  * 3. ROUTER & PROCEDURE (THE IMPORTANT BIT)

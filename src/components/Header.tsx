@@ -4,8 +4,13 @@ import { useDisclosure, useMediaQuery } from '@mantine/hooks';
 import { theme } from '~/config/theme';
 import PinkLogo from '../../public/logo/logo-pink-dark.png';
 import Image from 'next/image';
+import { ReactNode } from 'react';
 
-export const Header = () => {
+type HeaderProps = {
+  children?: ReactNode;
+};
+
+export const Header: React.FC<HeaderProps> = ({ children }) => {
   const [mobileOpened, { open, close }] = useDisclosure();
   const isMobile = useMediaQuery('(max-width: 750em)');
   const { colors, white } = theme;
