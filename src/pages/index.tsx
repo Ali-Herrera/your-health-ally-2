@@ -15,6 +15,7 @@ import React from 'react';
 export default function Home() {
   const [opened, { toggle }] = useDisclosure();
   const [chatItems, setChatItems] = useState<ChatItem[]>([]);
+  const [waiting, setWaiting] = useState<boolean>(false);
   const scrollToRef = useRef<HTMLDivElement>(null);
 
   const scrollToBottom = () => {
@@ -46,16 +47,16 @@ export default function Home() {
       ]);
     },
 
-    // onSettled: () => {
-    //   setWaiting(false);
-    //   scrollToBottom();
-    // },
+    onSettled: () => {
+      setWaiting(false);
+      scrollToBottom();
+    },
   });
 
-  // const resetMutation = api.ai.reset.useMutation();
+  const resetMutation = api.ai.reset.useMutation();
 
   const handleUpdate = (prompt: string) => {
-    // // // setWaiting(true);
+    setWaiting(true);
 
     setChatItems([
       ...chatItems,
@@ -75,6 +76,10 @@ export default function Home() {
 
     console.log('After calling mutate:', chatItems);
   };
+  const handleReset = () => {
+    setChatItems([]);
+    resetMutation.mutate();
+  };
 
   return (
     <>
@@ -92,7 +97,7 @@ export default function Home() {
           <div>Logo</div>
         </Header>
 
-        <NavBar />
+        <NavBar onReset={handleReset} />
 
         <AppShell.Main>
           <ChatContent chatItems={chatItems} />
@@ -102,6 +107,3 @@ export default function Home() {
     </>
   );
 }
-// function setWaiting(arg0: boolean) {
-//   throw new Error('Function not implemented.');
-// }

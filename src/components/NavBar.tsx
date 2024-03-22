@@ -6,7 +6,11 @@ import { IconPlus } from '@tabler/icons-react';
 
 const { colors, black } = theme;
 
-export const NavBar = () => {
+type Props = {
+  onReset: () => void;
+};
+
+export const NavBar = ({ onReset }: Props) => {
   const [mobileOpened, { open, close }] = useDisclosure();
   const isMobile = useMediaQuery('(max-width: 750em)');
   const { colors, white } = theme;
@@ -36,6 +40,7 @@ export const NavBar = () => {
         color={colors?.darkPink?.[6]}
         leftSection={iconPlus}
         justify='center'
+        onClick={onReset}
       >
         Start New Chat
       </Button>
