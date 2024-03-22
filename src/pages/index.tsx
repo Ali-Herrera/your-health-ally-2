@@ -101,6 +101,7 @@ export default function Home() {
 
         <AppShell.Main>
           <ChatContent chatItems={chatItems} />
+          <div ref={scrollToRef} />
           <ChatInput onUpdate={handleUpdate} waiting={waiting} />
         </AppShell.Main>
       </AppShell>
