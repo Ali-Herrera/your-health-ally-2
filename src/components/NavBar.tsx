@@ -8,9 +8,10 @@ const { colors, black } = theme;
 
 type Props = {
   onReset: () => void;
+  waiting?: boolean;
 };
 
-export const NavBar = ({ onReset }: Props) => {
+export const NavBar = ({ onReset, waiting }: Props) => {
   const [mobileOpened, { open, close }] = useDisclosure();
   const isMobile = useMediaQuery('(max-width: 750em)');
   const { colors, white } = theme;
@@ -40,6 +41,7 @@ export const NavBar = ({ onReset }: Props) => {
         color={colors?.darkPink?.[6]}
         leftSection={iconPlus}
         justify='center'
+        disabled={waiting}
         onClick={onReset}
       >
         Start New Chat

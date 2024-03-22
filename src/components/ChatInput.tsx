@@ -5,9 +5,10 @@ import { useState } from 'react';
 
 type Props = {
   onUpdate: (prompt: string) => void;
+  waiting?: boolean;
 };
 
-export const ChatInput = ({ onUpdate }: Props) => {
+export const ChatInput = ({ onUpdate, waiting }: Props) => {
   const [prompt, setPrompt] = useState<string>('');
 
   const handleUpdate = () => {
@@ -32,6 +33,7 @@ export const ChatInput = ({ onUpdate }: Props) => {
             handleUpdate();
           }
         }}
+        disabled={waiting}
       />
       <Button
         color={colors?.darkPink?.[3]}
@@ -44,6 +46,7 @@ export const ChatInput = ({ onUpdate }: Props) => {
           width: '5%',
         }}
         onClick={handleUpdate}
+        disabled={waiting}
       >
         <IconSend size={20} style={{ bottom: '5px', alignSelf: 'center' }} />
       </Button>
