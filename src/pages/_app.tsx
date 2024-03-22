@@ -1,29 +1,39 @@
-import { type AppType } from 'next/app';
-import { Inter } from 'next/font/google';
+import Head from "next/head";
+import { type AppType } from "next/app";
+import { Inter } from "next/font/google";
+import { api } from "~/utils/api";
+import { MantineProvider } from "@mantine/core";
+import { theme } from "../config/theme";
 // import { ClerkProvider } from '@clerk/nextjs';
 
-import { api } from '~/utils/api';
-import '@mantine/core/styles.css';
-
-import '~/styles/globals.css';
-import { createTheme, MantineProvider } from '@mantine/core';
-
 const inter = Inter({
-  subsets: ['latin'],
+	subsets: ["latin"],
 });
 
 const MyApp: AppType = ({ Component, pageProps }) => {
-  return (
-    <>
-      {/* <ClerkProvider {...pageProps}> */}
-      <MantineProvider>
-        <main className={inter.className}>
-          <Component {...pageProps} />
-        </main>
-      </MantineProvider>
-      {/* </ClerkProvider> */}
-    </>
-  );
+	return (
+		<>
+			<Head>
+				<title>Your Health Ally</title>
+				<meta
+					name="viewport"
+					content="minimum-scale=1, initial-scale=1, width=device-width"
+				/>
+			</Head>
+
+			{/* <ClerkProvider {...pageProps}> */}
+			<MantineProvider
+				withGlobalStyles
+				withNormalizeCSS
+				theme={{ ...theme, colorScheme: "light" }}
+			>
+				<main className={inter.className}>
+					<Component {...pageProps} />
+				</main>
+			</MantineProvider>
+			{/* </ClerkProvider> */}
+		</>
+	);
 };
 
 export default api.withTRPC(MyApp);
