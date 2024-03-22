@@ -1,6 +1,6 @@
 import { type AppType } from 'next/app';
 import { Inter } from 'next/font/google';
-import { ClerkProvider } from '@clerk/nextjs';
+// import { ClerkProvider } from '@clerk/nextjs';
 
 import { api } from '~/utils/api';
 import '@mantine/core/styles.css';
@@ -15,13 +15,13 @@ const inter = Inter({
 const MyApp: AppType = ({ Component, pageProps }) => {
   return (
     <>
-      <ClerkProvider {...pageProps}>
-        <MantineProvider>
-          <main className={inter.className}>
-            <Component {...pageProps} />
-          </main>
-        </MantineProvider>
-      </ClerkProvider>
+      {/* <ClerkProvider {...pageProps}> */}
+      <MantineProvider>
+        <main className={inter.className}>
+          <Component {...pageProps} />
+        </main>
+      </MantineProvider>
+      {/* </ClerkProvider> */}
     </>
   );
 };

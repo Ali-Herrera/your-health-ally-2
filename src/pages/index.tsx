@@ -73,7 +73,7 @@ export default function Home() {
 
     generatedTextMutation.mutate({ prompt });
     console.log('After calling mutate:', chatItems);
-    console.log('OpenAI API Key:', process.env.OPENAI_API_KEY);
+    console.log('OpenAI API Key:', process.env.NEXT_PUBLIC_OPENAI_API_KEY);
   };
 
   return (

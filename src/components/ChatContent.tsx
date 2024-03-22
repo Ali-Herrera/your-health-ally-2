@@ -1,6 +1,6 @@
 import { Avatar, Group, Stack, Text } from '@mantine/core';
 
-import { UserButton } from '@clerk/nextjs';
+// import { UserButton } from '@clerk/nextjs';
 import { theme } from '~/config/theme';
 import { type Author } from '~/utils/types';
 
