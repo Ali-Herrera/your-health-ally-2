@@ -5,7 +5,7 @@ import { TRPCError } from '@trpc/server';
 import axios from 'axios';
 
 const configuration = new Configuration({
-  apiKey: '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',
+  apiKey: process.env.NEXT_PUBLIC_OPENAI_API_KEY,
 });
 
 const openai = new OpenAIApi(configuration);
