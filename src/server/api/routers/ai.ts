@@ -5,7 +5,7 @@ import { TRPCError } from '@trpc/server';
 import axios from 'axios';
 
 const configuration = new Configuration({
-  apiKey: process.env.NEXT_PUBLIC_OPENAI_API_KEY,
+  apiKey: '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',
 });
 
 const openai = new OpenAIApi(configuration);
@@ -22,6 +22,8 @@ export const aiRouter = createTRPCRouter({
     .input(z.object({ prompt: z.string() }))
     .mutation(async ({ input }) => {
       const { prompt } = input;
+
+      console.log(prompt);
 
       messages.push({
         role: 'user',

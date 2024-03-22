@@ -55,7 +55,7 @@ export default function Home() {
   // const resetMutation = api.ai.reset.useMutation();
 
   const handleUpdate = (prompt: string) => {
-    // setWaiting(true);
+    // // // setWaiting(true);
 
     setChatItems([
       ...chatItems,
@@ -72,6 +72,7 @@ export default function Home() {
     console.log('Prompt value:', prompt);
 
     generatedTextMutation.mutate({ prompt });
+
     console.log('After calling mutate:', chatItems);
     console.log('OpenAI API Key:', process.env.NEXT_PUBLIC_OPENAI_API_KEY);
   };
