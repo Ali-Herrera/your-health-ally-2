@@ -1,7 +1,8 @@
-import { Button, Group, Textarea } from '@mantine/core';
+import { Button, Group, Textarea, Loader } from '@mantine/core';
 import { IconSend } from '@tabler/icons-react';
 import { theme } from '~/config/theme';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
+import { useDisclosure } from '@mantine/hooks';
 
 type Props = {
   onUpdate: (prompt: string) => void;
@@ -10,6 +11,13 @@ type Props = {
 
 export const ChatInput = ({ onUpdate, waiting }: Props) => {
   const [prompt, setPrompt] = useState<string>('');
+  const [loading, { toggle }] = useDisclosure();
+  const [rows, setRows] = useState<number>(2);
+
+  useEffect(() => {
+    const lines = prompt.split(/\r*\n/).length;
+    setRows(Math.max(2, Math.min(lines, 8)));
+  }, [prompt]);
 
   const handleUpdate = () => {
     setPrompt('');
@@ -34,6 +42,7 @@ export const ChatInput = ({ onUpdate, waiting }: Props) => {
           }
         }}
         disabled={waiting}
+        rows={rows}
       />
       <Button
         color={colors?.darkPink?.[3]}
