@@ -17,7 +17,7 @@ export const Header: React.FC<HeaderProps> = ({ children }) => {
 	//
 
 	return (
-		<MantineHeader height={80}>
+		<MantineHeader height={80} ml={isMobile ? "px" : "250px"}>
 			<Flex m="md" direction="row" align="center" justify="space-between">
 				<Image
 					src={PinkLogo}

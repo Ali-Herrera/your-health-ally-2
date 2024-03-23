@@ -11,6 +11,7 @@ export const Footer = () => {
 			height={80}
 			bg={white}
 			withBorder={false}
+			ml={isMobile ? "0" : "250px"}
 			style={{
 				position: "relative",
 				bottom: 0,

@@ -1,4 +1,5 @@
 import { Avatar, Box, Group, Stack, Text } from "@mantine/core";
+import { useMediaQuery } from "@mantine/hooks";
 
 // import { UserButton } from '@clerk/nextjs';
 import { theme } from "~/config/theme";
@@ -14,11 +15,13 @@ type Props = {
 	chatItems: ChatItem[];
 };
 
-const { colors, black } = theme;
 
 export const ChatContent = ({ chatItems }: Props) => {
+	const isMobile = useMediaQuery("(max-width: 480px)");
+	const { colors, black } = theme;
+
 	return (
-		<Box ml="lg" mr="lg" h="70vh">
+		<Box ml={isMobile ? "lg" : "250px"} mr="lg" h="70vh">
 			{chatItems.map((chatItem: ChatItem, index: number) => (
 				<Stack key={index} className="chatLog" spacing="md" mb="xl">
 					<Group

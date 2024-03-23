@@ -1,5 +1,8 @@
 import { Box } from "@mantine/core";
+import { useMediaQuery } from "@mantine/hooks";
+
 import { Header } from "~/components/header";
+import { Sidebar } from "~/components/Sidebar/sidebar";
 import { Footer } from "~/components/footer";
 import { ChatContent, type ChatItem } from "~/components/Chat/ChatContent";
 import { ChatInput } from "~/components/Chat/ChatInput";
@@ -8,6 +11,8 @@ import { useRef, useState } from "react";
 import React from "react";
 
 export default function Home() {
+	const isMobile = useMediaQuery("(max-width: 480px)");
+
 	const [chatItems, setChatItems] = useState<ChatItem[]>([]);
 	const scrollToRef = useRef<HTMLDivElement>(null);
 
@@ -74,6 +79,7 @@ export default function Home() {
 	return (
 		<Box>
 			<Header />
+			{isMobile ? null : <Sidebar />}
 			<ChatContent chatItems={chatItems} />
 			<ChatInput onUpdate={handleUpdate} />
 			<Footer />

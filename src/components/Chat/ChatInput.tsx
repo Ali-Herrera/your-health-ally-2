@@ -1,4 +1,5 @@
 import { Button, Group, Textarea } from "@mantine/core";
+import { useMediaQuery } from "@mantine/hooks";
 import { IconSend } from "@tabler/icons-react";
 import { theme } from "../../config/theme";
 import { useState } from "react";
@@ -8,6 +9,8 @@ type Props = {
 };
 
 export const ChatInput = ({ onUpdate }: Props) => {
+	const isMobile = useMediaQuery("(max-width: 480px)");
+
 	const { colors } = theme;
 
 	const [prompt, setPrompt] = useState<string>("");
@@ -17,7 +20,7 @@ export const ChatInput = ({ onUpdate }: Props) => {
 	};
 
 	return (
-		<Group position="center">
+		<Group position="center" ml={isMobile ? "lg" : "250px"} mr="lg">
 			<Textarea
 				placeholder="What questions do you have?"
 				aria-label="Type your message here"
