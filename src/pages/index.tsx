@@ -1,5 +1,6 @@
 import { Box } from "@mantine/core";
 import { Header } from "~/components/header";
+import { Footer } from "~/components/footer";
 import { ChatContent, type ChatItem } from "~/components/Chat/ChatContent";
 import { ChatInput } from "~/components/Chat/ChatInput";
 import { api } from "~/utils/api";
@@ -75,7 +76,7 @@ export default function Home() {
 			<Header />
 			<ChatContent chatItems={chatItems} />
 			<ChatInput onUpdate={handleUpdate} />
-			{/* <Footer /> */}
+			<Footer />
 		</Box>
 	);
 }
