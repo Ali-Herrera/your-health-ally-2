@@ -1,8 +1,4 @@
-import Head from "next/head";
-
-import { Box, Button, Burger } from "@mantine/core";
-import { useDisclosure } from "@mantine/hooks";
-import { NavBar } from "~/components/NavBar";
+import { Box } from "@mantine/core";
 import { Header } from "~/components/header";
 import { ChatContent, type ChatItem } from "~/components/Chat/ChatContent";
 import { ChatInput } from "~/components/Chat/ChatInput";
@@ -11,7 +7,6 @@ import { useRef, useState } from "react";
 import React from "react";
 
 export default function Home() {
-	const [opened, { toggle }] = useDisclosure();
 	const [chatItems, setChatItems] = useState<ChatItem[]>([]);
 	const scrollToRef = useRef<HTMLDivElement>(null);
 
@@ -53,7 +48,7 @@ export default function Home() {
 	// const resetMutation = api.ai.reset.useMutation();
 
 	const handleUpdate = (prompt: string) => {
-		// // // setWaiting(true);
+		// setWaiting(true);
 
 		setChatItems([
 			...chatItems,
@@ -77,30 +72,14 @@ export default function Home() {
 
 	return (
 		<Box>
-			<AppShell
-				header={{ height: 60 }}
-				navbar={{
-					width: 300,
-					breakpoint: "sm",
-					collapsed: { mobile: !opened },
-				}}
-				padding="md"
-			>
-				<Header>
-					<Burger opened={opened} onClick={toggle} hiddenFrom="sm" size="sm" />
-					<div>Logo</div>
-				</Header>
-
-				<NavBar />
-
-				<AppShell.Main>
-					<ChatContent chatItems={chatItems} />
-					<ChatInput onUpdate={handleUpdate} />
-				</AppShell.Main>
-			</AppShell>
+			<Header />
+			<ChatContent chatItems={chatItems} />
+			<ChatInput onUpdate={handleUpdate} />
+			{/* <Footer /> */}
 		</Box>
 	);
 }
+
 // function setWaiting(arg0: boolean) {
 //   throw new Error('Function not implemented.');
 // }

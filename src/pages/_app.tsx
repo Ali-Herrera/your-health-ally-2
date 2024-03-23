@@ -1,4 +1,5 @@
 import Head from "next/head";
+// import Html from "next/document";
 import { type AppType } from "next/app";
 import { Inter } from "next/font/google";
 import { api } from "~/utils/api";
@@ -13,25 +14,17 @@ const inter = Inter({
 const MyApp: AppType = ({ Component, pageProps }) => {
 	return (
 		<>
-			<Head>
-				<title>Your Health Ally</title>
-				<meta
-					name="viewport"
-					content="minimum-scale=1, initial-scale=1, width=device-width"
-				/>
-			</Head>
-
-			{/* <ClerkProvider {...pageProps}> */}
-			<MantineProvider
-				withGlobalStyles
-				withNormalizeCSS
-				theme={{ ...theme, colorScheme: "light" }}
-			>
-				<main className={inter.className}>
-					<Component {...pageProps} />
-				</main>
-			</MantineProvider>
-			{/* </ClerkProvider> */}
+				{/* <ClerkProvider {...pageProps}> */}
+				<MantineProvider
+					withGlobalStyles
+					withNormalizeCSS
+					theme={{ ...theme, colorScheme: "light" }}
+				>
+					<main className={inter.className}>
+						<Component {...pageProps} />
+					</main>
+				</MantineProvider>
+				{/* </ClerkProvider> */}
 		</>
 	);
 };
