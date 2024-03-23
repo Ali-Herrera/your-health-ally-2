@@ -1,5 +1,5 @@
 // import { SignedIn, UserButton } from '@clerk/nextjs';
-import { Header as MantineHeader, Flex } from "@mantine/core";
+import { Box, Header as MantineHeader, Flex } from "@mantine/core";
 import { useMediaQuery } from "@mantine/hooks";
 import { theme } from "~/config/theme";
 import PinkLogo from "../../public/logo/logo-pink-dark.png";
@@ -18,14 +18,14 @@ export const Header: React.FC<HeaderProps> = ({ children }) => {
 
 	return (
 		<MantineHeader height={80}>
-			<Flex m="md" direction="row" align="center" justify="space-around">
-				{isMobile ? <MobileSidebar /> : null}
+			<Flex m="md" direction="row" align="center" justify="space-between">
 				<Image
 					src={PinkLogo}
 					alt="Your Health Ally Logo"
 					width={96}
 					height={54}
 				/>
+				{isMobile ? <MobileSidebar /> : null}
 				{/* <SignedIn>
           <UserButton />
         </SignedIn> */}

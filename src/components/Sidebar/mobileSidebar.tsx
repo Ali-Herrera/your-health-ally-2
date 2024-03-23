@@ -2,7 +2,7 @@ import { Box, Button, Drawer, Group, Stack } from "@mantine/core";
 import { useDisclosure, useMediaQuery } from "@mantine/hooks";
 import { IconMenu2, IconPlus } from "@tabler/icons-react";
 import Image from "next/image";
-import logoIcon from "../../../public/icon/heart-green-dark.png";
+import logoIcon from "../../../public/icon/heart-pink-dark.png";
 import { theme } from "~/config/theme";
 
 export default function MobileSidebar() {
@@ -74,8 +74,8 @@ export default function MobileSidebar() {
 					>
 						<Button
 							mt="xl"
-							variant="white"
-							color={colors?.darkPink?.[6]}
+							// variant="white"
+							// color={colors?.darkPink?.[6]}
 							leftIcon={iconPlus}
 						>
 							Start New Chat
@@ -90,7 +90,7 @@ export default function MobileSidebar() {
 					stroke={2.5}
 					size="30px"
 					onClick={open}
-					style={{ color: `${white}` }}
+					style={{ color: black }}
 					aria-label="Sidebar Menu"
 				/>
 			</Group>
