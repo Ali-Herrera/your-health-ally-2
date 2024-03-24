@@ -1,90 +1,106 @@
-import { Box } from "@mantine/core";
-import { useMediaQuery } from "@mantine/hooks";
+import { Box, Group } from '@mantine/core';
+import { useMediaQuery } from '@mantine/hooks';
 
-import { Header } from "~/components/header";
-import { Sidebar } from "~/components/Sidebar/sidebar";
-import { Footer } from "~/components/footer";
-import { ChatContent, type ChatItem } from "~/components/Chat/ChatContent";
-import { ChatInput } from "~/components/Chat/ChatInput";
-import { api } from "~/utils/api";
-import { useRef, useState } from "react";
-import React from "react";
+import { Header } from '~/components/Header';
+import { Sidebar } from '~/components/Sidebar/sidebar';
+import { Footer } from '~/components/footer';
+import { ChatContent, type ChatItem } from '~/components/Chat/ChatContent';
+import { ChatInput } from '~/components/Chat/ChatInput';
+import { api } from '~/utils/api';
+import { useRef, useState } from 'react';
+import React from 'react';
+import { UserButton, useUser } from '@clerk/nextjs';
+import { Welcome } from '~/components/Welcome';
 
 export default function Home() {
-	const isMobile = useMediaQuery("(max-width: 480px)");
+  const isMobile = useMediaQuery('(max-width: 480px)');
 
-	const [chatItems, setChatItems] = useState<ChatItem[]>([]);
-	const scrollToRef = useRef<HTMLDivElement>(null);
+  const [chatItems, setChatItems] = useState<ChatItem[]>([]);
+  const scrollToRef = useRef<HTMLDivElement>(null);
 
-	const scrollToBottom = () => {
-		setTimeout(
-			() => scrollToRef.current?.scrollIntoView({ behavior: "smooth" }),
-			100
-		);
-	};
+  const scrollToBottom = () => {
+    setTimeout(
+      () => scrollToRef.current?.scrollIntoView({ behavior: 'smooth' }),
+      100
+    );
+  };
 
-	const generatedTextMutation = api.ai.generateText.useMutation({
-		onSuccess: (data) => {
-			setChatItems([
-				...chatItems,
-				{
-					content: data.generatedText,
-					author: "AI",
-				},
-			]);
-		},
+  const generatedTextMutation = api.ai.generateText.useMutation({
+    onSuccess: (data) => {
+      setChatItems([
+        ...chatItems,
+        {
+          content: data.generatedText,
+          author: 'AI',
+        },
+      ]);
+    },
 
-		onError: (error) => {
-			setChatItems([
-				...chatItems,
-				{
-					content: error.message ?? "An error occurred",
-					author: "AI",
-					isError: true,
-				},
-			]);
-		},
+    onError: (error) => {
+      setChatItems([
+        ...chatItems,
+        {
+          content: error.message ?? 'An error occurred',
+          author: 'AI',
+          isError: true,
+        },
+      ]);
+    },
 
-		// onSettled: () => {
-		//   setWaiting(false);
-		//   scrollToBottom();
-		// },
-	});
+    // onSettled: () => {
+    //   setWaiting(false);
+    //   scrollToBottom();
+    // },
+  });
 
-	// const resetMutation = api.ai.reset.useMutation();
+  // const resetMutation = api.ai.reset.useMutation();
 
-	const handleUpdate = (prompt: string) => {
-		// setWaiting(true);
+  const handleUpdate = (prompt: string) => {
+    // setWaiting(true);
 
-		setChatItems([
-			...chatItems,
-			{
-				content: prompt.replace(/\n/g, "\n\n"),
-				author: "User",
-			},
-		]);
+    setChatItems([
+      ...chatItems,
+      {
+        content: prompt.replace(/\n/g, '\n\n'),
+        author: 'User',
+      },
+    ]);
 
-		scrollToBottom();
+    scrollToBottom();
 
-		console.log("User sent a message:", prompt);
-		console.log("Before calling mutate:", chatItems);
-		console.log("Prompt value:", prompt);
+    console.log('User sent a message:', prompt);
+    console.log('Before calling mutate:', chatItems);
+    console.log('Prompt value:', prompt);
 
-		generatedTextMutation.mutate({ prompt });
+    generatedTextMutation.mutate({ prompt });
 
-		console.log("After calling mutate:", chatItems);
-		console.log("OpenAI API Key:", process.env.NEXT_PUBLIC_OPENAI_API_KEY);
-	};
+    console.log('After calling mutate:', chatItems);
+    console.log('OpenAI API Key:', process.env.NEXT_PUBLIC_OPENAI_API_KEY);
+  };
 
-	return (
-		<Box>
-			<Header />
-			{isMobile ? null : <Sidebar />}
-			<ChatContent chatItems={chatItems} />
-			<ChatInput onUpdate={handleUpdate} />
-			<Footer />
-		</Box>
-	);
+  const { isLoaded, user } = useUser();
+  return (
+    <>
+      {isLoaded && !user && (
+        <>
+          <Welcome />
+          <Group className='h-screen'>
+            <UserButton afterSignOutUrl='/' />
+          </Group>
+        </>
+      )}
+      {''}
+      {isLoaded && user && (
+        <Box>
+          <Header />
+          {isMobile ? null : <Sidebar />}
+          <ChatContent chatItems={chatItems} />
+          <ChatInput onUpdate={handleUpdate} />
+          <Footer />
+        </Box>
+      )}
+    </>
+  );
 }
 
 // function setWaiting(arg0: boolean) {
