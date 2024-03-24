@@ -18,6 +18,11 @@ export const ChatContent = ({ chatItems }: Props) => {
   const isMobile = useMediaQuery('(max-width: 480px)');
   const { colors, black } = theme;
 
+  // Check if any user messages exist
+  const userMessageExists = chatItems.some(
+    (item) => item.author === 'User' && item.content
+  );
+
   return (
     <Box ml={isMobile ? 'lg' : '250px'} mr='lg' h='70vh'>
       {chatItems.map((chatItem: ChatItem, index: number) => (
@@ -54,6 +59,31 @@ export const ChatContent = ({ chatItems }: Props) => {
           </Group>
         </Stack>
       ))}
+      {/* Render initial prompt only if no user messages exist */}
+      {!userMessageExists && (
+        <Box>
+          <Stack className='chatLog' spacing='md' mb='xl'>
+            <Group
+              className='chatUser'
+              style={{
+                padding: '16px',
+                borderRadius: '10px',
+              }}
+            >
+              <Avatar color={colors?.darkPink?.[6]}>AI</Avatar>
+              <Text c={black}>
+                I am an intelligent advisor that can provide information
+                regarding people's health. I answer questions about
+                health-related conditions and symptoms, and what type of doctors
+                you may want to see, and what types of questions to bring to the
+                doctor, as well as provide readiness checklists for
+                appointments. This is for educational purposes only. Please see
+                your healthcare provider for medical treatment.
+              </Text>
+            </Group>
+          </Stack>
+        </Box>
+      )}
     </Box>
   );
 };
