@@ -33,12 +33,14 @@ export const ChatContent = ({ chatItems, onReset, waiting }: Props) => {
 	return (
 		<Box ml={isMobile ? "lg" : "250px"} mr="lg" h="70vh" sx={{ overflow: 'scroll' }}>
 			{chatItems.map((chatItem: ChatItem, index: number) => (
-				<Stack key={index} spacing="md" mb="xl">
+				<Stack key={index} spacing="md" m="xl">
 					{chatItem.author === "User" ? (
 						<Group
 							p="xl"
+              
 							sx={{
 								borderRadius: "10px",
+                backgroundColor: "#E5E5E5",
 							}}
 						>
 							<UserButton />
