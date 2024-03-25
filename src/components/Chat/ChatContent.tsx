@@ -74,10 +74,8 @@ export const ChatContent = ({ chatItems }: Props) => {
               <Text c={black}>
                 I am an intelligent advisor that can provide information
                 regarding people's health. I answer questions about
-                health-related conditions and symptoms, and what type of doctors
-                you may want to see, and what types of questions to bring to the
-                doctor, as well as provide readiness checklists for
-                appointments. This is for educational purposes only. Please see
+                health-related conditions and symptoms, and how to prepare for
+                office visits. This is for educational purposes only. Please see
                 your healthcare provider for medical treatment.
               </Text>
             </Group>
