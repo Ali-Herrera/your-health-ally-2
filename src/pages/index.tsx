@@ -1,3 +1,4 @@
+
 import { Box, Group } from '@mantine/core';
 import { useMediaQuery } from '@mantine/hooks';
 
@@ -101,8 +102,3 @@ export default function Home() {
       )}
     </>
   );
-}
-
-// function setWaiting(arg0: boolean) {
-//   throw new Error('Function not implemented.');
-// }
