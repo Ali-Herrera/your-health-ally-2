@@ -17,12 +17,12 @@ type Props = {
 };
 
 export const ChatContent = ({ chatItems, onReset }: Props) => {
-	const isMobile = useMediaQuery("(max-width: 480px)");
+	const mobileScreen = useMediaQuery("(max-width: 480px)");
 	const { colors, black } = theme;
 
 	return (
 		<Box
-			ml={isMobile ? "lg" : "250px"}
+			ml={mobileScreen ? "lg" : "250px"}
 			mr="lg"
 			h="70vh"
 			sx={{ overflow: "scroll" }}

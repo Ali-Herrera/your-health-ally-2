@@ -26,12 +26,12 @@ type Props = {
 };
 
 export const ChatContent = ({ chatItems, onReset, waiting }: Props) => {
-	const isMobile = useMediaQuery("(max-width: 480px)");
+	const mobileScreen = useMediaQuery("(max-width: 480px)");
 	const { colors, black } = theme;
 
 
 	return (
-		<Box ml={isMobile ? "lg" : "250px"} mr="lg" h="70vh">
+		<Box ml={mobileScreen ? "lg" : "250px"} mr="lg" h="70vh">
       <Stack spacing="md" mb="xl">
 			{chatItems.map((chatItem: ChatItem, index: number) => (
 					{chatItem.author === "User" ? (

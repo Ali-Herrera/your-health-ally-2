@@ -21,13 +21,13 @@ type HeaderProps = {
 };
 
 export const HeaderMobile: React.FC<HeaderProps> = ({ children, onReset }) => {
-	const isMobile = useMediaQuery("(max-width: 480px)");
+	const mobileScreen = useMediaQuery("(max-width: 480px)");
 	const [opened, { open, close }] = useDisclosure(false);
 	const { white, black } = theme;
 	const iconPlus = <IconPlus size={15} />;
 
 	return (
-		<MantineHeader height={80} ml={isMobile ? "px" : "250px"}>
+		<MantineHeader height={80} ml={mobileScreen ? "px" : "250px"}>
 			<Flex m="md" direction="row" align="center" justify="space-between">
 				<Image
 					src={PinkLogo}

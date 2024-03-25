@@ -4,11 +4,8 @@ import { Box, Button, Space, Title, Text } from "@mantine/core";
 import { theme } from "../config/theme";
 import GreenLogo from "../../public/logo/logo-green.png";
 import { useMediaQuery } from "@mantine/hooks";
-// import WelcomeImg from '../../public/images/unsplashphoto-welcome.jpg';
-// image org size = 6000x4000
 
 export function Welcome() {
-	const mobileScreen = useMediaQuery("(max-width: 482px)");
 	const { colors, white, black } = theme;
 
 	return (

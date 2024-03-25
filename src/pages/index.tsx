@@ -13,7 +13,7 @@ import React from "react";
 import { UserButton, useUser } from "@clerk/nextjs";
 
 export default function Home() {
-	const isMobile = useMediaQuery("(max-width: 480px)");
+	const mobileScreen = useMediaQuery("(max-width: 480px)");
 
 	const [chatItems, setChatItems] = useState<ChatItem[]>([]);
 	const [waiting, setWaiting] = useState<boolean>(false);
@@ -96,8 +96,8 @@ export default function Home() {
 			{""}
 			{isLoaded && user && (
 				<Box>
-					{isMobile ? <HeaderMobile onReset={handleReset} /> : <Header />}
-					{isMobile ? null : <Sidebar onReset={handleReset} />}
+					{mobileScreen ? <HeaderMobile onReset={handleReset} /> : <Header />}
+					{mobileScreen ? null : <Sidebar onReset={handleReset} />}
 					<ChatContent
 						chatItems={chatItems}
 						onReset={handleReset}

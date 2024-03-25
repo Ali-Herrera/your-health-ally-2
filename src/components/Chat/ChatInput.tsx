@@ -10,7 +10,7 @@ type Props = {
 };
 
 export const ChatInput = ({ onUpdate, waiting }: Props) => {
-	const isMobile = useMediaQuery("(max-width: 480px)");
+	const mobileScreen = useMediaQuery("(max-width: 480px)");
 	const { colors } = theme;
 
 	const [prompt, setPrompt] = useState<string>("");
@@ -27,7 +27,7 @@ export const ChatInput = ({ onUpdate, waiting }: Props) => {
 	};
 
 	return (
-		<Group position="center" ml={isMobile ? "lg" : "250px"} mr="lg">
+		<Group position="center" ml={mobileScreen ? "lg" : "250px"} mr="lg">
 			<Textarea
 				placeholder="What questions do you have?"
 				aria-label="Type your message here"

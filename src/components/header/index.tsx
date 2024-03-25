@@ -10,10 +10,10 @@ type HeaderProps = {
 };
 
 export const Header: React.FC<HeaderProps> = ({ children }) => {
-	const isMobile = useMediaQuery("(max-width: 480px)");
+	const mobileScreen = useMediaQuery("(max-width: 480px)");
 
 	return (
-		<MantineHeader height={80} ml={isMobile ? "px" : "250px"}>
+		<MantineHeader height={80} ml={mobileScreen ? "0px" : "250px"}>
 			<Flex m="md" direction="row" align="center" justify="space-between">
 				<Image
 					src={PinkLogo}
