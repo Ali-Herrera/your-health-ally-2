@@ -3,6 +3,7 @@ import { useMediaQuery } from "@mantine/hooks";
 import { UserButton } from "@clerk/nextjs";
 import { theme } from "~/config/theme";
 import { type Author } from "~/utils/types";
+import { useEffect } from "react";
 
 export type ChatItem = {
 	author: Author;
@@ -20,20 +21,20 @@ export const ChatContent = ({ chatItems, onReset }: Props) => {
 	const mobileScreen = useMediaQuery("(max-width: 480px)");
 	const { colors, black } = theme;
 
+	useEffect(() => {
+		
+	}
+	)
+
 	return (
-		<Box
-			ml={mobileScreen ? "lg" : "250px"}
-			mr="lg"
-			h="70vh"
-			sx={{ overflow: "scroll" }}
-		>
+		<Box ml={mobileScreen ? "0" : "250px"} h="65vh" sx={{ overflow: "scroll" }}>
 			{chatItems.map((chatItem: ChatItem, index: number) => (
-				<Stack key={index} spacing="md" m="xl">
+				<Stack key={index} spacing="md">
 					{chatItem.author === "User" ? (
 						<Group
 							p="xl"
 							sx={{
-								borderRadius: "10px",
+								width: "100%",
 								backgroundColor: "#E5E5E5",
 							}}
 						>
@@ -41,13 +42,8 @@ export const ChatContent = ({ chatItems, onReset }: Props) => {
 							<Text c="dimmed">{chatItem.content}</Text>
 						</Group>
 					) : (
-						<Group
-							p="xl"
-							sx={{
-								borderRadius: "10px",
-							}}
-						>
-							<Avatar color={colors?.darkPink?.[6]} size="md">
+						<Group p="xl">
+							<Avatar size={32} alt="ChatGBT" variant="gradient">
 								AI
 							</Avatar>
 							<Text c={black}>{chatItem.content}</Text>

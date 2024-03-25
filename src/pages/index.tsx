@@ -1,12 +1,12 @@
 import { Box, Group } from "@mantine/core";
 import { useMediaQuery } from "@mantine/hooks";
-import { Welcome } from "../components/Welcome";
+import { Welcome } from "../components/welcome";
 import { Sidebar } from "../components/sidebar";
 import { Header } from "~/components/header";
 import { HeaderMobile } from "~/components/header/mobileHeader";
 import { Footer } from "~/components/footer";
-import { ChatContent, type ChatItem } from "~/components/Chat/ChatContent";
-import { ChatInput } from "~/components/Chat/ChatInput";
+import { ChatContent, type ChatItem } from "~/components/chat/ChatContent";
+import { ChatInput } from "~/components/chat/ChatInput";
 import { api } from "~/utils/api";
 import { useRef, useState } from "react";
 import React from "react";

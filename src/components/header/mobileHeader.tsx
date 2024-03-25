@@ -4,13 +4,15 @@ import {
 	Button,
 	Drawer,
 	Group,
+	Space,
 	Stack,
+	Title,
 } from "@mantine/core";
 import { useDisclosure, useMediaQuery } from "@mantine/hooks";
 import { SignedIn, UserButton } from "@clerk/nextjs";
 import { IconMenu2, IconPlus } from "@tabler/icons-react";
 import PinkLogo from "../../../public/logo/logo-pink-dark.png";
-import logoIcon from "../../../public/icon/heart-pink-dark.png";
+import logoIcon from "../../../public/icon/heart-pink.png";
 import Image from "next/image";
 import { ReactNode } from "react";
 import { theme } from "~/config/theme";
@@ -84,16 +86,17 @@ export const HeaderMobile: React.FC<HeaderProps> = ({ children, onReset }) => {
 						},
 					}}
 				>
-					<Stack>
+					<Stack justify="center" spacing="md">
 						<SignedIn>
 							<UserButton />
 						</SignedIn>
-						{/* SPACER */}
+						<Space />
 						<Button mt="xl" leftIcon={iconPlus} onClick={onReset}>
 							New Chat
 						</Button>
-						{/* SPACER */}
-						{/* SAVED CHATS */}
+						<Space />
+
+						<Title order={3}>Previous Chats</Title>
 					</Stack>
 				</Drawer>
 

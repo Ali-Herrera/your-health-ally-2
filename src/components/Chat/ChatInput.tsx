@@ -1,4 +1,4 @@
-import { Button, Group, Textarea } from "@mantine/core";
+import { Button, Group, Space, Textarea } from "@mantine/core";
 import { useMediaQuery } from "@mantine/hooks";
 import { IconSend } from "@tabler/icons-react";
 import { theme } from "../../config/theme";
@@ -27,7 +27,7 @@ export const ChatInput = ({ onUpdate, waiting }: Props) => {
 	};
 
 	return (
-		<Group position="center" ml={mobileScreen ? "lg" : "250px"} mr="lg">
+		<Group position="center" ml={mobileScreen ? "lg" : "250px"} mr="lg" p="lg">
 			<Textarea
 				placeholder="What questions do you have?"
 				aria-label="Type your message here"
