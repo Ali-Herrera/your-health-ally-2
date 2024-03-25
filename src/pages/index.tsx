@@ -1,6 +1,6 @@
 import { Box, Group } from "@mantine/core";
 import { useMediaQuery } from "@mantine/hooks";
-import { Welcome } from '~/components/Welcome';
+import { Welcome } from '../components/welcome';
 import { Sidebar } from "~/components/Sidebar/sidebar";
 import { Header } from "~/components/Header";
 import { Footer } from "~/components/footer";

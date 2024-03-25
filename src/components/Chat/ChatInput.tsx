@@ -2,18 +2,25 @@ import { Button, Group, Textarea } from "@mantine/core";
 import { useMediaQuery } from "@mantine/hooks";
 import { IconSend } from "@tabler/icons-react";
 import { theme } from "../../config/theme";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 
 type Props = {
 	onUpdate: (prompt: string) => void;
+	waiting?: boolean;
 };
 
-export const ChatInput = ({ onUpdate }: Props) => {
+export const ChatInput = ({ onUpdate, waiting }: Props) => {
 	const isMobile = useMediaQuery("(max-width: 480px)");
-
 	const { colors } = theme;
 
 	const [prompt, setPrompt] = useState<string>("");
+	const [rows, setRows] = useState<number>(2);
+
+	useEffect(() => {
+		const lines = prompt.split(/\r*\n/).length;
+		setRows(Math.max(2, Math.min(lines, 8)));
+	  }, [prompt]);
+
 	const handleUpdate = () => {
 		setPrompt("");
 		onUpdate(prompt);
@@ -35,6 +42,8 @@ export const ChatInput = ({ onUpdate }: Props) => {
 						handleUpdate();
 					}
 				}}
+				disabled={waiting}
+				rows={rows}
 			/>
 			<Button
 				size="sm"
