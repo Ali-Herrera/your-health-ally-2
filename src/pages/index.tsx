@@ -1,8 +1,5 @@
 import { Box } from "@mantine/core";
-import { useMediaQuery } from "@mantine/hooks";
-
 import { Header } from "~/components/header";
-import { Sidebar } from "~/components/Sidebar/sidebar";
 import { Footer } from "~/components/footer";
 import { ChatContent, type ChatItem } from "~/components/Chat/ChatContent";
 import { ChatInput } from "~/components/Chat/ChatInput";
@@ -11,10 +8,10 @@ import { useRef, useState } from "react";
 import React from "react";
 
 export default function Home() {
-	const isMobile = useMediaQuery("(max-width: 480px)");
-
-	const [chatItems, setChatItems] = useState<ChatItem[]>([]);
-	const scrollToRef = useRef<HTMLDivElement>(null);
+  const [opened, { toggle }] = useDisclosure();
+  const [chatItems, setChatItems] = useState<ChatItem[]>([]);
+  const [waiting, setWaiting] = useState<boolean>(false);
+  const scrollToRef = useRef<HTMLDivElement>(null);
 
 	const scrollToBottom = () => {
 		setTimeout(
@@ -45,16 +42,16 @@ export default function Home() {
 			]);
 		},
 
-		// onSettled: () => {
-		//   setWaiting(false);
-		//   scrollToBottom();
-		// },
-	});
+    onSettled: () => {
+      setWaiting(false);
+      scrollToBottom();
+    },
+  });
 
-	// const resetMutation = api.ai.reset.useMutation();
+  const resetMutation = api.ai.reset.useMutation();
 
-	const handleUpdate = (prompt: string) => {
-		// setWaiting(true);
+  const handleUpdate = (prompt: string) => {
+    setWaiting(true);
 
 		setChatItems([
 			...chatItems,
@@ -72,21 +69,20 @@ export default function Home() {
 
 		generatedTextMutation.mutate({ prompt });
 
-		console.log("After calling mutate:", chatItems);
-		console.log("OpenAI API Key:", process.env.NEXT_PUBLIC_OPENAI_API_KEY);
-	};
+    console.log('After calling mutate:', chatItems);
+  };
+  const handleReset = () => {
+    setChatItems([]);
+    resetMutation.mutate();
+  };
 
 	return (
 		<Box>
+			{/* TODO: reset for mobile sidebar and for desktop/tablet sidebar */}
 			<Header />
-			{isMobile ? null : <Sidebar />}
 			<ChatContent chatItems={chatItems} />
 			<ChatInput onUpdate={handleUpdate} />
 			<Footer />
 		</Box>
 	);
 }
-
-// function setWaiting(arg0: boolean) {
-//   throw new Error('Function not implemented.');
-// }

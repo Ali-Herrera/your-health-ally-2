@@ -10,6 +10,7 @@ const configuration = new Configuration({
 
 const openai = new OpenAIApi(configuration);
 
+//Messages object to story the conversation context to push to the AI model
 type Message = {
   role: 'user' | 'system' | 'assistant';
   content: string;
@@ -25,6 +26,7 @@ export const aiRouter = createTRPCRouter({
 
       console.log(prompt);
 
+      //Provides context to the AI model by pushing the user's message to the conversation context
       messages.push({
         role: 'user',
         content: prompt,
@@ -38,6 +40,7 @@ export const aiRouter = createTRPCRouter({
 
         const generatedText = completion.data.choices[0]?.message?.content;
 
+        //Pushes the AI response to the conversation context
         if (generatedText) {
           messages.push({
             role: 'system',
@@ -62,4 +65,9 @@ export const aiRouter = createTRPCRouter({
         });
       }
     }),
+
+  //Resets the conversation context
+  reset: publicProcedure.mutation(() => {
+    messages.length = 0;
+  }),
 });
