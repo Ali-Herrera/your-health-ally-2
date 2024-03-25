@@ -9,7 +9,7 @@ export default function MobileSidebar() {
 	const [opened, { open, close }] = useDisclosure(false);
 	const { colors, white, black } = theme;
 	const iconPlus = <IconPlus size={15} />;
-	onReset: () => void;
+	// onReset: () => void;
 
 	return (
 		<>

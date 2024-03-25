@@ -3,8 +3,6 @@ import { Button, Stack } from "@mantine/core";
 import { theme } from "~/config/theme";
 import { IconPlus } from "@tabler/icons-react";
 
-const { colors, black } = theme;
-
 export const Sidebar = () => {
 	const { colors } = theme;
 	const iconPlus = <IconPlus size={15} />;
