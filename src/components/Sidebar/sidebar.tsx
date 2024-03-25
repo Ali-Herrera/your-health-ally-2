@@ -8,6 +8,7 @@ const { colors, black } = theme;
 export const Sidebar = () => {
 	const { colors } = theme;
 	const iconPlus = <IconPlus size={15} />;
+	// export const Sidebar = ({ onReset, waiting }: Props)
 
 	return (
 		<Stack

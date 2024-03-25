@@ -1,8 +1,8 @@
-import { UserButton } from '@clerk/nextjs';
-import { Avatar, Box, Group, Stack, Text } from '@mantine/core';
-import { useMediaQuery } from '@mantine/hooks';
-import { theme } from '~/config/theme';
-import { type Author } from '~/utils/types';
+import { Avatar, Box, Group, Stack, Text } from "@mantine/core";
+import { useMediaQuery } from "@mantine/hooks";
+import { UserButton } from "@clerk/nextjs";
+import { theme } from "~/config/theme";
+import { type Author } from "~/utils/types";
 
 export type ChatItem = {
   author: Author;
