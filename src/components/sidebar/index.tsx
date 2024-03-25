@@ -35,8 +35,10 @@ export const Sidebar = ({ onReset }: Props) => {
 				leftIcon={iconPlus}
 				onClick={onReset}
 			>
-				Start New Chat
+				New Chat
 			</Button>
+			{/* SPACER */}
+			{/* SAVED CHATS */}
 		</Stack>
 	);
 };

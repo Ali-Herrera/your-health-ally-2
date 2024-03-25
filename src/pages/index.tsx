@@ -1,8 +1,9 @@
 import { Box, Group } from "@mantine/core";
 import { useMediaQuery } from "@mantine/hooks";
 import { Welcome } from "../components/Welcome";
-import { Sidebar } from "~/components/Sidebar/sidebar";
-import { Header } from "~/components/Header";
+import { Sidebar } from "../components/sidebar";
+import { Header } from "~/components/header";
+import { HeaderMobile } from "~/components/header/mobileHeader";
 import { Footer } from "~/components/footer";
 import { ChatContent, type ChatItem } from "~/components/Chat/ChatContent";
 import { ChatInput } from "~/components/Chat/ChatInput";
@@ -95,10 +96,14 @@ export default function Home() {
 			{""}
 			{isLoaded && user && (
 				<Box>
-					<Header />
-					{isMobile ? null : <Sidebar onReset={handleReset}/>}
-					<ChatContent chatItems={chatItems} onReset={handleReset} waiting={waiting}/>
-					<ChatInput onUpdate={handleUpdate} waiting={waiting}/>
+					{isMobile ? <HeaderMobile onReset={handleReset} /> : <Header />}
+					{isMobile ? null : <Sidebar onReset={handleReset} />}
+					<ChatContent
+						chatItems={chatItems}
+						onReset={handleReset}
+						waiting={waiting}
+					/>
+					<ChatInput onUpdate={handleUpdate} waiting={waiting} />
 					<Footer />
 				</Box>
 			)}
