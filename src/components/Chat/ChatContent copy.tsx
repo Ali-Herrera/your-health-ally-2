@@ -31,11 +31,12 @@ export const ChatContent = ({ chatItems, onReset, waiting }: Props) => {
 
 
 	return (
-		<Box ml={isMobile ? "lg" : "250px"} mr="lg" h="70vh" sx={{ overflow: 'scroll' }}>
+		<Box ml={isMobile ? "lg" : "250px"} mr="lg" h="70vh">
+      <Stack spacing="md" mb="xl">
 			{chatItems.map((chatItem: ChatItem, index: number) => (
-				<Stack key={index} spacing="md" mb="xl">
 					{chatItem.author === "User" ? (
 						<Group
+            
 							p="xl"
 							sx={{
 								borderRadius: "10px",
@@ -44,6 +45,8 @@ export const ChatContent = ({ chatItems, onReset, waiting }: Props) => {
 							<UserButton />
 							<Text c="dimmed">{chatItem.content}</Text>
 						</Group>
+					) : waiting ? (
+							<Loader color={black} variant="dots" size="md" m="xl" />
 					) : (
 						<Group
 							p="xl"
@@ -57,8 +60,8 @@ export const ChatContent = ({ chatItems, onReset, waiting }: Props) => {
 							<Text c={black}>{chatItem.content}</Text>
 						</Group>
 					)}
-				</Stack>
-			))}
+          ))}
+          </Stack>
 		</Box>
 	);
 };

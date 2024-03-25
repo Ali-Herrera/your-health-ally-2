@@ -19,7 +19,7 @@ export const ChatInput = ({ onUpdate, waiting }: Props) => {
 	useEffect(() => {
 		const lines = prompt.split(/\r*\n/).length;
 		setRows(Math.max(2, Math.min(lines, 8)));
-	  }, [prompt]);
+	}, [prompt]);
 
 	const handleUpdate = () => {
 		setPrompt("");
@@ -53,6 +53,7 @@ export const ChatInput = ({ onUpdate, waiting }: Props) => {
 					backgroundColor: colors?.darkPink?.[6],
 				}}
 				onClick={handleUpdate}
+				disabled={waiting}
 			>
 				<IconSend size={20} style={{ bottom: "5px", alignSelf: "center" }} />
 			</Button>
