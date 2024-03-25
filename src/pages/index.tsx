@@ -1,16 +1,11 @@
-import Head from 'next/head';
-
-import { Button } from '@mantine/core';
-
-import { AppShell, Burger } from '@mantine/core';
-import { useDisclosure } from '@mantine/hooks';
-import { NavBar } from '~/components/NavBar';
-import { Header } from '~/components/Header';
-import { ChatContent, type ChatItem } from '~/components/ChatContent';
-import { ChatInput } from '~/components/ChatInput';
-import { api } from '~/utils/api';
-import { useRef, useState } from 'react';
-import React from 'react';
+import { Box } from "@mantine/core";
+import { Header } from "~/components/header";
+import { Footer } from "~/components/footer";
+import { ChatContent, type ChatItem } from "~/components/Chat/ChatContent";
+import { ChatInput } from "~/components/Chat/ChatInput";
+import { api } from "~/utils/api";
+import { useRef, useState } from "react";
+import React from "react";
 
 export default function Home() {
   const [opened, { toggle }] = useDisclosure();
@@ -18,34 +13,34 @@ export default function Home() {
   const [waiting, setWaiting] = useState<boolean>(false);
   const scrollToRef = useRef<HTMLDivElement>(null);
 
-  const scrollToBottom = () => {
-    setTimeout(
-      () => scrollToRef.current?.scrollIntoView({ behavior: 'smooth' }),
-      100
-    );
-  };
+	const scrollToBottom = () => {
+		setTimeout(
+			() => scrollToRef.current?.scrollIntoView({ behavior: "smooth" }),
+			100
+		);
+	};
 
-  const generatedTextMutation = api.ai.generateText.useMutation({
-    onSuccess: (data) => {
-      setChatItems([
-        ...chatItems,
-        {
-          content: data.generatedText,
-          author: 'AI',
-        },
-      ]);
-    },
+	const generatedTextMutation = api.ai.generateText.useMutation({
+		onSuccess: (data) => {
+			setChatItems([
+				...chatItems,
+				{
+					content: data.generatedText,
+					author: "AI",
+				},
+			]);
+		},
 
-    onError: (error) => {
-      setChatItems([
-        ...chatItems,
-        {
-          content: error.message ?? 'An error occurred',
-          author: 'AI',
-          isError: true,
-        },
-      ]);
-    },
+		onError: (error) => {
+			setChatItems([
+				...chatItems,
+				{
+					content: error.message ?? "An error occurred",
+					author: "AI",
+					isError: true,
+				},
+			]);
+		},
 
     onSettled: () => {
       setWaiting(false);
@@ -58,21 +53,21 @@ export default function Home() {
   const handleUpdate = (prompt: string) => {
     setWaiting(true);
 
-    setChatItems([
-      ...chatItems,
-      {
-        content: prompt.replace(/\n/g, '\n\n'),
-        author: 'User',
-      },
-    ]);
+		setChatItems([
+			...chatItems,
+			{
+				content: prompt.replace(/\n/g, "\n\n"),
+				author: "User",
+			},
+		]);
 
-    scrollToBottom();
+		scrollToBottom();
 
-    console.log('User sent a message:', prompt);
-    console.log('Before calling mutate:', chatItems);
-    console.log('Prompt value:', prompt);
+		console.log("User sent a message:", prompt);
+		console.log("Before calling mutate:", chatItems);
+		console.log("Prompt value:", prompt);
 
-    generatedTextMutation.mutate({ prompt });
+		generatedTextMutation.mutate({ prompt });
 
     console.log('After calling mutate:', chatItems);
   };
@@ -81,30 +76,13 @@ export default function Home() {
     resetMutation.mutate();
   };
 
-  return (
-    <>
-      <AppShell
-        header={{ height: 60 }}
-        navbar={{
-          width: 300,
-          breakpoint: 'sm',
-          collapsed: { mobile: !opened },
-        }}
-        padding='md'
-      >
-        <Header>
-          <Burger opened={opened} onClick={toggle} hiddenFrom='sm' size='sm' />
-          <div>Logo</div>
-        </Header>
-
-        <NavBar onReset={handleReset} />
-
-        <AppShell.Main>
-          <ChatContent chatItems={chatItems} />
-          <div ref={scrollToRef} />
-          <ChatInput onUpdate={handleUpdate} waiting={waiting} />
-        </AppShell.Main>
-      </AppShell>
-    </>
-  );
+	return (
+		<Box>
+			{/* TODO: reset for mobile sidebar and for desktop/tablet sidebar */}
+			<Header />
+			<ChatContent chatItems={chatItems} />
+			<ChatInput onUpdate={handleUpdate} />
+			<Footer />
+		</Box>
+	);
 }

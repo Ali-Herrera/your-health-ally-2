@@ -26,7 +26,7 @@ export const ChatInput = ({ onUpdate, waiting }: Props) => {
 
   const { colors } = theme;
   return (
-    <Group justify='center'>
+    <Group position='center'>
       <Textarea
         placeholder='What questions do you have?'
         aria-label='Type your message here'
@@ -48,7 +48,6 @@ export const ChatInput = ({ onUpdate, waiting }: Props) => {
         color={colors?.darkPink?.[3]}
         size='sm'
         radius='xl'
-        justify='center'
         p={0}
         aria-label='Send message'
         style={{
