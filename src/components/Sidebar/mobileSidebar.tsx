@@ -1,5 +1,5 @@
-import { Box, Button, Drawer, Group, Stack } from "@mantine/core";
-import { useDisclosure, useMediaQuery } from "@mantine/hooks";
+import { Button, Drawer, Group, Stack } from "@mantine/core";
+import { useDisclosure } from "@mantine/hooks";
 import { IconMenu2, IconPlus } from "@tabler/icons-react";
 import Image from "next/image";
 import logoIcon from "../../../public/icon/heart-pink-dark.png";
@@ -74,8 +74,6 @@ export default function MobileSidebar() {
 					>
 						<Button
 							mt="xl"
-							// variant="white"
-							// color={colors?.darkPink?.[6]}
 							leftIcon={iconPlus}
 						>
 							Start New Chat

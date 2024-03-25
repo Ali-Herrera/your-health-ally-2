@@ -1,23 +1,23 @@
-
-import { Box, Group } from '@mantine/core';
-import { useMediaQuery } from '@mantine/hooks';
-
-import { Header } from '~/components/Header';
-import { Sidebar } from '~/components/Sidebar/sidebar';
-import { Footer } from '~/components/footer';
-import { ChatContent, type ChatItem } from '~/components/Chat/ChatContent';
-import { ChatInput } from '~/components/Chat/ChatInput';
-import { api } from '~/utils/api';
-import { useRef, useState } from 'react';
-import React from 'react';
-import { UserButton, useUser } from '@clerk/nextjs';
+import { Box, Group } from "@mantine/core";
+import { useMediaQuery } from "@mantine/hooks";
 import { Welcome } from '~/components/Welcome';
+import { Sidebar } from "~/components/Sidebar/sidebar";
+import { Header } from "~/components/Header";
+import { Footer } from "~/components/footer";
+import { ChatContent, type ChatItem } from "~/components/Chat/ChatContent";
+import { ChatInput } from "~/components/Chat/ChatInput";
+import { api } from "~/utils/api";
+import { useRef, useState } from "react";
+import React from "react";
+import { UserButton, useUser } from '@clerk/nextjs';
+
 
 export default function Home() {
-  const isMobile = useMediaQuery('(max-width: 480px)');
+	const isMobile = useMediaQuery("(max-width: 480px)");
 
-  const [chatItems, setChatItems] = useState<ChatItem[]>([]);
-  const scrollToRef = useRef<HTMLDivElement>(null);
+	const [chatItems, setChatItems] = useState<ChatItem[]>([]);
+	const [waiting, setWaiting] = useState<boolean>(false);
+	const scrollToRef = useRef<HTMLDivElement>(null);
 
   const scrollToBottom = () => {
     setTimeout(
@@ -48,16 +48,16 @@ export default function Home() {
       ]);
     },
 
-    // onSettled: () => {
-    //   setWaiting(false);
-    //   scrollToBottom();
-    // },
-  });
+		onSettled: () => {
+			setWaiting(false);
+			scrollToBottom();
+		},
+	});
 
-  // const resetMutation = api.ai.reset.useMutation();
+	const resetMutation = api.ai.reset.useMutation();
 
-  const handleUpdate = (prompt: string) => {
-    // setWaiting(true);
+	const handleUpdate = (prompt: string) => {
+		setWaiting(true);
 
     setChatItems([
       ...chatItems,
@@ -75,9 +75,12 @@ export default function Home() {
 
     generatedTextMutation.mutate({ prompt });
 
-    console.log('After calling mutate:', chatItems);
-    console.log('OpenAI API Key:', process.env.NEXT_PUBLIC_OPENAI_API_KEY);
-  };
+		console.log("After calling mutate:", chatItems);
+	};
+	const handleReset = () => {
+		setChatItems([]);
+		resetMutation.mutate();
+	};
 
   const { isLoaded, user } = useUser();
   return (
@@ -101,4 +104,4 @@ export default function Home() {
         </Box>
       )}
     </>
-  );
+  );}
