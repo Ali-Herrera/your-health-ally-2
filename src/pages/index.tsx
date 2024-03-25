@@ -96,9 +96,8 @@ export default function Home() {
 			{isLoaded && user && (
 				<Box>
 					<Header />
-					{isMobile ? null : <Sidebar />}
-					{/* onReset={}  */}
-					<ChatContent chatItems={chatItems} waiting={waiting}/>
+					{isMobile ? null : <Sidebar onReset={handleReset}/>}
+					<ChatContent chatItems={chatItems} onReset={handleReset} waiting={waiting}/>
 					<ChatInput onUpdate={handleUpdate} waiting={waiting}/>
 					<Footer />
 				</Box>

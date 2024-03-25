@@ -1,17 +1,8 @@
-import {
-	Avatar,
-	Box,
-	Group,
-	Loader,
-	Skeleton,
-	Stack,
-	Text,
-} from "@mantine/core";
+import { Avatar, Box, Group, Stack, Text } from "@mantine/core";
 import { useMediaQuery } from "@mantine/hooks";
 import { UserButton } from "@clerk/nextjs";
 import { theme } from "~/config/theme";
 import { type Author } from "~/utils/types";
-import { useState, useEffect } from "react";
 
 export type ChatItem = {
 	author: Author;
@@ -22,25 +13,28 @@ export type ChatItem = {
 type Props = {
 	chatItems: ChatItem[];
 	waiting?: boolean;
-	onReset?: (prompt: string) => void;
+	onReset: () => void;
 };
 
-export const ChatContent = ({ chatItems, onReset, waiting }: Props) => {
+export const ChatContent = ({ chatItems, onReset }: Props) => {
 	const isMobile = useMediaQuery("(max-width: 480px)");
 	const { colors, black } = theme;
 
-
 	return (
-		<Box ml={isMobile ? "lg" : "250px"} mr="lg" h="70vh" sx={{ overflow: 'scroll' }}>
+		<Box
+			ml={isMobile ? "lg" : "250px"}
+			mr="lg"
+			h="70vh"
+			sx={{ overflow: "scroll" }}
+		>
 			{chatItems.map((chatItem: ChatItem, index: number) => (
 				<Stack key={index} spacing="md" m="xl">
 					{chatItem.author === "User" ? (
 						<Group
 							p="xl"
-              
 							sx={{
 								borderRadius: "10px",
-                backgroundColor: "#E5E5E5",
+								backgroundColor: "#E5E5E5",
 							}}
 						>
 							<UserButton />

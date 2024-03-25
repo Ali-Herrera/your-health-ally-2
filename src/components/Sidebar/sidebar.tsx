@@ -3,7 +3,11 @@ import { Button, Stack } from "@mantine/core";
 import { theme } from "~/config/theme";
 import { IconPlus } from "@tabler/icons-react";
 
-export const Sidebar = () => {
+type Props = {
+	onReset: () => void;
+};
+
+export const Sidebar = ({ onReset }: Props) => {
 	const { colors } = theme;
 	const iconPlus = <IconPlus size={15} />;
 	// export const Sidebar = ({ onReset, waiting }: Props)
@@ -29,6 +33,7 @@ export const Sidebar = () => {
 				variant="white"
 				color={colors?.darkPink?.[6]}
 				leftIcon={iconPlus}
+				onClick={onReset}
 			>
 				Start New Chat
 			</Button>
