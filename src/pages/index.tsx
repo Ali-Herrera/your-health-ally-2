@@ -101,6 +101,7 @@ export default function Home() {
 					<ChatContent
 						chatItems={chatItems}
 						onReset={handleReset}
+						loading={waiting}
 					/>
 					<ChatInput onUpdate={handleUpdate} waiting={waiting} />
 					<Footer />
