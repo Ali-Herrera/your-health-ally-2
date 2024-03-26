@@ -1,9 +1,10 @@
-import { Avatar, Box, Group, Stack, Text } from "@mantine/core";
+import { Box, Stack, Group, Avatar, Skeleton, Text } from "@mantine/core";
 import { useMediaQuery } from "@mantine/hooks";
+import { type Author } from "~/utils/types";
+// import { UserChat } from "./User";
+// import { AIChat } from "./AI";
 import { UserButton } from "@clerk/nextjs";
 import { theme } from "~/config/theme";
-import { type Author } from "~/utils/types";
-import { useEffect } from "react";
 
 export type ChatItem = {
 	author: Author;
@@ -11,57 +12,57 @@ export type ChatItem = {
 	isError?: boolean;
 };
 
-type Props = {
+export type Props = {
 	chatItems: ChatItem[];
-	waiting?: boolean;
 	onReset: () => void;
 };
 
 export const ChatContent = ({ chatItems, onReset }: Props) => {
 	const mobileScreen = useMediaQuery("(max-width: 480px)");
-	const { colors, black } = theme;
+	const { black } = theme;
 
-	useEffect(() => {
-		
-	}
-	)
 
-	return (
-		<Box ml={mobileScreen ? "0" : "250px"} h="65vh" sx={{ overflow: "scroll" }}>
-			{chatItems.map((chatItem: ChatItem, index: number) => (
-				<Stack key={index} spacing="md">
-					{chatItem.author === "User" ? (
-						<Group
-							p="xl"
-							sx={{
-								width: "100%",
-								backgroundColor: "#E5E5E5",
-							}}
-						>
-							<UserButton />
-							<Text c="dimmed">{chatItem.content}</Text>
-						</Group>
-					) : (
-						<Group p="xl">
-							<Avatar size={32} alt="ChatGBT" variant="gradient">
-								AI
-							</Avatar>
-							<Text c={black}>{chatItem.content}</Text>
-						</Group>
-					)}
+	if (chatItems === undefined) {
+		return (
+			<Box
+				ml={mobileScreen ? "0" : "250px"}
+				h="65vh"
+				sx={{ overflow: "scroll" }}
+			>
+				<Stack spacing="md">
+					<Group p="xl">
+						<Skeleton height={32} circle mb="sm" />
+						<Skeleton height={12} radius="xl" mb="sm" />
+						<Skeleton height={12} radius="xl" width="70%" />
+					</Group>
 				</Stack>
-			))}
-		</Box>
-	);
+			</Box>
+		);
+	} else {
+		return (
+			<Box
+				ml={mobileScreen ? "0" : "250px"}
+				h="65vh"
+				sx={{ overflow: "scroll" }}
+			>
+				{chatItems.map((chatItem: ChatItem, index: number) => (
+					<Stack spacing="md" key={index}>
+						{chatItem.author === "User" ? (
+							<Group p="xl" sx={{ backgroundColor: "#E5E5E5" }}>
+								<UserButton />
+								<Text c="dimmed">{chatItem.content}</Text>
+							</Group>
+						) : (
+							<Group p="xl">
+								<Avatar size={32} alt="ChatGBT" variant="gradient" mb="sm">
+									AI
+								</Avatar>
+								<Text c={black}>{chatItem.content}</Text>
+							</Group>
+						)}
+					</Stack>
+				))}
+			</Box>
+		);
+	}
 };
-
-{
-	/* TODO: ERROR HANDLING
-				 <div
-            className={clsx("ml-5 mt-1 box-border", {
-              "text-white": !chatItem.isError,
-              "text-red-500": chatItem.isError,
-            })}
-          >   
-          </div> */
-}
