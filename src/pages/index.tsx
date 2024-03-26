@@ -93,7 +93,6 @@ export default function Home() {
 					</Group>
 				</>
 			)}
-			{""}
 			{isLoaded && user && (
 				<Box>
 					{mobileScreen ? <HeaderMobile onReset={handleReset} /> : <Header />}
