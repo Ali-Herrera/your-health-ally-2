@@ -1,8 +1,10 @@
-import { UserButton } from '@clerk/nextjs';
-import { Avatar, Box, Group, Stack, Text } from '@mantine/core';
+import { Box, Stack, Group, Avatar, Skeleton, Text } from '@mantine/core';
 import { useMediaQuery } from '@mantine/hooks';
-import { theme } from '~/config/theme';
 import { type Author } from '~/utils/types';
+// import { UserChat } from "./User";
+// import { AIChat } from "./AI";
+import { UserButton } from '@clerk/nextjs';
+import { theme } from '~/config/theme';
 
 export type ChatItem = {
   author: Author;
@@ -10,13 +12,15 @@ export type ChatItem = {
   isError?: boolean;
 };
 
-type Props = {
+export type Props = {
   chatItems: ChatItem[];
+  onReset: () => void;
+  loading: boolean;
 };
 
-export const ChatContent = ({ chatItems }: Props) => {
-  const isMobile = useMediaQuery('(max-width: 480px)');
-  const { colors, black } = theme;
+export const ChatContent = ({ chatItems, onReset, loading }: Props) => {
+  const mobileScreen = useMediaQuery('(max-width: 480px)');
+  const { black } = theme;
 
   // Check if any user messages exist
   const userMessageExists = chatItems.some(
@@ -24,64 +28,53 @@ export const ChatContent = ({ chatItems }: Props) => {
   );
 
   return (
-    <Box ml={isMobile ? 'lg' : '250px'} mr='lg' h='70vh'>
-      {chatItems.map((chatItem: ChatItem, index: number) => (
-        <Stack key={index} className='chatLog' spacing='md' mb='xl'>
-          <Group
-            className='chatUser'
-            style={{
-              padding: index === chatItems.length - 1 ? '10px' : '16px',
-              borderRadius: '10px',
-            }}
-          >
-            <Avatar
-              color={
-                chatItem.author === 'User'
-                  ? colors?.teal?.[6]
-                  : colors?.darkPink?.[6]
-              }
-            >
-              {chatItem.author === 'User' ? /* "User" */ <UserButton /> : 'AI'}
-            </Avatar>
-            {chatItem.author === 'User' ? (
-              <Text c='dimmed'>{chatItem.content}</Text>
-            ) : (
-              <Text c={black}>{chatItem.content}</Text>
-            )}
-            {/* TODO: ERROR HANDLING
-				 <div
-            className={clsx("ml-5 mt-1 box-border", {
-              "text-white": !chatItem.isError,
-              "text-red-500": chatItem.isError,
-            })}
-          >   
-          </div> */}
-          </Group>
-        </Stack>
-      ))}
-      {/* Render initial prompt only if no user messages exist */}
-      {!userMessageExists && (
-        <Box>
-          <Stack className='chatLog' spacing='md' mb='xl'>
-            <Group
-              className='chatUser'
-              style={{
-                padding: '16px',
-                borderRadius: '10px',
-              }}
-            >
-              <Avatar color={colors?.darkPink?.[6]}>AI</Avatar>
-              <Text c={black}>
-                I am an intelligent advisor that can provide information
-                regarding people's health. I answer questions about
-                health-related conditions and symptoms, and how to prepare for
-                office visits. This is for educational purposes only. Please see
-                your healthcare provider for medical treatment.
-              </Text>
+    <Box ml={mobileScreen ? '0' : '250px'} h='65vh' sx={{ overflow: 'scroll' }}>
+      <Stack spacing='md'>
+        {loading ? (
+          <>
+            {chatItems.map((chatItem: ChatItem, index: number) => (
+              <Box key={index}>
+                {chatItem.author === 'User' ? (
+                  <Group p='xl' sx={{ backgroundColor: '#E5E5E5' }}>
+                    <UserButton />
+                    <Text c='dimmed'>{chatItem.content}</Text>
+                  </Group>
+                ) : (
+                  <Group p='xl'>
+                    <Avatar size={32} alt='ChatGBT' variant='gradient' mb='sm'>
+                      AI
+                    </Avatar>
+                    <Text c={black}>{chatItem.content}</Text>
+                  </Group>
+                )}
+              </Box>
+            ))}
+            <Group p='xl'>
+              <Skeleton height={32} circle />
+              <Skeleton height={8} radius='xl' />
+              <Skeleton height={8} radius='xl' width='70%' />
             </Group>
-          </Stack>
-        </Box>
-      )}
+          </>
+        ) : (
+          chatItems.map((chatItem: ChatItem, index: number) => (
+            <Box key={index}>
+              {chatItem.author === 'User' ? (
+                <Group p='xl' sx={{ backgroundColor: '#E5E5E5' }}>
+                  <UserButton />
+                  <Text c='dimmed'>{chatItem.content}</Text>
+                </Group>
+              ) : (
+                <Group p='xl'>
+                  <Avatar size={32} alt='ChatGBT' variant='gradient' mb='sm'>
+                    AI
+                  </Avatar>
+                  <Text c={black}>{chatItem.content}</Text>
+                </Group>
+              )}
+            </Box>
+          ))
+        )}
+      </Stack>
     </Box>
   );
 };

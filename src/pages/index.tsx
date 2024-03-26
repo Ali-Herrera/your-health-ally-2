@@ -1,8 +1,9 @@
 import { Box, Group } from '@mantine/core';
 import { useMediaQuery } from '@mantine/hooks';
-
-import { Header } from '~/components/Header';
-import { Sidebar } from '~/components/Sidebar/sidebar';
+import { Welcome } from '../components/Welcome';
+import { Sidebar } from '../components/sidebar';
+import { Header } from '~/components/header';
+import { HeaderMobile } from '~/components/header/mobileHeader';
 import { Footer } from '~/components/footer';
 import { ChatContent, type ChatItem } from '~/components/Chat/ChatContent';
 import { ChatInput } from '~/components/Chat/ChatInput';
@@ -10,12 +11,12 @@ import { api } from '~/utils/api';
 import { useRef, useState } from 'react';
 import React from 'react';
 import { UserButton, useUser } from '@clerk/nextjs';
-import { Welcome } from '~/components/Welcome';
 
 export default function Home() {
-  const isMobile = useMediaQuery('(max-width: 480px)');
+  const mobileScreen = useMediaQuery('(max-width: 480px)');
 
   const [chatItems, setChatItems] = useState<ChatItem[]>([]);
+  const [waiting, setWaiting] = useState<boolean>(false);
   const scrollToRef = useRef<HTMLDivElement>(null);
 
   const scrollToBottom = () => {
@@ -47,16 +48,16 @@ export default function Home() {
       ]);
     },
 
-    // onSettled: () => {
-    //   setWaiting(false);
-    //   scrollToBottom();
-    // },
+    onSettled: () => {
+      setWaiting(false);
+      scrollToBottom();
+    },
   });
 
-  // const resetMutation = api.ai.reset.useMutation();
+  const resetMutation = api.ai.reset.useMutation();
 
   const handleUpdate = (prompt: string) => {
-    // setWaiting(true);
+    setWaiting(true);
 
     setChatItems([
       ...chatItems,
@@ -75,7 +76,10 @@ export default function Home() {
     generatedTextMutation.mutate({ prompt });
 
     console.log('After calling mutate:', chatItems);
-    console.log('OpenAI API Key:', process.env.NEXT_PUBLIC_OPENAI_API_KEY);
+  };
+  const handleReset = () => {
+    setChatItems([]);
+    resetMutation.mutate();
   };
 
   const { isLoaded, user } = useUser();
@@ -89,20 +93,19 @@ export default function Home() {
           </Group>
         </>
       )}
-      {''}
       {isLoaded && user && (
         <Box>
-          <Header />
-          {isMobile ? null : <Sidebar />}
-          <ChatContent chatItems={chatItems} />
-          <ChatInput onUpdate={handleUpdate} />
+          {mobileScreen ? <HeaderMobile onReset={handleReset} /> : <Header />}
+          {mobileScreen ? null : <Sidebar onReset={handleReset} />}
+          <ChatContent
+            chatItems={chatItems}
+            onReset={handleReset}
+            loading={waiting}
+          />
+          <ChatInput onUpdate={handleUpdate} waiting={waiting} />
           <Footer />
         </Box>
       )}
     </>
   );
 }
-
-// function setWaiting(arg0: boolean) {
-//   throw new Error('Function not implemented.');
-// }
