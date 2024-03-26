@@ -56,7 +56,7 @@ export const HeaderMobile: React.FC<HeaderProps> = ({ children, onReset }) => {
 						},
 						// HEADER + CLOSE BUTTON STYLES
 						"& .mantine-Drawer-header": {
-							margin: "10px 50px 10px 15px",
+							margin: "10px 20px 10px 15px",
 							display: "flex",
 							alignContent: "center",
 							justifyContent: "center",
@@ -86,14 +86,17 @@ export const HeaderMobile: React.FC<HeaderProps> = ({ children, onReset }) => {
 						},
 					}}
 				>
-					<Stack justify="center" spacing="md">
-						<SignedIn>
-							<UserButton />
-						</SignedIn>
-						<Space />
-						<Button mt="xl" leftIcon={iconPlus} onClick={onReset}>
-							New Chat
-						</Button>
+					<Stack justify="center" align="center" spacing="md">
+						<Space h="lg" />
+
+						<Group position="apart" sx={{ alignContent: "center" }}>
+							<SignedIn>
+								<UserButton  />
+							</SignedIn>
+							<Button ml="lg" leftIcon={iconPlus} onClick={onReset}>
+								New Chat
+							</Button>
+						</Group>
 						<Space />
 
 						<Title order={3}>Previous Chats</Title>

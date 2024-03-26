@@ -46,8 +46,8 @@ export const ChatContent = ({ chatItems, onReset, loading }: Props) => {
 						))}
 						<Group p="xl">
 							<Skeleton height={32} circle />
-							<Skeleton height={12} radius="xl" />
-							<Skeleton height={12} radius="xl" width="70%" />
+							<Skeleton height={8} radius="xl" />
+							<Skeleton height={8} radius="xl" width="70%" />
 						</Group>
 					</>
 				) : (
