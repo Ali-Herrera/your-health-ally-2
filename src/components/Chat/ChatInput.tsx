@@ -1,4 +1,4 @@
-import { Button, Group, Textarea } from "@mantine/core";
+import { Button, Group, Space, Textarea } from "@mantine/core";
 import { useMediaQuery } from "@mantine/hooks";
 import { IconSend } from "@tabler/icons-react";
 import { theme } from "../../config/theme";
@@ -10,7 +10,7 @@ type Props = {
 };
 
 export const ChatInput = ({ onUpdate, waiting }: Props) => {
-	const isMobile = useMediaQuery("(max-width: 480px)");
+	const mobileScreen = useMediaQuery("(max-width: 480px)");
 	const { colors } = theme;
 
 	const [prompt, setPrompt] = useState<string>("");
@@ -19,7 +19,7 @@ export const ChatInput = ({ onUpdate, waiting }: Props) => {
 	useEffect(() => {
 		const lines = prompt.split(/\r*\n/).length;
 		setRows(Math.max(2, Math.min(lines, 8)));
-	  }, [prompt]);
+	}, [prompt]);
 
 	const handleUpdate = () => {
 		setPrompt("");
@@ -27,7 +27,7 @@ export const ChatInput = ({ onUpdate, waiting }: Props) => {
 	};
 
 	return (
-		<Group position="center" ml={isMobile ? "lg" : "250px"} mr="lg">
+		<Group position="center" ml={mobileScreen ? "lg" : "250px"} mr="lg" p="lg">
 			<Textarea
 				placeholder="What questions do you have?"
 				aria-label="Type your message here"
@@ -53,6 +53,7 @@ export const ChatInput = ({ onUpdate, waiting }: Props) => {
 					backgroundColor: colors?.darkPink?.[6],
 				}}
 				onClick={handleUpdate}
+				disabled={waiting}
 			>
 				<IconSend size={20} style={{ bottom: "5px", alignSelf: "center" }} />
 			</Button>

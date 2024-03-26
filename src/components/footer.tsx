@@ -1,17 +1,16 @@
-// import { SignedIn, UserButton } from '@clerk/nextjs';
-import { Footer as MantineFooter, Flex, Text } from "@mantine/core";
+import { Footer as MantineFooter, Text } from "@mantine/core";
 import { useMediaQuery } from "@mantine/hooks";
 import { theme } from "~/config/theme";
 
 export const Footer = () => {
-	const isMobile = useMediaQuery("(max-width: 480px)");
+	const mobileScreen = useMediaQuery("(max-width: 480px)");
 	const { white } = theme;
 	return (
 		<MantineFooter
-			height={80}
+			height="auto"
 			bg={white}
 			withBorder={false}
-			ml={isMobile ? "0" : "250px"}
+			ml={mobileScreen ? "0px" : "250px"}
 			style={{
 				position: "relative",
 				bottom: 0,
