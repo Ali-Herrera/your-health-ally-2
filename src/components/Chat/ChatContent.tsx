@@ -5,7 +5,7 @@ import { type Author } from '~/utils/types';
 // import { AIChat } from "./AI";
 import { UserButton } from '@clerk/nextjs';
 import { theme } from '~/config/theme';
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useRef } from 'react';
 
 export type ChatItem = {
   author: Author;
@@ -34,9 +34,18 @@ export const ChatContent = ({ chatItems, loading }: Props) => {
     setUserMessageExists(exists);
   };
 
+  // Ref for scrolling to bottom
+  const endOfChatRef = useRef<HTMLDivElement>(null);
+
+  // Function to scroll to bottom of chat
+  const scrollToBottom = () => {
+    endOfChatRef.current?.scrollIntoView({ behavior: 'smooth' });
+  };
+
   // Call the function to check user messages when component mounts or chat items change
   useEffect(() => {
     checkUserMessages();
+    scrollToBottom();
   }, [chatItems]);
 
   return (
@@ -85,6 +94,8 @@ export const ChatContent = ({ chatItems, loading }: Props) => {
             )}
           </Box>
         ))}
+        {/* Empty div to scroll to when necessary */}
+        <div ref={endOfChatRef} />
       </Stack>
     </Box>
   );
