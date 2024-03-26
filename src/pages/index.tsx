@@ -17,14 +17,6 @@ export default function Home() {
 
   const [chatItems, setChatItems] = useState<ChatItem[]>([]);
   const [waiting, setWaiting] = useState<boolean>(false);
-  const scrollToRef = useRef<HTMLDivElement>(null);
-
-  const scrollToBottom = () => {
-    setTimeout(
-      () => scrollToRef.current?.scrollIntoView({ behavior: 'smooth' }),
-      100
-    );
-  };
 
   const generatedTextMutation = api.ai.generateText.useMutation({
     onSuccess: (data) => {
@@ -50,7 +42,6 @@ export default function Home() {
 
     onSettled: () => {
       setWaiting(false);
-      scrollToBottom();
     },
   });
 
@@ -66,8 +57,6 @@ export default function Home() {
         author: 'User',
       },
     ]);
-
-    scrollToBottom();
 
     console.log('User sent a message:', prompt);
     console.log('Before calling mutate:', chatItems);
