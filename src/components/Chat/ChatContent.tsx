@@ -1,4 +1,4 @@
-import { Box, Stack, Group, Avatar, Skeleton, Text } from '@mantine/core';
+import { Box, Stack, Group, Avatar, Skeleton, Text, List } from '@mantine/core';
 import { useMediaQuery } from '@mantine/hooks';
 import { type Author } from '~/utils/types';
 // import { UserChat } from "./User";
@@ -49,7 +49,11 @@ export const ChatContent = ({ chatItems, loading }: Props) => {
   }, [chatItems]);
 
   return (
-    <Box ml={mobileScreen ? '0' : '250px'} h='65vh' sx={{ overflow: 'scroll' }}>
+    <Box
+      ml={mobileScreen ? '0' : '250px'}
+      h='65vh'
+      sx={{ overflowY: 'scroll', maxWidth: '100%' }}
+    >
       <Stack spacing='md'>
         {/* Render initial prompt only if no user messages exist */}
         {!userMessageExists && (
@@ -82,18 +86,50 @@ export const ChatContent = ({ chatItems, loading }: Props) => {
             {chatItem.author === 'User' ? (
               <Group p='xl' sx={{ backgroundColor: '#E5E5E5' }}>
                 <UserButton />
-                <Text c='dimmed'>{chatItem.content}</Text>
+                {chatItem.content?.includes('\n') ? (
+                  <Text
+                    component='pre'
+                    sx={{ wordWrap: 'break-word', whiteSpace: 'pre-wrap' }}
+                  >
+                    {chatItem.content}
+                  </Text>
+                ) : chatItem.content?.startsWith('- ') ? (
+                  <List>
+                    {chatItem.content.split('\n').map((item, idx) => (
+                      <List.Item key={idx}>{item}</List.Item>
+                    ))}
+                  </List>
+                ) : (
+                  <Text>{chatItem.content}</Text>
+                )}
               </Group>
             ) : (
               <Group p='xl'>
                 <Avatar size={32} alt='ChatGBT' variant='gradient' mb='sm'>
                   AI
                 </Avatar>
-                <Text c={black}>{chatItem.content}</Text>
+                {/* <Text c={black}>{chatItem.content}</Text> */}
+                {chatItem.content?.includes('\n') ? (
+                  <Text
+                    component='pre'
+                    sx={{ wordWrap: 'break-word', whiteSpace: 'pre-wrap' }}
+                  >
+                    {chatItem.content}
+                  </Text>
+                ) : chatItem.content?.startsWith('- ') ? (
+                  <List>
+                    {chatItem.content.split('\n').map((item, idx) => (
+                      <List.Item key={idx}>{item}</List.Item>
+                    ))}
+                  </List>
+                ) : (
+                  <Text>{chatItem.content}</Text>
+                )}
               </Group>
             )}
           </Box>
         ))}
+
         {/* Empty div to scroll to when necessary */}
         <div ref={endOfChatRef} />
       </Stack>
