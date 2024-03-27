@@ -26,6 +26,13 @@ export const aiRouter = createTRPCRouter({
 
       console.log(prompt);
 
+      // Prompt engineering
+      messages.push({
+        role: 'system',
+        content:
+          "You are an intelligent advisor that can provide information regarding people's health. You answer their questions about health-related conditions and symptoms, and what type of doctors they may want to see, and what types of questions to bring to the doctor with them and provide them with readiness checklists for appointments.",
+      });
+
       //Provides context to the AI model by pushing the user's message to the conversation context
       messages.push({
         role: 'user',
