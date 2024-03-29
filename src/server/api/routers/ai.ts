@@ -10,7 +10,7 @@ const configuration = new Configuration({
 
 const openai = new OpenAIApi(configuration);
 
-//Messages object to story the conversation context to push to the AI model
+//Message type to store the conversation context
 type Message = {
   role: 'user' | 'system' | 'assistant';
   content: string;
