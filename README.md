@@ -53,6 +53,7 @@
                 <li><a href="#frameworks-and-libraries">Frameworks and Libraries</a></li>
                 <li><a href="#linters-and-formatters">Linters and Formatters</a></li>
                 <li><a href="#apis-and-sdks">APIs and SDKs</a></li>
+                <li><a href="#backing-services">Backing Services</a></li>
                 <li><a href="#deployment-service">Deployment Service</a></li>
                 <li><a href="#devops">DevOps</a></li>
             </ul>
@@ -107,8 +108,7 @@ Additionally, the Journal of General Internal Medicine found that on average, pa
 - Responsive design
 - Intuitive navigation
 - Authentication
-- AI Chat Bot
-- Save and Delete chats
+- AI Chatbot
 - Interactive Glossary
 - Chat-to-PDF Conversion
 
@@ -138,7 +138,7 @@ Additionally, the Journal of General Internal Medicine found that on average, pa
 [![ChatGBT](https://img.shields.io/badge/chatGPT-74aa9c?style=for-the-badge&logo=openai&logoColor=white)](https://openai.com/blog/introducing-chatgpt-and-whisper-apis)
 [![tRPC](https://img.shields.io/badge/tRPC-%232596BE.svg?style=for-the-badge&logo=tRPC&logoColor=white)](https://trpc.io/)
 
-####Backing Services
+#### Backing Services
 
 [![MongoDB](https://img.shields.io/badge/MongoDB-%25234ea94b.svg?style=for-the-badge&logo=mongodb&logoColor=white)](https://www.mongodb.com/)
 [![Prisma](https://img.shields.io/badge/Prisma-3982CE?style=for-the-badge&logo=Prisma&logoColor=white)](https://www.prisma.io/)
@@ -151,7 +151,9 @@ Additionally, the Journal of General Internal Medicine found that on average, pa
 
 [![Git](https://img.shields.io/badge/git-%23F05033.svg?style=for-the-badge&logo=git&logoColor=white)](https://git-scm.com/doc)
 
-**_Note: This is a [T3 Stack](https://create.t3.gg/) project bootstrapped with `create-t3-app`._**
+### Dev Notes
+
+**This is a [T3 Stack](https://create.t3.gg/) project bootstrapped with `create-t3-app`.**
 
 - [Documentation](https://create.t3.gg/)
 - [Tutorials](https://create.t3.gg/en/faq#what-learning-resources-are-currently-available)
@@ -160,8 +162,6 @@ Additionally, the Journal of General Internal Medicine found that on average, pa
   - [Vercel](https://create.t3.gg/en/deployment/vercel)
   - [Netlify](https://create.t3.gg/en/deployment/netlify)
   - [Docker](https://create.t3.gg/en/deployment/docker) for more information.
-
-### Dev Notes
 
 **Mantine Imports**
 
