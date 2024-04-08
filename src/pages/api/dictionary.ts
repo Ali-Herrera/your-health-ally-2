@@ -1,6 +1,7 @@
-export async function GET(req: Request, res: Response) {
+export async function GET(request: Request) {
+	const word = request;
 	const response = await fetch(
-		`https://api.dictionaryapi.dev/api/v2/entries/en/${req.query.word}`
+		`https://api.dictionaryapi.dev/api/v2/entries/en/${word}`
 	);
 	const data = await response.json();
 	console.log(data);
