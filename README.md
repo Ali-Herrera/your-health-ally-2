@@ -215,15 +215,17 @@ import { IconBrandLinkedin } from "@tabler/icons-react";
 
 ### Installation
 
-**1. Clone repository to your local computer and open in a source code editor.**  
-**2. Download dependencies: `npm install` or `npm i`.**  
+**1. Clone repository to your local computer and open in a source code editor.**
+
+**2. Download dependencies: `npm install` or `npm i`.**
+
 **3. Double check you have a `.gitignore` file in the root folder.**
 
-_If there isn't a `.gitignore', follow these steps to make one:_
+- _If there isn't a `.gitignore', follow these steps to make one:_
 
-- Run `touch .gitignore`.
-- Copy and pages the `Node` template from [GitHub/gitignore/Node.gitignore](https://github.com/github/gitignore/blob/main/Node.gitignore)
-- Make sure these are included:
+  - Run `touch .gitignore`.
+  - Copy and paste the [GitHub/gitignore/Node.gitignore](https://github.com/github/gitignore/blob/main/Node.gitignore) template into your new `.gitignore` file
+    - Make sure the following are included
 
 ```
 # macOS
@@ -258,7 +260,7 @@ NEXT_PUBLIC_CLERK_PUBLISHABLE_KEY=​pk_test_example
 CLERK_SECRET_KEY=​sk_test_example
 ```
 
-- For more information, refer to the Clerkjs [Quickstart Guide](https://clerk.com/docs/quickstarts/nextjs) with Nextjs.
+- Refer to the Clerkjs [Quickstart Guide](https://clerk.com/docs/quickstarts/nextjs) with Nextjs for more information.
 
 **5. Install Prisma: Run `npm install prisma --save-dev`**
 
