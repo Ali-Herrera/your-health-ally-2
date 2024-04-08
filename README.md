@@ -244,10 +244,7 @@ jspm_packages/
 
 # dotenv environment variable files
 .env
-.env.development.local
-.env.test.local
-.env.production.local
-.env.local
+.env*
 ```
 
 **4. Set up `Clerkjs` developer account for authentication.**
