@@ -1,3 +1,11 @@
+<!-- BADGES: Ali-Herrera & your-health-ally-2 -->
+
+![Github Created At](https://img.shields.io/github/created-at/Ali-Herrera/your-health-ally-2?style=for-the-badge) ![GitHub License](https://img.shields.io/github/license/Ali-Herrera/your-health-ally-2?style=for-the-badge)
+ ![GitHub commit activity](https://img.shields.io/github/commit-activity/t/Ali-Herrera/your-health-ally-2?style=for-the-badge) ![GitHub Repo stars](https://img.shields.io/github/stars/Ali-Herrera/your-health-ally-2?style=for-the-badge&color=%23FFC300) ![GitHub forks](https://img.shields.io/github/forks/Ali-Herrera/your-health-ally-2?style=for-the-badge&color=%23ACF033)
+
+<!-- -->
+<!--  -->
+
 <!-- LINK TO TOP -->
 
 <a name="readme-top"></a>
@@ -80,7 +88,7 @@
   </ol>
 </details>
 
-<!-- About the Project -->
+<!-- CONTENTS -->
 
 ## About the Project
 
@@ -332,7 +340,7 @@ _For more examples, please refer to the [Documentation](https://example.com)_
 
 ## License
 
-![MITLicense](https://flat.badgen.net/static/license/MIT/yellow)
+![GitHub License](https://img.shields.io/github/license/Ali-Herrera/your-health-ally-2?style=for-the-badge)
 
 - <a href="https://github.com/Ali-Herrera/your-health-ally/blob/main/LICENCE" target="_blank"> Read more. </a>
 
