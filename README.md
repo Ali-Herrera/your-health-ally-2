@@ -1,7 +1,7 @@
 <!-- BADGES: Ali-Herrera & your-health-ally-2 -->
 
 ![GitHub License](https://img.shields.io/github/license/Ali-Herrera/your-health-ally-2?style=for-the-badge&color=red&link=https%3A%2F%2Fgithub.com%2FAli-Herrera%2Fyour-health-ally-2%2Fblob%2Fmain%2FLICENSE)
-![GitHub commit activity](https://img.shields.io/github/commit-activity/t/Ali-Herrera/your-health-ally-2?style=for-the-badge) ![GitHub Repo stars](https://img.shields.io/github/stars/Ali-Herrera/your-health-ally-2?style=for-the-badge&color=%23FFC300) ![GitHub forks](https://img.shields.io/github/forks/Ali-Herrera/your-health-ally-2?style=for-the-badge&color=%23ACF033) ![Github Created At](https://img.shields.io/github/created-at/Ali-Herrera/your-health-ally-2?style=for-the-badge) 
+![GitHub commit activity](https://img.shields.io/github/commit-activity/t/Ali-Herrera/your-health-ally-2?style=for-the-badge) ![GitHub Repo stars](https://img.shields.io/github/stars/Ali-Herrera/your-health-ally-2?style=for-the-badge&color=%23FFC300) ![GitHub forks](https://img.shields.io/github/forks/Ali-Herrera/your-health-ally-2?style=for-the-badge&color=%23ACF033) ![Github Created At](https://img.shields.io/github/created-at/Ali-Herrera/your-health-ally-2?style=for-the-badge)
 
 <!-- LINK TO TOP -->
 
@@ -227,7 +227,7 @@ import { IconBrandLinkedin } from "@tabler/icons-react";
 ![Nextjs, GitHub package.json prod dependency version (main)](https://img.shields.io/github/package-json/dependency-version/Ali-Herrera/your-health-ally-2/next/main?style=for-the-badge&logo=nextdotjs&logoColor=white&label=NEXTJS&labelColor=black&color=white&link=https%3A%2F%2Fnextjs.org%2F)  
 ![OpenAI, GitHub package.json prod dependency version (main)](https://img.shields.io/github/package-json/dependency-version/Ali-Herrera/your-health-ally-2/openai/main?style=for-the-badge&logo=openai&label=OpenAI&labelColor=black&color=white&link=https%3A%2F%2Fopenai.com%2F)  
 ![Prisma, GitHub package.json dev/peer/optional dependency version (main)](https://img.shields.io/github/package-json/dependency-version/Ali-Herrera/your-health-ally-2/dev/prisma/main?style=for-the-badge&logo=prisma&label=Prisma&labelColor=3982CE&color=white&link=https%3A%2F%2Fwww.prisma.io%2F)  
-![tRPC, GitHub package.json prod dependency version (main)](https://img.shields.io/github/package-json/dependency-version/Ali-Herrera/your-health-ally-2/%40trpc%2Fserver/main?style=for-the-badge&logo=tRPC&logoColor=black&label=tRPC&labelColor=lightskyblue&color=white&link=https%3A%2F%2Ftrpc.io%2F)  
+![tRPC, GitHub package.json prod dependency version (main)](https://img.shields.io/github/package-json/dependency-version/Ali-Herrera/your-health-ally-2/%40trpc%2Fserver/main?style=for-the-badge&logo=tRPC&logoColor=black&label=tRPC&labelColor=lightskyblue&color=white&link=https%3A%2F%2Ftrpc.io%2F)
 
 ### Installation
 
@@ -348,9 +348,7 @@ _For more examples, please refer to the [Documentation](https://example.com)_
 
 ## License
 
-![GitHub License](https://img.shields.io/github/license/Ali-Herrera/your-health-ally-2?style=for-the-badge&color=red&link=https%3A%2F%2Fgithub.com%2FAli-Herrera%2Fyour-health-ally-2%2Fblob%2Fmain%2FLICENSE)
-
-- <a href="https://github.com/Ali-Herrera/your-health-ally/blob/main/LICENCE" target="_blank"> Read more. </a>
+![GitHub License](https://img.shields.io/github/license/Ali-Herrera/your-health-ally-2?style=for-the-badge&color=green&link=https%3A%2F%2Fgithub.com%2FAli-Herrera%2Fyour-health-ally-2%2Fblob%2Fmain%2FLICENSE)
 
 <p align="right">(<a href="#readme-top"> 🔝 </a>)</p>
 
