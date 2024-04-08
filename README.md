@@ -190,14 +190,14 @@ import { IconBrandLinkedin } from "@tabler/icons-react";
 
 ### Prerequisites
 
-1. **Nodejs**
+**1. Nodejs**
 
 - Run `node -v` in the terminal to check if you already have `Node.js` installed.
 - If it's installed, it will show the installed version.
 - Follow Node.js [docs](https://nodejs.org/en/download/) to download.
 - Once downloaded, run `node -v` command to double check it's installed.
 
-2. **NPM**
+**2. NPM**
 
 - Run `npm -v` in the terminal to check if you already have `npm` installed.
 - If it's installed, it will show the installed version.
@@ -205,7 +205,7 @@ import { IconBrandLinkedin } from "@tabler/icons-react";
 - Once downloaded, run `npm -v` command to double check it's installed.
   - [Differences Between Yarn and NPM](https://www.knowledgehut.com/blog/web-development/yarn-vs-npm#differences-between-yarn-and-npm%C2%A0)
 
-3. **MongoDB**
+**3. MongoDB**
 
 - Access to a `MongoDB 4.2+ server` with a replica set deployment.
   - `Prisma` recommends using `MongoDB Atlas`.
