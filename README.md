@@ -1,7 +1,7 @@
 <!-- BADGES: Ali-Herrera & your-health-ally-2 -->
 
-![Github Created At](https://img.shields.io/github/created-at/Ali-Herrera/your-health-ally-2?style=for-the-badge) ![GitHub License](https://img.shields.io/github/license/Ali-Herrera/your-health-ally-2?style=for-the-badge)
- ![GitHub commit activity](https://img.shields.io/github/commit-activity/t/Ali-Herrera/your-health-ally-2?style=for-the-badge) ![GitHub Repo stars](https://img.shields.io/github/stars/Ali-Herrera/your-health-ally-2?style=for-the-badge&color=%23FFC300) ![GitHub forks](https://img.shields.io/github/forks/Ali-Herrera/your-health-ally-2?style=for-the-badge&color=%23ACF033)
+![Github Created At](https://img.shields.io/github/created-at/Ali-Herrera/your-health-ally-2?style=for-the-badge) ![GitHub License](https://img.shields.io/github/license/Ali-Herrera/your-health-ally-2?style=for-the-badge&color=red&link=https%3A%2F%2Fgithub.com%2FAli-Herrera%2Fyour-health-ally-2%2Fblob%2Fmain%2FLICENSE)
+![GitHub commit activity](https://img.shields.io/github/commit-activity/t/Ali-Herrera/your-health-ally-2?style=for-the-badge) ![GitHub Repo stars](https://img.shields.io/github/stars/Ali-Herrera/your-health-ally-2?style=for-the-badge&color=%23FFC300) ![GitHub forks](https://img.shields.io/github/forks/Ali-Herrera/your-health-ally-2?style=for-the-badge&color=%23ACF033)
 
 <!-- -->
 <!--  -->
@@ -340,7 +340,7 @@ _For more examples, please refer to the [Documentation](https://example.com)_
 
 ## License
 
-![GitHub License](https://img.shields.io/github/license/Ali-Herrera/your-health-ally-2?style=for-the-badge)
+![GitHub License](https://img.shields.io/github/license/Ali-Herrera/your-health-ally-2?style=for-the-badge&color=red&link=https%3A%2F%2Fgithub.com%2FAli-Herrera%2Fyour-health-ally-2%2Fblob%2Fmain%2FLICENSE)
 
 - <a href="https://github.com/Ali-Herrera/your-health-ally/blob/main/LICENCE" target="_blank"> Read more. </a>
 
