@@ -8,8 +8,7 @@ import { Footer } from "~/components/footer";
 import { ChatContent, type ChatItem } from "../components/chat/ChatContent";
 import { ChatInput } from "../components/chat/ChatInput";
 import { api } from "~/utils/api";
-import { useRef, useState } from "react";
-import React from "react";
+import React, { useEffect, useState } from "react";
 import { UserButton, useUser } from "@clerk/nextjs";
 import { GET } from "~/pages/api/dictionary";
 
@@ -72,25 +71,6 @@ export default function Home() {
 		resetMutation.mutate();
 	};
 
-	// document.body.addEventListener("mouseover", function (e) {
-	// 	const selectedWord = window.getSelection().toString();
-	// 	if (selectedWord) {
-	// 		// Call your GET function here with the selected word
-	// 		GET(selectedWord);
-	// 		return (
-	// 			<Tooltip
-	// 				label={}
-	// 				position="top"
-	// 				withArrow
-	// 				transition="fade"
-	// 				transitionDuration={200}
-	// 			>
-	// 				<span>word</span>
-	// 			</Tooltip>
-	// 		);
-	// 	}
-	// });
-
 	const { isLoaded, user } = useUser();
 	return (
 		<>
@@ -102,6 +82,7 @@ export default function Home() {
 					</Group>
 				</>
 			)}
+
 			{isLoaded && user && (
 				<Box>
 					{mobileScreen ? <HeaderMobile onReset={handleReset} /> : <Header />}

@@ -1,11 +1,10 @@
 import { Box, Stack, Group, Avatar, Skeleton, Text, List } from "@mantine/core";
 import { useMediaQuery } from "@mantine/hooks";
 import { type Author } from "~/utils/types";
-// import { UserChat } from "./User";
-// import { AIChat } from "./AI";
 import { UserButton } from "@clerk/nextjs";
 import { theme } from "~/config/theme";
 import { useState, useEffect, useRef } from "react";
+import DefinitionTool from "../glossary";
 
 export type ChatItem = {
 	author: Author;
@@ -47,6 +46,39 @@ export const ChatContent = ({ chatItems, loading }: Props) => {
 		checkUserMessages();
 		scrollToBottom();
 	}, [chatItems]);
+
+	// State to Set if the user has selected text
+	const [definitionNeeded, setDefinitionNeeded] = useState<boolean>(false);
+
+	// State to Store the Selected Text
+	const [selectedText, setSelectedText] = useState<string>("");
+
+	// Function to handle events when user selects text
+
+	const handleSelectedText = () => {
+		const selection = window.getSelection();
+		if (selection) {
+			setSelectedText(selection.toString());
+		}
+	};
+
+	// Event listener for different events when component mounts
+	useEffect(() => {
+		document.addEventListener("mouseup", handleSelectedText);
+		document.addEventListener("mouseover", handleSelectedText);
+		document.addEventListener("focus", handleSelectedText, true); // Use capture phase for focus event
+		document.addEventListener("touchstart", handleSelectedText);
+		setDefinitionNeeded(true);
+
+		// Remove event listener when component unmounts
+		return () => {
+			document.removeEventListener("mouseup", handleSelectedText);
+			document.removeEventListener("mouseover", handleSelectedText);
+			document.removeEventListener("focus", handleSelectedText, true);
+			document.removeEventListener("touchstart", handleSelectedText);
+			setDefinitionNeeded(false);
+		};
+	}, []);
 
 	return (
 		<Box
@@ -121,13 +153,18 @@ export const ChatContent = ({ chatItems, loading }: Props) => {
 					</Box>
 				))}
 
-				{/* Display skeleton loading animation if loading */}
+				{/* Display skeleton loading animation below loaded chat end if loading */}
 				{loading && (
 					<Group p="xl">
 						<Skeleton height={32} circle />
 						<Skeleton height={8} radius="xl" />
 						<Skeleton height={8} radius="xl" width="70%" />
 					</Group>
+				)}
+
+				{/* Display Definition Tool if text is selected */}
+				{definitionNeeded && selectedText && (
+					<DefinitionTool selected={definitionNeeded} text={selectedText} />
 				)}
 
 				{/* Empty div to scroll to when necessary */}

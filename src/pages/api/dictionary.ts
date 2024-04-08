@@ -1,5 +1,4 @@
-export async function GET(request: Request) {
-	const word = request;
+export async function GET(word: string) {
 	const response = await fetch(
 		`https://api.dictionaryapi.dev/api/v2/entries/en/${word}`
 	);
@@ -10,5 +9,7 @@ export async function GET(request: Request) {
 	// const example = data.meanings.definitions[0].example;
 	// const synonyms = data.meanings.definitions[0].synonyms;
 	// const antonyms = data.meanings.definitions[0].antonyms;
-	return data;
+
+    return Response.json({ data })
+
 }
