@@ -215,15 +215,15 @@ import { IconBrandLinkedin } from "@tabler/icons-react";
 
 ### Installation
 
-1. Clone repository to your local computer and open in a source code editor.
+**1. Clone repository to your local computer and open in a source code editor.**  
+**2. Download dependencies: `npm install` or `npm i`.**  
+**3. Double check you have a `.gitignore` file in the root folder.**
 
-2. Download dependencies: `npm install` or `npm i`.
+_If there isn't a `.gitignore', follow these steps to make one:_
 
-3. Set up your local `.gitignore` file in the root folder.
-
-- Create file: `touch .gitignore`
-- Click through GitHub's `gitignore` templates. I suggest the `Node` template.
-- If anything, make sure these are included in your file:
+- Run `touch .gitignore`.
+- Copy and pages the `Node` template from [GitHub/gitignore/Node.gitignore](https://github.com/github/gitignore/blob/main/Node.gitignore)
+- Make sure these are included:
 
 ```
 # macOS
@@ -250,7 +250,7 @@ jspm_packages/
 .env.local
 ```
 
-4. Set up `Clerkjs` for authentication.
+**4. Set up `Clerkjs` developer account for authentication.**
 
 - Create an [account](https://clerk.com/docs/quickstarts/setup-clerk) with `Clerkjs`.
 - Install `@clerk/nextjs` in the root folder: `npm install @clerk/nextjs`
@@ -263,20 +263,19 @@ CLERK_SECRET_KEY=​sk_test_example
 
 - For more information, refer to the Clerkjs [Quickstart Guide](https://clerk.com/docs/quickstarts/nextjs) with Nextjs.
 
-5. Install Prisma: Run `npm install prisma --save-dev`
+**5. Install Prisma: Run `npm install prisma --save-dev`**
 
-   - After installation, run `npm run postinstall`: It reads your Prisma schema and generates Prisma Client JS, a type-safe database client for your application.
-   -
+- After installation, run `npm run postinstall`: It reads your Prisma schema and generates Prisma Client JS, a type-safe database client for your application.
 
-6. Configure MongoDB connection:
+**6. Configure MongoDB connection:**
 
 - In your `.env` file, set up MongoDB connection string from MongoDB Atlas
 - This establishes a connection with MongoDB cluster (DATABASE_URL).
 
-7. View Tables (collections) in Prisma Studio:
+**7. View Tables (collections) in Prisma Studio:**
 
-- **After** installing Prisma and configuring MongoDB connection string, you can use Prisma Studio to view the collections.
-- Run `npx prisma studio`
+- _After_ installing Prisma and configuring MongoDB connection string, you can use Prisma Studio to view the collections.
+- Run `npm run db:studio`
 
 <p align="right">(<a href="#readme-top"> 🔝 </a>)</p>
 
