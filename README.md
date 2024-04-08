@@ -45,9 +45,10 @@
             <ul>
                 <li><a href="#description">Description</a></li>
                 <li><a href="#features">Features</a></li>
-                <li><a href="#stack">Stack</a>
+                <li><a href="#stack-overview">Stack Overview</a>
                     <ul>
                         <li><a href="#prerequisites">Prerequisites</a></li>
+                            <li><a href="#dependency-versions">Dependency Versions</a></li>
                         <li><a href="#installation">Installation</a></li>
                      </ul>
                 </li>
@@ -120,7 +121,7 @@ Additionally, the Journal of General Internal Medicine found that on average, pa
 - Interactive Glossary
 - Chat-to-PDF Conversion
 
-### Stack
+### Stack Overview
 
 #### Languages and Runtimes
 
