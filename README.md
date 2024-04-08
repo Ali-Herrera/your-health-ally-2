@@ -296,7 +296,7 @@ CLERK_SECRET_KEY=​sk_test_example
 
 ### Start
 
-- `npm run start`" starts the app while in production mode
+- `npm run start`: starts the app while in production mode
   - app must be compiled with `build` **before** `start`
 
 ### Prisma
@@ -353,12 +353,12 @@ _For more examples, please refer to the [Documentation](https://example.com)_
 
 #### Tutorials
 
-- [Best README](https://github.com/othneildrew/Best-README-Template/blob/master/README.md#roadmap)
-- [Emojipedia](https://emojipedia.org/)
-- [Img Shields](https://shields.io)
-- [GitHub Emoji Cheat Sheet](https://www.webpagefx.com/tools/emoji-cheat-sheet)
-- [Markdown Cheat Sheet](https://www.markdownguide.org/cheat-sheet/)
-- [Nextjs 14 Custom Chatbot](https://www.youtube.com/watch?v=mkJbEP5GeRA)
+[Best README](https://github.com/othneildrew/Best-README-Template/blob/master/README.md#roadmap)  
+[Emojipedia](https://emojipedia.org/)  
+[Img Shields](https://shields.io)  
+[GitHub Emoji Cheat Sheet](https://www.webpagefx.com/tools/emoji-cheat-sheet)  
+[Markdown Cheat Sheet](https://www.markdownguide.org/cheat-sheet/)  
+[Nextjs 14 Custom Chatbot](https://www.youtube.com/watch?v=mkJbEP5GeRA)
 
 <p align="right">(<a href="#readme-top"> 🔝 </a>)</p>
 
