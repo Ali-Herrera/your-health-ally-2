@@ -130,26 +130,26 @@ Additionally, the Journal of General Internal Medicine found that on average, pa
 
 #### Frameworks and Libraries
 
-[![Mantine](https://img.shields.io/badge/Mantine-ffffff?style=for-the-badge&logo=Mantine&logoColor=339af0)](https://mantine.dev/)
-[![Nextjs](https://img.shields.io/badge/next.js-000000?style=for-the-badge&logo=nextdotjs&logoColor=white)](https://nextjs.org/)
+![Mantine, GitHub package.json prod dependency version (main)](https://img.shields.io/github/package-json/dependency-version/Ali-Herrera/your-health-ally-2/%40mantine%2Fcore/main?style=for-the-badge&logo=Mantine&logoColor=339af0&label=Mantine&labelColor=FAF9F6&color=339af0&link=https%3A%2F%2Fmantine.dev%2F)
+![Nextjs, GitHub package.json prod dependency version (main)](https://img.shields.io/github/package-json/dependency-version/Ali-Herrera/your-health-ally-2/next/main?style=for-the-badge&logo=nextdotjs&logoColor=white&label=NEXTJS&labelColor=black&color=purple&link=https%3A%2F%2Fnextjs.org%2F)
 [![NPM](https://img.shields.io/badge/NPM-%23CB3837.svg?style=for-the-badge&logo=npm&logoColor=white)](https://www.npmjs.com/)
-[![React](https://img.shields.io/badge/React-20232A?style=for-the-badge&logo=react&logoColor=61DAFB)](https://reactjs.org/)
+![React, GitHub package.json prod dependency version (main)](https://img.shields.io/github/package-json/dependency-version/Ali-Herrera/your-health-ally-2/react/main?style=for-the-badge&logo=react&color=61DAFB&link=https%3A%2F%2Freactjs.org%2F)
 
 #### Linters and Formatters
 
-[![ESLint](https://img.shields.io/badge/eslint-3A33D1?style=for-the-badge&logo=eslint&logoColor=white)](https://eslint.org/docs/latest/)
+![ESLint, GitHub package.json dev/peer/optional dependency version (main)](https://img.shields.io/github/package-json/dependency-version/Ali-Herrera/your-health-ally-2/dev/eslint/main?style=for-the-badge&logo=eslint&label=eslint&labelColor=3A33D1&color=gray&link=https%3A%2F%2Feslint.org%2Fdocs%2Flatest)
 [![Prettier](https://img.shields.io/badge/prettier-1A2C34?style=for-the-badge&logo=prettier&logoColor=F7BA3E)](https://prettier.io/)
 
 #### APIs and SDKs
 
-[![Clerkjs](https://img.shields.io/badge/%20ClerkJS%20-6d50fb?style=for-the-badge)](https://clerk.com/docs)
-[![ChatGBT](https://img.shields.io/badge/chatGPT-74aa9c?style=for-the-badge&logo=openai&logoColor=white)](https://openai.com/blog/introducing-chatgpt-and-whisper-apis)
-[![tRPC](https://img.shields.io/badge/tRPC-%232596BE.svg?style=for-the-badge&logo=tRPC&logoColor=white)](https://trpc.io/)
+![Clerkjs, GitHub package.json prod dependency version (main)](https://img.shields.io/github/package-json/dependency-version/Ali-Herrera/your-health-ally-2/%40clerk%2Fnextjs/main?style=for-the-badge&logo=clerkjs&logoColor=1f0854&label=Clerkjs&labelColor=indigo&color=gray&link=https%3A%2F%2Fclerk.com%2Fdocs)
+![OpenAI, GitHub package.json prod dependency version (main)](https://img.shields.io/github/package-json/dependency-version/Ali-Herrera/your-health-ally-2/openai/main?style=for-the-badge&logo=openai&label=OpenAI&labelColor=black&color=gray&link=https%3A%2F%2Fopenai.com%2F)
+![tRPC, GitHub package.json prod dependency version (main)](https://img.shields.io/github/package-json/dependency-version/Ali-Herrera/your-health-ally-2/%40trpc%2Fserver/main?style=for-the-badge&logo=tRPC&logoColor=black&label=tRPC&labelColor=lightskyblue&color=gray&link=https%3A%2F%2Ftrpc.io%2F)
 
 #### Backing Services
 
 [![MongoDB](https://img.shields.io/badge/MongoDB-%25234ea94b.svg?style=for-the-badge&logo=mongodb&logoColor=white)](https://www.mongodb.com/)
-[![Prisma](https://img.shields.io/badge/Prisma-3982CE?style=for-the-badge&logo=Prisma&logoColor=white)](https://www.prisma.io/)
+![prisma, GitHub package.json dev/peer/optional dependency version (main)](https://img.shields.io/github/package-json/dependency-version/Ali-Herrera/your-health-ally-2/dev/prisma/main?style=for-the-badge&logo=prisma&label=Prisma&labelColor=3982CE&color=gray&link=https%3A%2F%2Fwww.prisma.io%2F)
 
 #### Deployment Service
 
@@ -220,6 +220,12 @@ import { IconBrandLinkedin } from "@tabler/icons-react";
 - The `MongoDB` database connector uses transactions to support nested writes.
   - Transactions require a replica set deployment.
   - The easiest way to deploy a replica set is with Atlas. It's free to get started.
+
+### Dependency Versions
+
+#### Nextjs
+
+![GitHub package.json prod dependency version (branch)](https://img.shields.io/github/package-json/dependency-version/Ali-Herrera/your-health-ally-2/next/main?style=for-the-badge&color=black)
 
 ### Installation
 
