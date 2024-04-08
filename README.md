@@ -130,26 +130,26 @@ Additionally, the Journal of General Internal Medicine found that on average, pa
 
 #### Frameworks and Libraries
 
-![Mantine, GitHub package.json prod dependency version (main)](https://img.shields.io/github/package-json/dependency-version/Ali-Herrera/your-health-ally-2/%40mantine%2Fcore/main?style=for-the-badge&logo=Mantine&logoColor=339af0&label=Mantine&labelColor=FAF9F6&color=339af0&link=https%3A%2F%2Fmantine.dev%2F)
-![Nextjs, GitHub package.json prod dependency version (main)](https://img.shields.io/github/package-json/dependency-version/Ali-Herrera/your-health-ally-2/next/main?style=for-the-badge&logo=nextdotjs&logoColor=white&label=NEXTJS&labelColor=black&color=purple&link=https%3A%2F%2Fnextjs.org%2F)
+![Mantine, GitHub package.json prod dependency version (main)](https://img.shields.io/github/package-json/dependency-version/Ali-Herrera/your-health-ally-2/%40mantine%2Fcore/main?style=for-the-badge&logo=Mantine&logoColor=white&label=Mantine&labelColor=339af0&color=white&link=https%3A%2F%2Fv6.mantine.dev%2F)
+![Nextjs, GitHub package.json prod dependency version (main)](https://img.shields.io/github/package-json/dependency-version/Ali-Herrera/your-health-ally-2/next/main?style=for-the-badge&logo=nextdotjs&logoColor=white&label=NEXTJS&labelColor=black&color=white&link=https%3A%2F%2Fnextjs.org%2F)
 [![NPM](https://img.shields.io/badge/NPM-%23CB3837.svg?style=for-the-badge&logo=npm&logoColor=white)](https://www.npmjs.com/)
-![React, GitHub package.json prod dependency version (main)](https://img.shields.io/github/package-json/dependency-version/Ali-Herrera/your-health-ally-2/react/main?style=for-the-badge&logo=react&color=61DAFB&link=https%3A%2F%2Freactjs.org%2F)
+![React, GitHub package.json prod dependency version (main)](https://img.shields.io/github/package-json/dependency-version/Ali-Herrera/your-health-ally-2/react/main?style=for-the-badge&logo=react&logoColor=black&label=React&labelColor=61DAFB&color=white&link=https%3A%2F%2Freact.dev%2F)
 
 #### Linters and Formatters
 
-![ESLint, GitHub package.json dev/peer/optional dependency version (main)](https://img.shields.io/github/package-json/dependency-version/Ali-Herrera/your-health-ally-2/dev/eslint/main?style=for-the-badge&logo=eslint&label=eslint&labelColor=3A33D1&color=gray&link=https%3A%2F%2Feslint.org%2Fdocs%2Flatest)
+![ESLint, GitHub package.json dev/peer/optional dependency version (main)](https://img.shields.io/github/package-json/dependency-version/Ali-Herrera/your-health-ally-2/dev/eslint/main?style=for-the-badge&logo=eslint&label=eslint&labelColor=3A33D1&color=white&link=https%3A%2F%2Feslint.org%2Fdocs%2Flatest)
 [![Prettier](https://img.shields.io/badge/prettier-1A2C34?style=for-the-badge&logo=prettier&logoColor=F7BA3E)](https://prettier.io/)
 
 #### APIs and SDKs
 
-![Clerkjs, GitHub package.json prod dependency version (main)](https://img.shields.io/github/package-json/dependency-version/Ali-Herrera/your-health-ally-2/%40clerk%2Fnextjs/main?style=for-the-badge&logo=clerkjs&logoColor=1f0854&label=Clerkjs&labelColor=indigo&color=gray&link=https%3A%2F%2Fclerk.com%2Fdocs)
-![OpenAI, GitHub package.json prod dependency version (main)](https://img.shields.io/github/package-json/dependency-version/Ali-Herrera/your-health-ally-2/openai/main?style=for-the-badge&logo=openai&label=OpenAI&labelColor=black&color=gray&link=https%3A%2F%2Fopenai.com%2F)
-![tRPC, GitHub package.json prod dependency version (main)](https://img.shields.io/github/package-json/dependency-version/Ali-Herrera/your-health-ally-2/%40trpc%2Fserver/main?style=for-the-badge&logo=tRPC&logoColor=black&label=tRPC&labelColor=lightskyblue&color=gray&link=https%3A%2F%2Ftrpc.io%2F)
+![Clerkjs, GitHub package.json prod dependency version (main)](https://img.shields.io/github/package-json/dependency-version/Ali-Herrera/your-health-ally-2/%40clerk%2Fnextjs/main?style=for-the-badge&logo=clerkjs&logoColor=1f0854&label=Clerkjs&labelColor=indigo&color=white&link=https%3A%2F%2Fclerk.com%2Fdocs)
+![OpenAI, GitHub package.json prod dependency version (main)](https://img.shields.io/github/package-json/dependency-version/Ali-Herrera/your-health-ally-2/openai/main?style=for-the-badge&logo=openai&label=OpenAI&labelColor=black&color=white&link=https%3A%2F%2Fopenai.com%2F)
+![tRPC, GitHub package.json prod dependency version (main)](https://img.shields.io/github/package-json/dependency-version/Ali-Herrera/your-health-ally-2/%40trpc%2Fserver/main?style=for-the-badge&logo=tRPC&logoColor=black&label=tRPC&labelColor=lightskyblue&color=white&link=https%3A%2F%2Ftrpc.io%2F)
 
 #### Backing Services
 
 [![MongoDB](https://img.shields.io/badge/MongoDB-%25234ea94b.svg?style=for-the-badge&logo=mongodb&logoColor=white)](https://www.mongodb.com/)
-![prisma, GitHub package.json dev/peer/optional dependency version (main)](https://img.shields.io/github/package-json/dependency-version/Ali-Herrera/your-health-ally-2/dev/prisma/main?style=for-the-badge&logo=prisma&label=Prisma&labelColor=3982CE&color=gray&link=https%3A%2F%2Fwww.prisma.io%2F)
+![prisma, GitHub package.json dev/peer/optional dependency version (main)](https://img.shields.io/github/package-json/dependency-version/Ali-Herrera/your-health-ally-2/dev/prisma/main?style=for-the-badge&logo=prisma&label=Prisma&labelColor=3982CE&color=white&link=https%3A%2F%2Fwww.prisma.io%2F)
 
 #### Deployment Service
 
