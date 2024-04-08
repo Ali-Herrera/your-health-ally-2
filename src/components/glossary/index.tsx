@@ -5,52 +5,47 @@ import React, { useState } from "react";
 import { Text, Tooltip } from "@mantine/core";
 import { theme } from "~/config/theme";
 
-
-
-export type DictionaryDefinition = {
-	partOfSpeech: string;
-	definitions: Array<string>;
-};
-
-export type DefinitionProps = {
+export type Tool = {
 	selected: boolean;
 	text?: string;
-	// ?: DictionaryDefinition;
 };
 
-export const DefinitionTool = ({
-	selected,
-	text,
-	// definition,
-}: DefinitionProps) => {
+export const DefinitionTool = ({ selected, text }: Tool) => {
 	const [dictionaryDef, setDictionaryDef] = useState("");
 	const { black } = theme;
 
-	const getDefinition = async (word: string) => {
+	type DefinitionsItem = {
+		definition: string;
+	};
+
+	const getDefinition = async () => {
 		const response = await fetch(
-			`https://api.dictionaryapi.dev/api/v2/entries/en/${word}`
+			`https://api.dictionaryapi.dev/api/v2/entries/en/${text}`
 		);
 		const data = await response.json();
 
 		if (!data[0]) {
 			setDictionaryDef("No definition found.");
-			return null;
 		}
 
 		const fullDefinition = data.meanings.map(
 			(info: {
-				partOfSpeech: string;
-				definitions: Array<{ definition: string }>;
-			}) => {
-				const part = info?.partOfSpeech;
-				const defArr = info?.definitions?.map((item) => item.definition); // Fix: Access the 'definition' property directly
-				return `${part} - ${defArr} ; `;
+                partOfSpeech: string,
+                definitions: Array<DefinitionsItem>,
+            }) => {
+				const partSp = info?.partOfSpeech;
+				const define = info?.definitions?.map((item) => item.definition); // Fix: Access the 'definition' property directly
+				return `${partSp} - ${define} ; `;
 			}
 		);
 		console.log(fullDefinition);
 		setDictionaryDef(fullDefinition);
-		return fullDefinition || "No definition found.";
+		return fullDefinition;
 	};
+
+	if (selected) {
+		getDefinition();
+	}
 	return (
 		<Tooltip
 			label={dictionaryDef}
