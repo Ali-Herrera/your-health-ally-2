@@ -11,26 +11,27 @@ datasource db {
 }
 
 model UserChatConversations {
-    userChatConversationId String   @id @default(auto()) @map("_id") @db.ObjectId
+    userChatConversationId String             @id @default(auto()) @map("_id") @db.ObjectId
     userId                 String
     title                  String
-    content                String?
+    messages               UserChatMessages[]
     description            String?
-    createdAt              DateTime @default(now())
-    updatedAt              DateTime @updatedAt
-    orderField             Int      @default(0)
+    createdAt              DateTime           @default(now())
+    updatedAt              DateTime           @updatedAt
+    orderField             Int                @default(0)
 
     @@map("userChatConversations")
 }
 
 model UserChatMessages {
-    userChatMessageId      String   @id @default(auto()) @map("_id") @db.ObjectId
-    userChatConversationId String
+    userChatMessageId      String                @id @default(auto()) @map("_id") @db.ObjectId
+    conversation           UserChatConversations @relation(fields: [userChatConversationId], references: [userChatConversationId])
+    userChatConversationId String                @db.ObjectId
     userId                 String
     content                String
-    createdAt              DateTime @default(now())
-    updatedAt              DateTime @updatedAt
-    orderField             Int      @default(0)
+    createdAt              DateTime              @default(now())
+    updatedAt              DateTime              @updatedAt
+    orderField             Int                   @default(0)
 
     @@map("userChatMessages")
 }
