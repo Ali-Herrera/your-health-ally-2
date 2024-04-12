@@ -1,10 +1,18 @@
-import { Box, Stack, Group, Avatar, Skeleton, Text, List } from "@mantine/core";
+import {
+	Box,
+	Stack,
+	Group,
+	Avatar,
+	Skeleton,
+	Text,
+	List,
+	Tooltip,
+} from "@mantine/core";
 import { useMediaQuery } from "@mantine/hooks";
 import { type Author } from "~/utils/types";
 import { UserButton } from "@clerk/nextjs";
 import { theme } from "~/config/theme";
 import { useState, useEffect, useRef } from "react";
-import DefinitionTool from "../glossary";
 
 export type ChatItem = {
 	author: Author;
@@ -20,7 +28,7 @@ export type Props = {
 
 export const ChatContent = ({ chatItems, loading }: Props) => {
 	const mobileScreen = useMediaQuery("(max-width: 480px)");
-	const { black } = theme;
+	const { black, colors } = theme;
 
 	// State to track if any user messages exist
 	const [userMessageExists, setUserMessageExists] = useState(false);
@@ -47,36 +55,70 @@ export const ChatContent = ({ chatItems, loading }: Props) => {
 		scrollToBottom();
 	}, [chatItems]);
 
-	// State to Set if the user has selected text
-	const [definitionNeeded, setDefinitionNeeded] = useState<boolean>(false);
+	// START HOVER DEFINITION FUNCTIONALITY
+	// TODO: Decide if this should be a separate component
+	// TODO: Decide if Tooltip should be rendered for entire element or inline with the selected text
+	const [needDictionary, setNeedDictionary] = useState<boolean>(false);
+	const [textDefinition, setTextDefinition] = useState("");
 
-	// State to Store the Selected Text
-	const [selectedText, setSelectedText] = useState<string>("");
+	const getDictionary = async (text: string) => {
+		try {
+			const response = await fetch(
+				`https://api.dictionaryapi.dev/api/v2/entries/en/${text}`
+			);
+			const data = await response.json();
+			if (!data) {
+				setTextDefinition(
+					"Hmm. No definition found. You can try again at later time or head to the web instead."
+				);
+			}
 
-	// Function to handle events when user selects text
+			console.log("dictionaryapi response: ", data);
 
-	const handleSelectedText = () => {
-		const selection = window.getSelection();
-		if (selection) {
-			setSelectedText(selection.toString());
+			const definedText = data[0].meanings.map(
+				(info: {
+					partOfSpeech: string;
+					definitions: Array<{ definition: string }>;
+				}) => {
+					const partOfSpeech = info.partOfSpeech;
+					const definition = info.definitions?.map((item) => item.definition);
+					return `${partOfSpeech}: ${definition}`;
+				}
+			);
+
+			console.log("definedText: ", definedText);
+
+			setTextDefinition(definedText.join(" | "));
+
+			console.log("dictionary: ", textDefinition);
+		} catch (error) {
+			console.error("Error fetching definition: ", error);
+			setTextDefinition(
+				"Whoops! Error fetching definition. You can try again at later time or head to the web instead."
+			);
 		}
 	};
 
-	// Event listener for different events when component mounts
+	const handleSelectedText = (event: MouseEvent) => {
+		event.preventDefault();
+		const selection = window.getSelection();
+		if (selection) {
+			setNeedDictionary(true);
+			const selectedText = selection.toString();
+			getDictionary(selectedText);
+		} else {
+			// do not show definition if nothing is selected
+			// TODO: find a way to hide definition when user clicks outside of selected text/element
+			setNeedDictionary(false);
+			return;
+		}
+	};
+
 	useEffect(() => {
 		document.addEventListener("mouseup", handleSelectedText);
-		document.addEventListener("mouseover", handleSelectedText);
-		document.addEventListener("focus", handleSelectedText, true); // Use capture phase for focus event
-		document.addEventListener("touchstart", handleSelectedText);
-		setDefinitionNeeded(true);
 
-		// Remove event listener when component unmounts
 		return () => {
 			document.removeEventListener("mouseup", handleSelectedText);
-			document.removeEventListener("mouseover", handleSelectedText);
-			document.removeEventListener("focus", handleSelectedText, true);
-			document.removeEventListener("touchstart", handleSelectedText);
-			setDefinitionNeeded(false);
 		};
 	}, []);
 
@@ -93,13 +135,25 @@ export const ChatContent = ({ chatItems, loading }: Props) => {
 						<Avatar size={32} alt="ChatGBT" variant="gradient" mb="sm">
 							AI
 						</Avatar>
-						<Text c={black}>
-							I am an intelligent advisor that can provide information regarding
-							people's health. I answer questions about health-related
-							conditions and symptoms, and how to prepare for doctors
-							appointments. This is for educational purposes only. Please see
-							your healthcare provider for medical treatment.
-						</Text>
+
+						<Tooltip
+							label={textDefinition}
+							color={black}
+							position="top"
+							closeDelay={900}
+							multiline
+							withArrow
+							opened={needDictionary}
+							events={{ hover: false, focus: false, touch: false }}
+						>
+							<Text c={black}>
+								I am an intelligent advisor that can provide information
+								regarding people's health. I answer questions about
+								health-related conditions and symptoms, and how to prepare for
+								doctors appointments. This is for educational purposes only.
+								Please see your healthcare provider for medical treatment.
+							</Text>
+						</Tooltip>
 					</Group>
 				)}
 
@@ -131,7 +185,6 @@ export const ChatContent = ({ chatItems, loading }: Props) => {
 								<Avatar size={32} alt="ChatGBT" variant="gradient" mb="sm">
 									AI
 								</Avatar>
-								{/* <Text c={black}>{chatItem.content}</Text> */}
 								{chatItem.content?.includes("\n") ? (
 									<Text
 										component="pre"
@@ -162,10 +215,10 @@ export const ChatContent = ({ chatItems, loading }: Props) => {
 					</Group>
 				)}
 
-				{/* Display Definition Tool if text is selected */}
+				{/* NOT INLINE WITH REST OF COMPONENT: Display Definition Component if text is selected
 				{definitionNeeded && selectedText && (
 					<DefinitionTool selected={definitionNeeded} text={selectedText} />
-				)}
+				)} */}
 
 				{/* Empty div to scroll to when necessary */}
 				<div ref={endOfChatRef} />
