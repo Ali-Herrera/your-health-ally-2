@@ -73,6 +73,7 @@ export const ChatContent = ({ chatItems, loading }: Props) => {
 
         {/* Display skeleton loading animation if loading */}
         {loading && (
+			
           <Group p='xl'>
             <Skeleton height={32} circle />
             <Skeleton height={8} radius='xl' />
