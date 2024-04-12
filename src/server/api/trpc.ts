@@ -15,10 +15,18 @@
  * These allow you to access things when processing a request, like the database, the session, etc.
  */
 import { type CreateNextContextOptions } from '@trpc/server/adapters/next';
-
+import {
+  getAuth,
+  SignedInAuthObject,
+  SignedOutAuthObject,
+} from '@clerk/nextjs/server';
 import { prisma } from '~/server/db';
 
 type CreateContextOptions = Record<string, never>;
+
+interface AuthContext {
+  auth: SignedInAuthObject | SignedOutAuthObject;
+}
 
 /**
  * This helper generates the "internals" for a tRPC context. If you need to use it, you can export
@@ -32,6 +40,7 @@ type CreateContextOptions = Record<string, never>;
  */
 const createInnerTRPCContext = (_opts: CreateContextOptions) => {
   return {
+    session: _opts.session,
     prisma,
   };
 };
@@ -43,7 +52,19 @@ const createInnerTRPCContext = (_opts: CreateContextOptions) => {
  * @see https://trpc.io/docs/context
  */
 export const createTRPCContext = (_opts: CreateNextContextOptions) => {
-  return createInnerTRPCContext({});
+  const { req, res } = _opts;
+
+  // Get the authentication context
+  const auth = getAuth(req);
+
+  // Create the main tRPC context using your existing function
+  const mainContext = createInnerTRPCContext({});
+
+  // Merge the authentication context into the main context
+  return {
+    ...mainContext,
+    auth,
+  };
 };
 
 /**
@@ -56,6 +77,7 @@ export const createTRPCContext = (_opts: CreateNextContextOptions) => {
 import { initTRPC } from '@trpc/server';
 import superjson from 'superjson';
 import { ZodError } from 'zod';
+import { NextApiRequest, NextApiResponse } from 'next';
 
 const t = initTRPC.context<typeof createTRPCContext>().create({
   transformer: superjson,
