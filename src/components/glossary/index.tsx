@@ -18,29 +18,37 @@ export const DefinitionTool = ({ selected, text }: Tool) => {
 		definition: string;
 	};
 
+	// 429 ERROR-TOO MANY REQUESTS. Wait X minutes for the API to be available.
+	// Fix: Add a delay before fetching the definition
+	// Fix: Only fetch the definition if the text selection has changed
 	const getDefinition = async () => {
-		const response = await fetch(
-			`https://api.dictionaryapi.dev/api/v2/entries/en/${text}`
-		);
-		const data = await response.json();
+		try {
+			const response = await fetch(
+				`https://api.dictionaryapi.dev/api/v2/entries/en/${text}`
+			);
+			const data = await response.json();
 
-		if (!data[0]) {
-			setDictionaryDef("No definition found.");
-		}
-
-		const fullDefinition = data.meanings.map(
-			(info: {
-                partOfSpeech: string,
-                definitions: Array<DefinitionsItem>,
-            }) => {
-				const partSp = info?.partOfSpeech;
-				const define = info?.definitions?.map((item) => item.definition); // Fix: Access the 'definition' property directly
-				return `${partSp} - ${define} ; `;
+			if (!data[0]) {
+				setDictionaryDef("No definition found.");
 			}
-		);
-		console.log(fullDefinition);
-		setDictionaryDef(fullDefinition);
-		return fullDefinition;
+			console.log("DATA : ", data[0]);
+			const fullDefinition = data[0].meanings[0].map(
+				(info: {
+					partOfSpeech: string;
+					definitions: Array<DefinitionsItem>;
+				}) => {
+					const partOfSp = info?.partOfSpeech;
+					const define = info?.definitions?.map((item) => item.definition);
+					return `${partOfSp} - ${define} ; `;
+				}
+			);
+			console.log(fullDefinition);
+			setDictionaryDef(fullDefinition);
+			return fullDefinition;
+		} catch (error) {
+			console.error("Error fetching definition: ", error);
+			setDictionaryDef("Server error. Please try again later.");
+		}
 	};
 
 	if (selected) {
