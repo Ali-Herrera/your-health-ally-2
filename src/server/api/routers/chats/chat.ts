@@ -1,6 +1,9 @@
 import { z } from 'zod';
-// import { prisma } from '~/server/db';
-import { createTRPCRouter, publicProcedure } from '~/server/api/trpc';
+import {
+  createTRPCRouter,
+  privateProcedure,
+  publicProcedure,
+} from '~/server/api/trpc';
 import { User, clerkClient } from '@clerk/nextjs/server';
 import { PrismaClient } from '@prisma/client';
 import type { Chat } from '@prisma/client';
@@ -54,6 +57,23 @@ export const chatRouter = createTRPCRouter({
 
     return addUserDataToChats(chats);
   }),
+
+  create: privateProcedure
+    .input(z.object({ message: z.string() }))
+    .mutation(async ({ ctx, input }) => {
+      const newChat = await ctx.prisma.chat.create({
+        data: {
+          userId: ctx.session.userId!,
+          title: '', // Add the missing 'title' property here
+          messages: {
+            create: [{ userId: ctx.session.userId!, content: input.message }],
+          },
+          // other necessary fields here
+        },
+      });
+
+      return newChat;
+    }),
 });
 
 // export const chatRouter = createTRPCRouter({
