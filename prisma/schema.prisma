@@ -19,6 +19,8 @@ model Chat {
     orderField  Int       @default(0)
     messages    Message[]
     userId      String
+
+    @@index([userId]) //ability to look up chats by user
 }
 
 model Message {
