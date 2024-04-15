@@ -73,7 +73,7 @@ export const createTRPCContext = (opts: CreateNextContextOptions) => {
  * ZodErrors so that you get typesafety on the frontend if your procedure fails due to validation
  * errors on the backend.
  */
-import { initTRPC } from '@trpc/server';
+import { initTRPC, TRPCError } from '@trpc/server';
 import superjson from 'superjson';
 import { ZodError } from 'zod';
 import { NextApiRequest, NextApiResponse } from 'next';
@@ -117,7 +117,9 @@ export const publicProcedure = t.procedure;
 
 const enforceAuth = t.middleware(async ({ ctx, next }) => {
   if (!ctx.session) {
-    throw new Error('Unauthorized');
+    throw new TRPCError({
+      code: 'UNAUTHORIZED',
+    });
   }
   return next({
     ctx: {
@@ -125,3 +127,5 @@ const enforceAuth = t.middleware(async ({ ctx, next }) => {
     },
   });
 });
+
+export const privateProcedure = t.procedure.use(enforceAuth);
