@@ -4,9 +4,13 @@ import { Footer } from '~/components/footer';
 import React from 'react';
 import { UserButton, useUser } from '@clerk/nextjs';
 import ChatInterface from '~/components/Chat/ChatInterface';
+import { api } from '~/utils/api';
 
 export default function Home() {
   const { isLoaded, user } = useUser();
+
+  // const { data } = api.chats.getAll.useQuery();
+
   return (
     <>
       {isLoaded && !user && (

@@ -3,7 +3,6 @@ import { createTRPCRouter, publicProcedure } from '../trpc';
 import { Configuration, OpenAIApi } from 'openai';
 import { TRPCError } from '@trpc/server';
 import axios from 'axios';
-// import { prisma } from '~/server/db';
 
 const configuration = new Configuration({
   apiKey: process.env.NEXT_PUBLIC_OPENAI_API_KEY,
@@ -11,11 +10,9 @@ const configuration = new Configuration({
 
 const openai = new OpenAIApi(configuration);
 
-type MessageRole = 'user' | 'system' | 'assistant'; // Define MessageRole type
-
 //Message type to store the conversation context
 type Message = {
-  role: MessageRole;
+  role: 'user' | 'system' | 'assistant';
   content: string;
 };
 
@@ -24,7 +21,7 @@ const messages: Message[] = [];
 export const aiRouter = createTRPCRouter({
   generateText: publicProcedure
     .input(z.object({ prompt: z.string() }))
-    .mutation(async ({ ctx, input }) => {
+    .mutation(async ({ input }) => {
       const { prompt } = input;
 
       console.log(prompt);
@@ -37,17 +34,8 @@ export const aiRouter = createTRPCRouter({
       });
 
       //Provides context to the AI model by pushing the user's message to the conversation context
-      await ctx.prisma.userChatMessages.create({
-        data: {
-          userId: ctx.auth.userId, // TODO: Replace with actual user ID from clerk
-          content: prompt,
-          role: 'user' as MessageRole,
-        },
-      });
-
-      // Push user's message to the conversation context
       messages.push({
-        role: 'user' as MessageRole,
+        role: 'user',
         content: prompt,
       });
 
@@ -59,17 +47,8 @@ export const aiRouter = createTRPCRouter({
 
         const generatedText = completion.data.choices[0]?.message?.content;
 
-        // Save AI's response to the database
+        //Pushes the AI response to the conversation context
         if (generatedText) {
-          await ctx.prisma.userChatMessages.create({
-            data: {
-              userId: 'AI', // Assuming 'AI' as the default user ID for AI-generated messages
-              content: generatedText,
-              role: 'system',
-            },
-          });
-
-          // Push AI's response to the conversation context
           messages.push({
             role: 'system',
             content: generatedText,
@@ -94,12 +73,8 @@ export const aiRouter = createTRPCRouter({
       }
     }),
 
-  //Starts a new conversation
-  startNewConversation: publicProcedure.mutation(() => {
+  //Resets the conversation context
+  reset: publicProcedure.mutation(() => {
     messages.length = 0;
-
-    return {
-      success: true,
-    };
   }),
 });
