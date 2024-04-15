@@ -6,7 +6,10 @@ import { PrismaClient } from '@prisma/client';
 
 export const chatRouter = createTRPCRouter({
   getAll: publicProcedure.query(({ ctx }) => {
-    return ctx.prisma.chat.findMany();
+    return ctx.prisma.chat.findMany({
+      orderBy: { createdAt: 'desc' },
+      take: 10,
+    });
   }),
 });
 

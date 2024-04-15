@@ -51,11 +51,10 @@ const createInnerTRPCContext = (_opts: CreateContextOptions) => {
  *
  * @see https://trpc.io/docs/context
  */
-export const createTRPCContext = (_opts: CreateNextContextOptions) => {
-  const { req, res } = _opts;
+export const createTRPCContext = (opts: CreateNextContextOptions) => {
+  const { req } = opts;
 
-  // Get the authentication context
-  const auth = getAuth(req);
+  const user = getAuth(req);
 
   // Create the main tRPC context using your existing function
   const mainContext = createInnerTRPCContext({});
@@ -63,7 +62,7 @@ export const createTRPCContext = (_opts: CreateNextContextOptions) => {
   // Merge the authentication context into the main context
   return {
     ...mainContext,
-    auth,
+    session: user,
   };
 };
 
@@ -115,3 +114,14 @@ export const createTRPCRouter = t.router;
  * are logged in.
  */
 export const publicProcedure = t.procedure;
+
+const enforceAuth = t.middleware(async ({ ctx, next }) => {
+  if (!ctx.session) {
+    throw new Error('Unauthorized');
+  }
+  return next({
+    ctx: {
+      session: ctx.session,
+    },
+  });
+});
