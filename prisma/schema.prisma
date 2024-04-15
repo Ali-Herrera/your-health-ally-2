@@ -18,6 +18,7 @@ model Chat {
     updatedAt   DateTime  @updatedAt
     orderField  Int       @default(0)
     messages    Message[]
+    userId      String
 }
 
 model Message {

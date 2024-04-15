@@ -1,7 +1,7 @@
 // import { postRouter } from '~/server/api/routers/post';
 import { createTRPCRouter } from '~/server/api/trpc';
 import { aiRouter } from './routers/ai';
-import { createConversationRouter } from './routers/conversations/createConversation';
+import { chatRouter } from './routers/conversations/createConversation';
 
 /**
  * This is the primary router for your server.
@@ -9,7 +9,7 @@ import { createConversationRouter } from './routers/conversations/createConversa
  * All routers added in /api/routers should be manually added here.
  */
 export const appRouter = createTRPCRouter({
-  post: createConversationRouter,
+  post: chatRouter,
   ai: aiRouter,
 });
 

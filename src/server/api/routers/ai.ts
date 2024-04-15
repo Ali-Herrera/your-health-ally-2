@@ -3,7 +3,7 @@ import { createTRPCRouter, publicProcedure } from '../trpc';
 import { Configuration, OpenAIApi } from 'openai';
 import { TRPCError } from '@trpc/server';
 import axios from 'axios';
-import { prisma } from '~/server/db';
+// import { prisma } from '~/server/db';
 
 const configuration = new Configuration({
   apiKey: process.env.NEXT_PUBLIC_OPENAI_API_KEY,
