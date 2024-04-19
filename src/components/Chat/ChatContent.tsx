@@ -101,14 +101,16 @@ export const ChatContent = ({ chatItems, loading }: Props) => {
 
 	const handleSelectedText = (event: MouseEvent) => {
 		event.preventDefault();
-		const selection = window.getSelection();
-		if (selection) {
+		const selection = window.getSelection()?.toString();
+		// .trim white space
+		if (selection != "" && selection != null) {
 			setNeedDictionary(true);
-			const selectedText = selection.toString();
-			getDictionary(selectedText);
+			// const selectedText = selection;
+			getDictionary(selection);
 		} else {
 			// do not show definition if nothing is selected
 			// TODO: find a way to hide definition when user clicks outside of selected text/element
+			// if white space, don't show definition
 			setNeedDictionary(false);
 			return;
 		}
