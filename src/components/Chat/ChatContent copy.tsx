@@ -60,34 +60,9 @@ export const ChatContent = ({ chatItems, loading }: Props) => {
 	// TODO: Decide if Tooltip should be rendered for entire element or inline with the selected text
 	const [needDictionary, setNeedDictionary] = useState<boolean>(false);
 	const [textDefinition, setTextDefinition] = useState("");
-	const [selected, setSelected] = useState<{
-		text: string;
-		element: ParentNode | null;
-	}>({ text: "", element: null });
+	const [selected, setSelected] = useState({ text: '', element: null });
 
-	// Function to handle mouseup event
-	const handleSelectedText = (event: MouseEvent) => {
-		event.preventDefault();
-		const text = window.getSelection()?.toString();
-		const selection = window.getSelection();
 
-		if (selection !== null && text != "" && text != undefined) {
-			const elementSelected =
-				text && selection.anchorNode ? selection.anchorNode.parentNode : null;
-			setNeedDictionary(true);
-			setSelected({ text: text, element: elementSelected });
-		}
-	};
-
-	// Add event listener for mouseup event when component mounts
-	useEffect(() => {
-		document.addEventListener("mouseup", handleSelectedText);
-
-		// Remove event listener when component unmounts
-		return () => {
-			document.removeEventListener("mouseup", handleSelectedText);
-		};
-	}, []);
 	const getDictionary = async (text: string) => {
 		try {
 			const response = await fetch(
@@ -126,16 +101,25 @@ export const ChatContent = ({ chatItems, loading }: Props) => {
 		}
 	};
 
-	// Call getDictionary when needDictionary changes to true
-	useEffect(() => {
-		if (needDictionary) {
-			getDictionary(selected.text);
+	const handleSelectedText = (event: MouseEvent) => {
+		event.preventDefault();
+		const selection = window.getSelection()?.toString();
+		if (selection != "" && selection != null) {
+			setNeedDictionary(true);
+			getDictionary(selection);
+		} else {
+			setNeedDictionary(false);
+			return;
 		}
+	};
+
+	useEffect(() => {
+		document.addEventListener("mouseup", handleSelectedText);
 
 		return () => {
-			setNeedDictionary(false);
+			document.removeEventListener("mouseup", handleSelectedText);
 		};
-	}, [needDictionary]);
+	}, []);
 
 	return (
 		<Box
