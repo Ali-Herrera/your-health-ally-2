@@ -60,6 +60,7 @@ export const ChatContent = ({ chatItems, loading }: Props) => {
 	// TODO: Decide if Tooltip should be rendered for entire element or inline with the selected text
 	const [needDictionary, setNeedDictionary] = useState<boolean>(false);
 	const [textDefinition, setTextDefinition] = useState("");
+	const [selected, setSelected] = useState({ text: "", element: null });
 
 	const getDictionary = async (text: string) => {
 		try {
@@ -99,23 +100,6 @@ export const ChatContent = ({ chatItems, loading }: Props) => {
 		}
 	};
 
-	const handleSelectedText = (event: MouseEvent) => {
-		event.preventDefault();
-		const selection = window.getSelection()?.toString();
-		// .trim white space
-		if (selection != "" && selection != null) {
-			setNeedDictionary(true);
-			// const selectedText = selection;
-			getDictionary(selection);
-		} else {
-			// do not show definition if nothing is selected
-			// TODO: find a way to hide definition when user clicks outside of selected text/element
-			// if white space, don't show definition
-			setNeedDictionary(false);
-			return;
-		}
-	};
-
 	useEffect(() => {
 		document.addEventListener("mouseup", handleSelectedText);
 
@@ -123,6 +107,25 @@ export const ChatContent = ({ chatItems, loading }: Props) => {
 			document.removeEventListener("mouseup", handleSelectedText);
 		};
 	}, []);
+
+	const handleSelectedText = () => {
+		const text = window.getSelection().toString();
+		const element = window.getSelection().anchorNode.parentNode;
+		if (!text) {
+			// If the selected text is empty, return without doing anything
+			return;
+		}
+		setSelected({ text, element });
+		setNeedDictionary(true);
+	};
+
+	// Call getDictionary when needDictionary changes to true
+	useEffect(() => {
+		if (needDictionary) {
+			getDictionary(selected.text);
+			setNeedDictionary(false);
+		}
+	}, [needDictionary]);
 
 	return (
 		<Box
@@ -146,7 +149,7 @@ export const ChatContent = ({ chatItems, loading }: Props) => {
 							multiline
 							withArrow
 							opened={needDictionary}
-							events={{ hover: false, focus: false, touch: false }}
+							events={{ hover: false, focus: true, touch: true }}
 						>
 							<Text c={black}>
 								I am an intelligent advisor that can provide information
@@ -163,47 +166,69 @@ export const ChatContent = ({ chatItems, loading }: Props) => {
 				{chatItems.map((chatItem: ChatItem, index: number) => (
 					<Box key={index}>
 						{chatItem.author === "User" ? (
-							<Group p="xl" sx={{ backgroundColor: "#E5E5E5" }}>
-								<UserButton />
-								{chatItem.content?.includes("\n") ? (
-									<Text
-										component="pre"
-										sx={{ wordWrap: "break-word", whiteSpace: "pre-wrap" }}
-									>
-										{chatItem.content}
-									</Text>
-								) : chatItem.content?.startsWith("- ") ? (
-									<List>
-										{chatItem.content.split("\n").map((item, idx) => (
-											<List.Item key={idx}>{item}</List.Item>
-										))}
-									</List>
-								) : (
-									<Text>{chatItem.content}</Text>
-								)}
-							</Group>
+							<Tooltip
+								label={textDefinition}
+								color={black}
+								position="top"
+								closeDelay={900}
+								multiline
+								withArrow
+								opened={needDictionary}
+								events={{ hover: false, focus: false, touch: false }}
+							>
+								<Group p="xl" sx={{ backgroundColor: "#E5E5E5" }}>
+									<UserButton />
+									{chatItem.content?.includes("\n") ? (
+										<Text
+											component="pre"
+											sx={{ wordWrap: "break-word", whiteSpace: "pre-wrap" }}
+										>
+											{chatItem.content}
+										</Text>
+									) : chatItem.content?.startsWith("- ") ? (
+										<List>
+											{chatItem.content.split("\n").map((item, idx) => (
+												<List.Item key={idx}>{item}</List.Item>
+											))}
+										</List>
+									) : (
+										<Text>{chatItem.content}</Text>
+									)}
+								</Group>
+							</Tooltip>
 						) : (
-							<Group p="xl">
-								<Avatar size={32} alt="ChatGBT" variant="gradient" mb="sm">
-									AI
-								</Avatar>
-								{chatItem.content?.includes("\n") ? (
-									<Text
-										component="pre"
-										sx={{ wordWrap: "break-word", whiteSpace: "pre-wrap" }}
-									>
-										{chatItem.content}
-									</Text>
-								) : chatItem.content?.startsWith("- ") ? (
-									<List>
-										{chatItem.content.split("\n").map((item, idx) => (
-											<List.Item key={idx}>{item}</List.Item>
-										))}
-									</List>
-								) : (
-									<Text>{chatItem.content}</Text>
-								)}
-							</Group>
+							<Tooltip
+								label={textDefinition}
+								color={black}
+								position="top"
+								closeDelay={900}
+								multiline
+								withArrow
+								opened={needDictionary}
+								events={{ hover: false, focus: false, touch: false }}
+							>
+								<Group p="xl">
+									<Avatar size={32} alt="ChatGBT" variant="gradient" mb="sm">
+										AI
+									</Avatar>
+									{chatItem.content?.includes("\n") ? (
+										<Text
+											component="pre"
+											sx={{ wordWrap: "break-word", whiteSpace: "pre-wrap" }}
+										>
+											{chatItem.content}
+										</Text>
+									) : chatItem.content?.startsWith("- ") ? (
+										<List>
+											{chatItem.content.split("\n").map((item, idx) => (
+												<List.Item key={idx}>{item}</List.Item>
+											))}
+										</List>
+									) : (
+										<Text>{chatItem.content}</Text>
+									)}
+								</Group>
+							</Tooltip>
 						)}
 					</Box>
 				))}
