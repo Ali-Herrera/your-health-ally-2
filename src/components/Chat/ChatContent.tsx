@@ -144,6 +144,8 @@ export const ChatContent = ({ chatItems, loading }: Props) => {
 	// 	};
 	// }, [needDictionary]);
 
+
+
 	return (
 		<Box
 			ml={mobileScreen ? "0" : "250px"}
@@ -186,8 +188,11 @@ export const ChatContent = ({ chatItems, loading }: Props) => {
 							<Group p="xl" sx={{ backgroundColor: "#E5E5E5" }} data-id={index}>
 								<UserButton />
 								{chatItem.content?.includes("\n") ? (
-									{selectedId !== null && selectedId === index && needDictionary && (
-										<Tooltip
+{selectedId !== null && selectedId === index && needDictionary && (
+	console.log("selectedId:", selectedId);
+	console.log("index:", index);
+	console.log("needDictionary:", needDictionary);
+	return {<Tooltip
 											label={textDefinition}
 											color={black}
 											position="top"
@@ -203,7 +208,7 @@ export const ChatContent = ({ chatItems, loading }: Props) => {
 											>
 												{chatItem.content}
 											</Text>
-										</Tooltip>
+										</Tooltip>}
 									)}
 
 								) : chatItem.content?.startsWith("- ") ? (
