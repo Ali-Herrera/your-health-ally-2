@@ -66,28 +66,6 @@ export const ChatContent = ({ chatItems, loading }: Props) => {
 	}>({ text: "", element: null });
 
 	// Function to handle mouseup event
-	const handleSelectedText = (event: MouseEvent) => {
-		event.preventDefault();
-		const text = window.getSelection()?.toString();
-		const selection = window.getSelection();
-
-		if (selection !== null && text != "" && text != undefined) {
-			const elementSelected =
-				text && selection.anchorNode ? selection.anchorNode.parentNode : null;
-			setNeedDictionary(true);
-			setSelected({ text: text, element: elementSelected });
-		}
-	};
-
-	// Add event listener for mouseup event when component mounts
-	useEffect(() => {
-		document.addEventListener("mouseup", handleSelectedText);
-
-		// Remove event listener when component unmounts
-		return () => {
-			document.removeEventListener("mouseup", handleSelectedText);
-		};
-	}, []);
 	const getDictionary = async (text: string) => {
 		try {
 			const response = await fetch(
@@ -126,16 +104,42 @@ export const ChatContent = ({ chatItems, loading }: Props) => {
 		}
 	};
 
-	// Call getDictionary when needDictionary changes to true
-	useEffect(() => {
-		if (needDictionary) {
-			getDictionary(selected.text);
-		}
+	const handleSelectedText = (event: MouseEvent) => {
+		event.preventDefault();
+		const selection = window.getSelection();
 
+		if (selection) {
+			const text = selection.toString();
+			const elementSelected =
+				text && selection.anchorNode ? selection.anchorNode.parentNode : null;
+
+			if (text && elementSelected) {
+				setNeedDictionary(true);
+				setSelected({ text: text, element: elementSelected });
+				getDictionary(text);
+			}
+		}
+	};
+
+	// Add event listener for mouseup event when component mounts
+	useEffect(() => {
+		document.addEventListener("mouseup", handleSelectedText);
+
+		// Remove event listener when component unmounts
 		return () => {
-			setNeedDictionary(false);
+			document.removeEventListener("mouseup", handleSelectedText);
 		};
-	}, [needDictionary]);
+	}, []);
+
+	// Call getDictionary when needDictionary changes to true
+	// useEffect(() => {
+	// 	if (needDictionary) {
+	// 	}
+
+	// 	return () => {
+	// 		setNeedDictionary(false);
+	// 	};
+	// }, [needDictionary]);
 
 	return (
 		<Box
