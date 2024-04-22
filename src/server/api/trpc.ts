@@ -121,11 +121,8 @@ const enforceAuth = t.middleware(async ({ ctx, next }) => {
       code: 'UNAUTHORIZED',
     });
   }
-  return next({
-    ctx: {
-      session: ctx.session,
-    },
-  });
+  return next();
 });
 
 export const privateProcedure = t.procedure.use(enforceAuth);
+export { TRPCError };

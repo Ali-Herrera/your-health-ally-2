@@ -23,7 +23,7 @@ export default function Home() {
       )}
       {isLoaded && user && (
         <Box>
-          <ChatInterface />
+          <ChatInterface userId={user.id} />
           <Footer />
         </Box>
       )}

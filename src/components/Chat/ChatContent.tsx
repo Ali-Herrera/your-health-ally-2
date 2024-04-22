@@ -15,7 +15,7 @@ export type ChatItem = {
 
 export type Props = {
   chatItems: ChatItem[];
-  onReset: () => void;
+  // onReset: () => void;
   loading: boolean;
 };
 
@@ -73,7 +73,6 @@ export const ChatContent = ({ chatItems, loading }: Props) => {
 
         {/* Display skeleton loading animation if loading */}
         {loading && (
-			
           <Group p='xl'>
             <Skeleton height={32} circle />
             <Skeleton height={8} radius='xl' />

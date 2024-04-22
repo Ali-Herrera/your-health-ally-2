@@ -11,10 +11,15 @@ import { Sidebar } from '../sidebar';
 import { HeaderMobile } from '../header/mobileHeader';
 import { Header } from '../header';
 
-const ChatInterface = () => {
+interface ChatInterfaceProps {
+  userId: string;
+}
+
+const ChatInterface: React.FC<ChatInterfaceProps> = ({ userId }) => {
   const mobileScreen = useMediaQuery('(max-width: 480px)');
   const [chatItems, setChatItems] = useState<ChatItem[]>([]);
   const [waiting, setWaiting] = useState<boolean>(false);
+  const { user: loggedInUser } = useUser();
 
   const generatedTextMutation = api.ai.generateText.useMutation({
     onSuccess: (data) => {
@@ -74,10 +79,14 @@ const ChatInterface = () => {
           {mobileScreen ? null : <Sidebar onReset={handleReset} />}
           <ChatContent
             chatItems={chatItems}
-            onReset={handleReset}
+            // onReset={handleReset}
             loading={waiting}
           />
-          <ChatInput onUpdate={handleUpdate} waiting={waiting} />
+          <ChatInput
+            onUpdate={handleUpdate}
+            waiting={waiting}
+            userId={userId}
+          />
           <Footer />
         </>
       )}
