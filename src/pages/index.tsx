@@ -1,4 +1,4 @@
-import { Box, Group, Tooltip } from "@mantine/core";
+import { Box, Group, Text, Tooltip } from "@mantine/core";
 import { useMediaQuery } from "@mantine/hooks";
 import { Welcome } from "../components/Welcome";
 import { Sidebar } from "../components/sidebar";
@@ -10,9 +10,12 @@ import { ChatInput } from "../components/chat/ChatInput";
 import { api } from "~/utils/api";
 import React, { useState, useEffect, useRef } from "react";
 import { UserButton, useUser } from "@clerk/nextjs";
+import { theme } from "~/config/theme";
 
 export default function Home() {
 	const mobileScreen = useMediaQuery("(max-width: 480px)");
+
+	const { black, colors } = theme;
 
 	const [chatItems, setChatItems] = useState<ChatItem[]>([]);
 	const [waiting, setWaiting] = useState<boolean>(false);
@@ -136,14 +139,19 @@ export default function Home() {
 			const rect = range?.getBoundingClientRect();
 			setNeedDictionary(true); // Show tooltip
 			setTooltipPosition({ top: rect.top, left: rect.left });
-			// getDictionary(selection.toString());
+			if (tooltip) {
+				tooltip.styles.left = `${rect.left}px`;
+				tooltip.style.top = `${rect.top}px`;
+			}
+
+			const text = selection.toString();
+			getDictionary(text);
 		});
 
-		// // Remove event listener when component unmounts
+		//Remove event listener when component unmounts
 		return () => {
 			document.removeEventListener("mouseup", (event: MouseEvent) => {
 				event.preventDefault();
-				// TODO: Decide if this should be removed
 				setNeedDictionary(false);
 				setTextDefinition("");
 				setTooltipPosition({ top: 0, left: 0 });
@@ -153,16 +161,7 @@ export default function Home() {
 
 	const { isLoaded, user } = useUser();
 	return (
-		<Tooltip
-			label={textDefinition}
-			color={black}
-			position={tooltipPosition}
-			closeDelay={900}
-			multiline
-			withArrow
-			opened={needDictionary}
-			events={{ hover: false, focus: true, touch: true }}
-		>
+		<>
 			{isLoaded && !user && (
 				<>
 					<Welcome />
@@ -174,6 +173,12 @@ export default function Home() {
 
 			{isLoaded && user && (
 				<Box>
+					<div className="tooltipGlossary">
+						<div className="tooltipContent tooltipitem">
+							<Text>Definition Here</Text>
+						</div>
+					</div>
+
 					{mobileScreen ? <HeaderMobile onReset={handleReset} /> : <Header />}
 					{mobileScreen ? null : <Sidebar onReset={handleReset} />}
 					<ChatContent
@@ -185,6 +190,6 @@ export default function Home() {
 					<Footer />
 				</Box>
 			)}
-		</Tooltip>
+		</>
 	);
 }
