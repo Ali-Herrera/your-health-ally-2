@@ -17,15 +17,6 @@ const ChatInterface = () => {
   const [waiting, setWaiting] = useState<boolean>(false);
 
   const generatedTextMutation = api.ai.generateText.useMutation({
-    onSuccess: (data) => {
-      setChatItems((prevChatItems) => [
-        ...prevChatItems,
-        {
-          content: data.generatedText,
-          author: 'AI',
-        },
-      ]);
-    },
     onError: (error) => {
       setChatItems((prevChatItems) => [
         ...prevChatItems,
