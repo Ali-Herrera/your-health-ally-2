@@ -75,21 +75,11 @@ export default function Home() {
 		resetMutation.mutate();
 	};
 
-	// START HOVER DEFINITION FUNCTIONALITY
-	// TODO: Decide if this should be a separate component
 	const [needDictionary, setNeedDictionary] = useState<boolean>(false);
 	const [word, setWord] = useState("");
 	const [textDefinition, setTextDefinition] = useState("");
-	// Create a ref for the tooltip
 	const tooltipRef = useRef<HTMLDivElement | null>(null);
-	// Define the initial state for the tooltip position
-	const initialTooltipPosition = { top: 0, left: 0 };
-	// Create a state variable for the tooltip position and a function to update it
-	const [tooltipPosition, setTooltipPosition] = useState(
-		initialTooltipPosition
-	);
 
-	// Function to handle mouseup event
 	const getDictionary = async (text: string) => {
 		try {
 			const response = await fetch(
@@ -101,8 +91,6 @@ export default function Home() {
 					"Hmm. No definition found. You can try again at later time or head to the web instead."
 				);
 			}
-
-			console.log("dictionaryapi response: ", data);
 
 			const definedText = data[0].meanings.map(
 				(info: {
@@ -136,41 +124,40 @@ export default function Home() {
 				const selection = window.getSelection();
 
 				if (selection?.isCollapsed || selection == null) {
-					setNeedDictionary(false); // Hide tooltip
+					setNeedDictionary(false);
 					return;
 				}
 
 				const selectedText = selection.toString().trim();
 				getDictionary(selectedText);
 				if (selectedText.length < 1) {
-					setNeedDictionary(false); // Hide tooltip
+					setNeedDictionary(false);
 					return;
 				}
-				setNeedDictionary(true); // Show tooltip
+				setNeedDictionary(true);
 				const rect = selection.getRangeAt(0).getBoundingClientRect();
 				tooltip.style.display = "block";
-				// Calculate the left position of the tooltip
+				// Calculate the left and top positions of the tooltip
 				let left = rect.left + rect.width / 2 - tooltip.clientWidth / 2;
+				let top = rect.top - tooltip.clientHeight;
 
-				// If the tooltip is off the left side of the viewport, move it to the right
 				if (left < 0) {
-					left = 10; // 10px from the left side of the viewport
+					left = 10;
 				}
 
-				// If the tooltip is off the right side of the viewport, move it to the left
 				if (left + tooltip.clientWidth > window.innerWidth) {
-					left = window.innerWidth - tooltip.clientWidth - 10; // 10px from the right side of the viewport
+				}
+				if (top < 0) {
+					top = rect.bottom;
 				}
 
 				tooltip.style.left = `${left}px`;
-				tooltip.style.top = `${rect.top - tooltip.clientHeight}px`;
+				tooltip.style.top = `${top}px`;
 			}
 		};
 
-		// Add event listener when the component mounts
 		document.addEventListener("mouseup", handleMouseUp);
 
-		// Remove event listener when the component unmounts
 		return () => {
 			document.removeEventListener("mouseup", handleMouseUp);
 			setNeedDictionary(false);
@@ -180,14 +167,14 @@ export default function Home() {
 	}, []);
 	const { isLoaded, user } = useUser();
 	return (
-		<>
+		<Box>
 			{isLoaded && !user && (
-				<>
+				<Box>
 					<Welcome />
 					<Group className="h-screen">
 						<UserButton afterSignOutUrl="/" />
 					</Group>
-				</>
+				</Box>
 			)}
 
 			{isLoaded && user && (
@@ -228,20 +215,8 @@ export default function Home() {
 									color: "#1a1910",
 								}}
 							>
-								{needDictionary ? textDefinition : ""}
+								{textDefinition}
 							</p>
-							{/* <div
-							style={{
-								content: '""',
-								display: "block",
-								border: "5px solid",
-								boxShadow: "0 0 10px rgba(0, 0, 0, 0.1)",
-								borderColor: "white transparent transparent transparent",
-								position: "absolute",
-								left: "50%",
-								transform: "translateX(-50%)",
-							}} 
-						></div>*/}
 						</div>
 					</div>
 
@@ -256,6 +231,6 @@ export default function Home() {
 					<Footer />
 				</Box>
 			)}
-		</>
+		</Box>
 	);
 }
