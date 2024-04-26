@@ -109,19 +109,18 @@ export default function Home() {
 					definitions: Array<{ definition: string }>;
 				}) => {
 					const partOfSpeech = info.partOfSpeech;
+					const styledPartOfSpeech = partOfSpeech.charAt(0).toUpperCase() + partOfSpeech.slice(1);
 					const definition = info.definitions?.map((item) => item.definition);
-					return `${partOfSpeech}: ${definition}`;
+					return `${styledPartOfSpeech} - ${definition}`;
 				}
 			);
 
-			console.log("definedText: ", definedText);
 
-			const definition = definedText.join("  //  ");
+			const definition = definedText.join("; ");
 			const word = text.toUpperCase();
 
-			setTextDefinition(`${word} - ${definition}`);
+			setTextDefinition(`${word}: ${definition}`);
 
-			console.log("dictionary: ", textDefinition);
 		} catch (error) {
 			console.error("Error fetching definition: ", error);
 			setTextDefinition(
@@ -187,9 +186,9 @@ export default function Home() {
 						style={{
 							position: "absolute",
 							zIndex: 100,
-							backgroundColor: "#1a1910",
+							backgroundColor: "white",
 							borderRadius: "5px",
-							color: "white",
+							boxShadow: "0 0 10px rgba(0, 0, 0, 0.1)",
 							display: "none",
 							width: "40vw",
 							maxWidth: "800px",
@@ -201,21 +200,23 @@ export default function Home() {
 								fontSize: "14px",
 								lineHeight: "1.5",
 								margin: "10px",
+								color: "#1a1910",
 							}}
 						>
 							{needDictionary ? textDefinition : ""}
 						</p>
-						<div
+						{/* <div
 							style={{
 								content: '""',
 								display: "block",
 								border: "5px solid",
-								borderColor: "#1a1910 transparent transparent transparent",
+								boxShadow: "0 0 10px rgba(0, 0, 0, 0.1)",
+								borderColor: "white transparent transparent transparent",
 								position: "absolute",
 								left: "50%",
 								transform: "translateX(-50%)",
-							}}
-						></div>
+							}} 
+						></div>*/}
 					</div>
 
 					{mobileScreen ? <HeaderMobile onReset={handleReset} /> : <Header />}
