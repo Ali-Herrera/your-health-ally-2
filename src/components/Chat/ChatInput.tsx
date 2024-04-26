@@ -59,78 +59,177 @@ export const ChatInput = ({ onUpdate, waiting, userId }: Props) => {
   const CreateChatMutation = api.chat.create.useMutation();
   const GenerateTextMutation = api.ai.generateText.useMutation();
 
+  // const handleSubmit = async () => {
+  //   if (prompt.trim()) {
+  //     try {
+  //       const createChatResult = await CreateChatMutation.mutate(
+  //         {
+  //           message: prompt,
+  //           userId: userId,
+  //         },
+  //         {
+  //           onSuccess: async (data) => {
+  //             console.log(
+  //               'Chat creation successful. Response:',
+  //               createChatResult
+  //             );
+  //             console.log('Chat ID:', data.chatId); // Check chatId here
+  //             setPrompt(''); // Clear the prompt after successful chat creation
+  //             setChatId(data.chatId);
+
+  //             // Now call the GenerateTextMutation inside the onSuccess callback
+  //             const chatIdFromResult = data?.chatId;
+
+  //             console.log(
+  //               'Calling GenerateTextMutation with chatId:',
+  //               chatIdFromResult
+  //             );
+
+  //             const generateTextResult = await GenerateTextMutation.mutate(
+  //               {
+  //                 prompt: prompt,
+  //                 chatId: chatIdFromResult ?? '', // Use chatIdFromResult as fallback and convert to string
+  //               },
+  //               {
+  //                 onSuccess: (generateTextData) => {
+  //                   if (
+  //                     generateTextData &&
+  //                     generateTextData.generatedText !== undefined
+  //                   ) {
+  //                     console.log(
+  //                       'GenerateText successful. Response:',
+  //                       generateTextData.generatedText
+  //                     );
+  //                     if (chatIdFromResult) {
+  //                       onUpdate(prompt, chatIdFromResult, 'User'); // Update the author to 'User' for user input
+  //                       onUpdate(
+  //                         generateTextData.generatedText,
+  //                         chatIdFromResult,
+  //                         'AI' // Update the author to 'AI' for AI-generated text
+  //                       );
+  //                     }
+  //                   } else {
+  //                     console.error(
+  //                       'Failed to generate text:',
+  //                       generateTextData
+  //                     ); // Log the error here
+  //                   }
+  //                 },
+  //                 onError: (generateTextError) => {
+  //                   console.error(
+  //                     'Failed to generate text:',
+  //                     generateTextError
+  //                   ); // Log the error here
+  //                 },
+  //               }
+  //             );
+  //           },
+  //         }
+  //       );
+  //     } catch (error) {
+  //       console.error('Failed to create chat:', error);
+  //     }
+  //   }
+  // };
+
   const handleSubmit = async () => {
     if (prompt.trim()) {
       try {
-        const createChatResult = await CreateChatMutation.mutate(
-          {
-            message: prompt,
-            userId: userId,
-          },
-          {
-            onSuccess: async (data) => {
-              console.log(
-                'Chat creation successful. Response:',
-                createChatResult
-              );
-              console.log('Chat ID:', data.chatId); // Check chatId here
-              setPrompt(''); // Clear the prompt after successful chat creation
-              setChatId(data.chatId);
+        if (!chatId) {
+          await CreateChatMutation.mutate(
+            {
+              message: prompt,
+              userId: userId,
+            },
+            {
+              onSuccess: async (data) => {
+                console.log('Chat creation successful. Response:', data);
+                const chatIdFromResult = data?.chatId;
+                setPrompt('');
+                setChatId(chatIdFromResult);
 
-              // Now call the GenerateTextMutation inside the onSuccess callback
-              const chatIdFromResult = data?.chatId;
+                console.log(
+                  'Calling GenerateTextMutation with chatId:',
+                  chatIdFromResult
+                );
 
-              console.log(
-                'Calling GenerateTextMutation with chatId:',
-                chatIdFromResult
-              );
-
-              const generateTextResult = await GenerateTextMutation.mutate(
-                {
-                  prompt: prompt,
-                  chatId: chatIdFromResult ?? '', // Use chatIdFromResult as fallback and convert to string
-                },
-                {
-                  onSuccess: (generateTextData) => {
-                    if (
-                      generateTextData &&
-                      generateTextData.generatedText !== undefined
-                    ) {
-                      console.log(
-                        'GenerateText successful. Response:',
-                        generateTextData.generatedText
-                      );
-                      if (chatIdFromResult) {
-                        onUpdate(prompt, chatIdFromResult, 'User'); // Update the author to 'User' for user input
+                const generateTextResult = await GenerateTextMutation.mutate(
+                  {
+                    prompt: prompt,
+                    chatId: chatIdFromResult ?? '',
+                  },
+                  {
+                    onSuccess: (generateTextData) => {
+                      if (
+                        generateTextData &&
+                        generateTextData.generatedText !== undefined
+                      ) {
+                        console.log(
+                          'GenerateText successful. Response:',
+                          generateTextData.generatedText
+                        );
+                        onUpdate(prompt, chatIdFromResult!, 'User');
                         onUpdate(
                           generateTextData.generatedText,
-                          chatIdFromResult,
-                          'AI' // Update the author to 'AI' for AI-generated text
+                          chatIdFromResult!,
+                          'AI'
+                        );
+                      } else {
+                        console.error(
+                          'Failed to generate text:',
+                          generateTextData
                         );
                       }
-                    } else {
+                    },
+                    onError: (generateTextError) => {
                       console.error(
                         'Failed to generate text:',
-                        generateTextData
-                      ); // Log the error here
-                    }
-                  },
-                  onError: (generateTextError) => {
-                    console.error(
-                      'Failed to generate text:',
-                      generateTextError
-                    ); // Log the error here
-                  },
-                }
-              );
+                        generateTextError
+                      );
+                    },
+                  }
+                );
+              },
+              onError: (error) => {
+                console.error('Failed to create chat:', error);
+              },
+            }
+          );
+        } else {
+          // If there's already a chatId, use it directly for GenerateTextMutation
+          const generateTextResult = await GenerateTextMutation.mutate(
+            {
+              prompt: prompt,
+              chatId: chatId,
             },
-          }
-        );
+            {
+              onSuccess: (generateTextData) => {
+                if (
+                  generateTextData &&
+                  generateTextData.generatedText !== undefined
+                ) {
+                  console.log(
+                    'GenerateText successful. Response:',
+                    generateTextData.generatedText
+                  );
+                  onUpdate(prompt, chatId!, 'User');
+                  onUpdate(generateTextData.generatedText, chatId!, 'AI');
+                } else {
+                  console.error('Failed to generate text:', generateTextData);
+                }
+              },
+              onError: (generateTextError) => {
+                console.error('Failed to generate text:', generateTextError);
+              },
+            }
+          );
+        }
       } catch (error) {
-        console.error('Failed to create chat:', error);
+        console.error('Error:', error);
       }
     }
   };
+
   const handleKeyDown = (e: React.KeyboardEvent<HTMLTextAreaElement>) => {
     if (e.key === 'Enter' && !e.shiftKey) {
       e.preventDefault();

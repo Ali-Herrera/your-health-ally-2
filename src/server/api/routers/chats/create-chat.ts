@@ -92,7 +92,8 @@ export const chatRouter = createTRPCRouter({
         },
       });
 
-      return newMessage;
+      // Return the chatId and newMessage
+      return { chatId, message: newMessage };
     }),
 
   startNewChat: privateProcedure.mutation(async ({ ctx, input = {} }) => {
