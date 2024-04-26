@@ -12,6 +12,7 @@ import React, { useState, useEffect, useRef } from "react";
 import { UserButton, useUser } from "@clerk/nextjs";
 import { theme } from "~/config/theme";
 import styles from "./index.module.css";
+import { set } from "zod";
 
 export default function Home() {
 	const mobileScreen = useMediaQuery("(max-width: 480px)");
@@ -115,7 +116,10 @@ export default function Home() {
 
 			console.log("definedText: ", definedText);
 
-			setTextDefinition(definedText.join(" | "));
+			const definition = definedText.join("  //  ");
+			const word = text.toUpperCase();
+
+			setTextDefinition(`${word} - ${definition}`);
 
 			console.log("dictionary: ", textDefinition);
 		} catch (error) {
@@ -138,11 +142,14 @@ export default function Home() {
 					setNeedDictionary(false); // Hide tooltip
 					return;
 				}
-				setNeedDictionary(true); // Show tooltip
 
 				const selectedText = selection.toString().trim();
 				getDictionary(selectedText);
-
+				if (selectedText.length < 1) {
+					setNeedDictionary(false); // Hide tooltip
+					return;
+				}
+				setNeedDictionary(true); // Show tooltip
 				const rect = selection.getRangeAt(0).getBoundingClientRect();
 				tooltip.style.display = "block";
 				// prettier-ignore
@@ -157,6 +164,8 @@ export default function Home() {
 		// Remove event listener when the component unmounts
 		return () => {
 			document.removeEventListener("mouseup", handleMouseUp);
+			setNeedDictionary(false);
+			setTextDefinition("");
 		};
 	}, []);
 	const { isLoaded, user } = useUser();
@@ -180,18 +189,21 @@ export default function Home() {
 							zIndex: 100,
 							backgroundColor: "#1a1910",
 							borderRadius: "5px",
-							padding: "0px 10px",
 							color: "white",
-							display: "none", // Uncomment this line once no errors
+							display: "none",
+							width: "40vw",
+							maxWidth: "800px",
+							visibility: needDictionary ? "visible" : "hidden",
 						}}
 					>
 						<p
 							style={{
 								fontSize: "14px",
-								padding: "5px 10px",
+								lineHeight: "1.5",
+								margin: "10px",
 							}}
 						>
-							{needDictionary ? textDefinition : "Select a word to define"}
+							{needDictionary ? textDefinition : ""}
 						</p>
 						<div
 							style={{
