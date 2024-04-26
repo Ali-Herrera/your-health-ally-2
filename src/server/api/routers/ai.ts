@@ -5,6 +5,7 @@ import { TRPCError } from '@trpc/server';
 import axios from 'axios';
 import { chatRouter } from './chats/create-chat';
 import { api } from '~/utils/api';
+import { AI_AUTHOR_ID } from '~/utils/types';
 
 const configuration = new Configuration({
   apiKey: process.env.NEXT_PUBLIC_OPENAI_API_KEY,
@@ -58,6 +59,15 @@ export const aiRouter = createTRPCRouter({
 
         // Extract the generated text from the completion
         const generatedText = completion.data.choices[0]?.message?.content;
+
+        // Save the generated AI response to the database
+        const newMessage = await ctx.prisma.message.create({
+          data: {
+            chatId,
+            userId: AI_AUTHOR_ID, // Replace '<AI_USER_ID>' with the ID representing the AI user
+            content: generatedText?.toString() ?? '',
+          },
+        });
 
         // Push the AI response to the conversation context
         if (generatedText) {
