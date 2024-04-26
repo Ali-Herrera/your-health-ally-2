@@ -1,72 +1,3 @@
-// // ChatInterface.tsx
-
-// import { Box } from '@mantine/core';
-// import { useMediaQuery } from '@mantine/hooks';
-// import { ChatContent, type ChatItem } from '~/components/Chat/ChatContent';
-// import { ChatInput } from '~/components/Chat/ChatInput';
-// import { Footer } from '~/components/footer';
-// import { useState } from 'react';
-// import { useUser } from '@clerk/nextjs';
-// import { Sidebar } from '../sidebar';
-// import { HeaderMobile } from '../header/mobileHeader';
-// import { Header } from '../header';
-
-// const ChatInterface = () => {
-//   const mobileScreen = useMediaQuery('(max-width: 480px)');
-//   const [chatItems, setChatItems] = useState<ChatItem[]>([]);
-//   const [waiting, setWaiting] = useState<boolean>(false);
-
-//   const { isLoaded, user } = useUser();
-
-//   const handleUpdate = (prompt: string, chatId: string) => {
-//     // Assuming setChatItems is the state setter function for chatItems
-//     setChatItems([
-//       ...chatItems,
-//       {
-//         content: prompt,
-//         author: 'User',
-//         chatId: chatId,
-//       } as ChatItem, // Add 'as ChatItem' to explicitly specify the type
-//     ]);
-//   };
-
-//   const handleReset = () => {
-//     setChatItems([]);
-//     // Reset any other state as needed
-//   };
-
-//   return (
-//     <Box>
-//       {isLoaded && user && (
-//         <>
-//           {mobileScreen ? <HeaderMobile onReset={handleReset} /> : <Header />}
-//           {mobileScreen ? null : (
-//             <Sidebar
-//               onStartNewChat={function (): void {
-//                 throw new Error('Function not implemented.');
-//               }}
-//             />
-//           )}
-//           <ChatContent
-//             chatItems={chatItems}
-//             // onReset={handleReset}
-//             loading={waiting}
-//           />
-//           <ChatInput
-//             userId={user.id}
-//             onUpdate={function (prompt: string, chatId: string): void {
-//               throw new Error('Function not implemented.');
-//             }}
-//           />
-//           <Footer />
-//         </>
-//       )}
-//     </Box>
-//   );
-// };
-
-// export default ChatInterface;
-
 // ChatInterface.tsx
 import { Box } from '@mantine/core';
 import { useMediaQuery } from '@mantine/hooks';
@@ -132,14 +63,26 @@ const ChatInterface = () => {
       });
 
       if (generateTextResult.generatedText) {
-        // Update chatItems with the generated text
-        setChatItems((prevChatItems) => [
-          ...prevChatItems,
-          {
-            content: generateTextResult.generatedText,
-            author: 'AI',
-          },
-        ]);
+        // Check if the AI response is the same as the last message in chatItems
+        const lastMessage = chatItems[chatItems.length - 1];
+        if (
+          lastMessage &&
+          lastMessage.author === 'AI' &&
+          lastMessage.content === generateTextResult.generatedText
+        ) {
+          console.log(
+            'AI response already exists in chatItems. Skipping addition.'
+          );
+        } else {
+          // Update chatItems with the generated text
+          setChatItems((prevChatItems) => [
+            ...prevChatItems,
+            {
+              content: generateTextResult.generatedText,
+              author: 'AI',
+            },
+          ]);
+        }
       } else {
         console.error('Error generating text');
         // Handle error if needed
