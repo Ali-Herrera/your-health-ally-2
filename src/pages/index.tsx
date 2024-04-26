@@ -142,11 +142,13 @@ export default function Home() {
 				let top = rect.top - tooltip.clientHeight;
 
 				if (left < 0) {
-					left = 10;
+					left = 10; // 10px from the left side of the viewport
 				}
 
 				if (left + tooltip.clientWidth > window.innerWidth) {
+					left = window.innerWidth - tooltip.clientWidth - 10; // 10px from the right side of the viewport
 				}
+
 				if (top < 0) {
 					top = rect.bottom;
 				}
