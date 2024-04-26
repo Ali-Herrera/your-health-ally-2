@@ -1,4 +1,4 @@
-import { Box, Group, Text, Tooltip } from "@mantine/core";
+import { Box, Group, Text } from "@mantine/core";
 import { useMediaQuery } from "@mantine/hooks";
 import { Welcome } from "../components/Welcome";
 import { Sidebar } from "../components/sidebar";
@@ -8,9 +8,10 @@ import { Footer } from "~/components/footer";
 import { ChatContent, type ChatItem } from "../components/chat/ChatContent";
 import { ChatInput } from "../components/chat/ChatInput";
 import { api } from "~/utils/api";
-import React, { useState, useEffect, useRef } from "react";
+import React, { useState, useEffect } from "react";
 import { UserButton, useUser } from "@clerk/nextjs";
 import { theme } from "~/config/theme";
+import styles from "./index.module.css";
 
 export default function Home() {
 	const mobileScreen = useMediaQuery("(max-width: 480px)");
@@ -173,9 +174,9 @@ export default function Home() {
 
 			{isLoaded && user && (
 				<Box>
-					<div className="tooltipGlossary">
-						<div className="tooltipContent tooltipitem">
-							<Text>Definition Here</Text>
+					<div className={styles.tooltipGlossary}>
+						<div className={styles.tooltipItem}>
+							<Text className={styles.tooltipContent}>Definition Here</Text>
 						</div>
 					</div>
 
