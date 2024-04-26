@@ -5,7 +5,7 @@ import { TRPCError } from '@trpc/server';
 import axios from 'axios';
 import { chatRouter } from './chats/create-chat';
 import { api } from '~/utils/api';
-import { AI_AUTHOR_ID } from '~/utils/types';
+import { AI_AUTHOR_ID, Author } from '~/utils/types';
 
 const configuration = new Configuration({
   apiKey: process.env.NEXT_PUBLIC_OPENAI_API_KEY,
@@ -17,6 +17,7 @@ const openai = new OpenAIApi(configuration);
 type Message = {
   role: 'user' | 'system';
   content: string;
+  author: Author; // Add the author field
 };
 
 const messages: Message[] = [];
@@ -49,6 +50,7 @@ export const aiRouter = createTRPCRouter({
         messages.push({
           role: 'user',
           content: prompt,
+          author: 'User',
         });
 
         // Call createChatCompletion to generate AI text based on the prompt and context
@@ -66,6 +68,7 @@ export const aiRouter = createTRPCRouter({
             chatId,
             userId: AI_AUTHOR_ID, // Replace '<AI_USER_ID>' with the ID representing the AI user
             content: generatedText?.toString() ?? '',
+            author: 'AI', // Add the author property
           },
         });
 
@@ -74,6 +77,7 @@ export const aiRouter = createTRPCRouter({
           messages.push({
             role: 'system',
             content: generatedText,
+            author: 'AI',
           });
         }
 

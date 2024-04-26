@@ -14,19 +14,28 @@ import { Author } from '~/utils/types';
 
 const ChatInterface = () => {
   const mobileScreen = useMediaQuery('(max-width: 480px)');
-  const [chatItems, setChatItems] = useState<ChatItem[]>([]);
+  const [chatItems, setChatItems] = useState([] as ChatItem[]);
   const [waiting, setWaiting] = useState<boolean>(false);
 
   const handleUpdate = (prompt: string, chatId: string, author: Author) => {
     console.log('Updating chat items...');
     console.log('Previous chat items:', chatItems);
 
+    // Determine the order field for the new message
+    const orderField =
+      chatItems.length > 0
+        ? (chatItems[chatItems.length - 1]?.orderField ?? 0) + 1
+        : 0;
+
     // Update the chatItems state by adding the new chat item
-    setChatItems((prevChatItems) => [
-      ...prevChatItems,
-      { content: prompt, author: author },
-    ]);
-    console.log('Updated chat items:', chatItems);
+    setChatItems((prevChatItems) => {
+      const updatedChatItems = [
+        ...prevChatItems,
+        { content: prompt, author: author, orderField: orderField }, // Make sure to include orderField
+      ];
+      console.log('Updated chat items:', updatedChatItems);
+      return updatedChatItems; // Return the updated chat items
+    });
   };
 
   const resetMutation = api.ai.reset.useMutation();

@@ -140,6 +140,8 @@ export const ChatInput = ({ onUpdate, waiting, userId }: Props) => {
             {
               message: prompt,
               userId: userId,
+              orderField: 0,
+              author: 'User',
             },
             {
               onSuccess: async (data) => {

@@ -11,6 +11,7 @@ export type ChatItem = {
   author: Author;
   content?: string;
   isError?: boolean;
+  orderField: number;
 };
 
 export type Props = {

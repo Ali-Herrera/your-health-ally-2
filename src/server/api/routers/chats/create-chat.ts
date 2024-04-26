@@ -5,6 +5,8 @@ import {
   publicProcedure,
 } from '~/server/api/trpc';
 import { PrismaClient, Chat } from '@prisma/client';
+import { Author, AI_AUTHOR_ID } from '~/utils/types';
+// import { MessageCreateInput } from '@prisma/client'; // Import the MessageCreateInput type
 
 const prisma = new PrismaClient();
 
@@ -66,6 +68,8 @@ export const chatRouter = createTRPCRouter({
         message: z.string(),
         chatId: z.string().optional(),
         userId: z.string(),
+        author: z.union([z.literal('User'), z.literal('AI')]), // Use the Author type
+        orderField: z.number(), // Include the order field
       })
     )
     .mutation(async ({ ctx, input }) => {
@@ -82,6 +86,8 @@ export const chatRouter = createTRPCRouter({
         });
         chatId = newChat.id;
       }
+      // Determine the author ID based on the author type
+      const authorId = input.author === 'User' ? input.userId : AI_AUTHOR_ID;
 
       // Create a new message associated with the chatId
       const newMessage = await ctx.prisma.message.create({
@@ -89,6 +95,8 @@ export const chatRouter = createTRPCRouter({
           chatId,
           userId: input.userId,
           content: input.message,
+          author: authorId, // Save the author (User or AI)
+          orderField: input.orderField, // Save the order field
         },
       });
 
