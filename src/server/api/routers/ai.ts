@@ -20,25 +20,29 @@ type Message = {
 
 const messages: Message[] = [];
 
-type GenerateTextInput = {
-  prompt: string;
-  chatId: string;
-};
+// type GenerateTextInput = {
+//   prompt: string;
+//   chatId: string;
+// };
 
 // Create TRPC router for AI operations
 export const aiRouter = createTRPCRouter({
   // Mutation to generate text based on a prompt and chat context
   generateText: publicProcedure
-    .input(z.object({ prompt: z.string() })) // Remove chatId from input schema
+    .input(z.object({ prompt: z.string(), chatId: z.string() })) // Include chatId in the input schema
     .mutation(async ({ input, ctx }) => {
-      const { prompt } = input; // Extract prompt from input
+      const { prompt, chatId } = input; // Extract prompt and chatId from input
 
       try {
-        // Call startNewChat mutation to generate a new chatId
-        // const { chatId } = await api.chat.startNewChat.useMutation();
+        // Fetch the chat by its ID to ensure it exists
+        const chat = await ctx.prisma.chat.findUnique({
+          where: { id: chatId },
+        });
 
-        // Engineering the prompt and other logic
-        // Use chatId retrieved above in your logic
+        // Check if the chat exists
+        if (!chat) {
+          throw new Error('Chat not found');
+        }
 
         // Provides context to the AI model by pushing the user's message to the conversation context
         messages.push({
@@ -55,7 +59,7 @@ export const aiRouter = createTRPCRouter({
         // Extract the generated text from the completion
         const generatedText = completion.data.choices[0]?.message?.content;
 
-        // Pushes the AI response to the conversation context
+        // Push the AI response to the conversation context
         if (generatedText) {
           messages.push({
             role: 'system',

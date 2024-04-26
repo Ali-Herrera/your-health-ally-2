@@ -46,7 +46,7 @@ export const ChatContent = ({ chatItems, loading }: Props) => {
   useEffect(() => {
     checkUserMessages();
     scrollToBottom();
-  }, [chatItems]);
+  }, [chatItems.length]);
 
   return (
     <Box

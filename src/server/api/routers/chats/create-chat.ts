@@ -95,7 +95,7 @@ export const chatRouter = createTRPCRouter({
       return newMessage;
     }),
 
-  startNewChat: privateProcedure.mutation(async ({ ctx }) => {
+  startNewChat: privateProcedure.mutation(async ({ ctx, input = {} }) => {
     // Create a new chat
     const chat = await ctx.prisma.chat.create({
       data: {

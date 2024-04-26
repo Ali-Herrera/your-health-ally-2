@@ -1,3 +1,72 @@
+// // ChatInterface.tsx
+
+// import { Box } from '@mantine/core';
+// import { useMediaQuery } from '@mantine/hooks';
+// import { ChatContent, type ChatItem } from '~/components/Chat/ChatContent';
+// import { ChatInput } from '~/components/Chat/ChatInput';
+// import { Footer } from '~/components/footer';
+// import { useState } from 'react';
+// import { useUser } from '@clerk/nextjs';
+// import { Sidebar } from '../sidebar';
+// import { HeaderMobile } from '../header/mobileHeader';
+// import { Header } from '../header';
+
+// const ChatInterface = () => {
+//   const mobileScreen = useMediaQuery('(max-width: 480px)');
+//   const [chatItems, setChatItems] = useState<ChatItem[]>([]);
+//   const [waiting, setWaiting] = useState<boolean>(false);
+
+//   const { isLoaded, user } = useUser();
+
+//   const handleUpdate = (prompt: string, chatId: string) => {
+//     // Assuming setChatItems is the state setter function for chatItems
+//     setChatItems([
+//       ...chatItems,
+//       {
+//         content: prompt,
+//         author: 'User',
+//         chatId: chatId,
+//       } as ChatItem, // Add 'as ChatItem' to explicitly specify the type
+//     ]);
+//   };
+
+//   const handleReset = () => {
+//     setChatItems([]);
+//     // Reset any other state as needed
+//   };
+
+//   return (
+//     <Box>
+//       {isLoaded && user && (
+//         <>
+//           {mobileScreen ? <HeaderMobile onReset={handleReset} /> : <Header />}
+//           {mobileScreen ? null : (
+//             <Sidebar
+//               onStartNewChat={function (): void {
+//                 throw new Error('Function not implemented.');
+//               }}
+//             />
+//           )}
+//           <ChatContent
+//             chatItems={chatItems}
+//             // onReset={handleReset}
+//             loading={waiting}
+//           />
+//           <ChatInput
+//             userId={user.id}
+//             onUpdate={function (prompt: string, chatId: string): void {
+//               throw new Error('Function not implemented.');
+//             }}
+//           />
+//           <Footer />
+//         </>
+//       )}
+//     </Box>
+//   );
+// };
+
+// export default ChatInterface;
+
 // ChatInterface.tsx
 import { Box } from '@mantine/core';
 import { useMediaQuery } from '@mantine/hooks';
@@ -11,30 +80,24 @@ import { Sidebar } from '../sidebar';
 import { HeaderMobile } from '../header/mobileHeader';
 import { Header } from '../header';
 
-interface ChatInterfaceProps {
-  userId: string;
-}
-
-const ChatInterface: React.FC<ChatInterfaceProps> = ({ userId }) => {
+const ChatInterface = () => {
   const mobileScreen = useMediaQuery('(max-width: 480px)');
   const [chatItems, setChatItems] = useState<ChatItem[]>([]);
   const [waiting, setWaiting] = useState<boolean>(false);
-  const { user: loggedInUser } = useUser();
 
   const generatedTextMutation = api.ai.generateText.useMutation({
     onSuccess: (data) => {
-      setChatItems([
-        ...chatItems,
+      setChatItems((prevChatItems) => [
+        ...prevChatItems,
         {
           content: data.generatedText,
           author: 'AI',
         },
       ]);
     },
-
     onError: (error) => {
-      setChatItems([
-        ...chatItems,
+      setChatItems((prevChatItems) => [
+        ...prevChatItems,
         {
           content: error.message ?? 'An error occurred',
           author: 'AI',
@@ -42,7 +105,6 @@ const ChatInterface: React.FC<ChatInterfaceProps> = ({ userId }) => {
         },
       ]);
     },
-
     onSettled: () => {
       setWaiting(false);
     },
@@ -50,18 +112,45 @@ const ChatInterface: React.FC<ChatInterfaceProps> = ({ userId }) => {
 
   const resetMutation = api.ai.reset.useMutation();
 
-  const handleUpdate = (prompt: string) => {
+  const handleUpdate = async (prompt: string, chatId: string) => {
     setWaiting(true);
 
-    setChatItems([
-      ...chatItems,
+    // Update chatItems with the user's prompt
+    setChatItems((prevChatItems) => [
+      ...prevChatItems,
       {
         content: prompt.replace(/\n/g, '\n\n'),
         author: 'User',
       },
     ]);
 
-    generatedTextMutation.mutate({ prompt });
+    try {
+      // Call the AI mutation to generate text
+      const generateTextResult = await generatedTextMutation.mutateAsync({
+        prompt,
+        chatId,
+      });
+
+      if (generateTextResult.generatedText) {
+        // Update chatItems with the generated text
+        setChatItems((prevChatItems) => [
+          ...prevChatItems,
+          {
+            content: generateTextResult.generatedText,
+            author: 'AI',
+          },
+        ]);
+      } else {
+        console.error('Error generating text');
+        // Handle error if needed
+      }
+    } catch (error) {
+      console.error('Error generating text:', error);
+      // Handle error if needed
+    } finally {
+      // Set waiting to false regardless of success or error
+      setWaiting(false);
+    }
   };
 
   const handleReset = () => {
@@ -76,7 +165,13 @@ const ChatInterface: React.FC<ChatInterfaceProps> = ({ userId }) => {
       {isLoaded && user && (
         <>
           {mobileScreen ? <HeaderMobile onReset={handleReset} /> : <Header />}
-          {mobileScreen ? null : <Sidebar onReset={handleReset} />}
+          {mobileScreen ? null : (
+            <Sidebar
+              onStartNewChat={function (): void {
+                throw new Error('Function not implemented.');
+              }} /*onReset={handleReset}*/
+            />
+          )}
           <ChatContent
             chatItems={chatItems}
             // onReset={handleReset}
@@ -85,7 +180,7 @@ const ChatInterface: React.FC<ChatInterfaceProps> = ({ userId }) => {
           <ChatInput
             onUpdate={handleUpdate}
             waiting={waiting}
-            userId={userId}
+            userId={user.id}
           />
           <Footer />
         </>
