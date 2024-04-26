@@ -8,7 +8,7 @@ import { Footer } from "~/components/footer";
 import { ChatContent, type ChatItem } from "../components/chat/ChatContent";
 import { ChatInput } from "../components/chat/ChatInput";
 import { api } from "~/utils/api";
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useRef } from "react";
 import { UserButton, useUser } from "@clerk/nextjs";
 import { theme } from "~/config/theme";
 import styles from "./index.module.css";
@@ -78,6 +78,8 @@ export default function Home() {
 	// TODO: Decide if this should be a separate component
 	const [needDictionary, setNeedDictionary] = useState<boolean>(false);
 	const [textDefinition, setTextDefinition] = useState("");
+	// Create a ref for the tooltip
+	const tooltipRef = useRef<HTMLDivElement | null>(null);
 	// Define the initial state for the tooltip position
 	const initialTooltipPosition = { top: 0, left: 0 };
 	// Create a state variable for the tooltip position and a function to update it
@@ -124,42 +126,39 @@ export default function Home() {
 		}
 	};
 
-	// Add event listener for mouseup event when component mounts
 	useEffect(() => {
-		document.addEventListener("mouseup", (event: MouseEvent) => {
+		const handleMouseUp = (event: MouseEvent) => {
 			event.preventDefault();
 
-			const selection = window.getSelection();
-			const tooltip = document.querySelector(".mantine-Tooltip-tooltip");
+			if (tooltipRef.current) {
+				const tooltip = tooltipRef.current;
+				const selection = window.getSelection();
 
-			if (selection?.isCollapsed || selection == null) {
-				setNeedDictionary(false); // Hide tooltip
-				return;
+				if (selection?.isCollapsed || selection == null) {
+					setNeedDictionary(false); // Hide tooltip
+					return;
+				}
+				setNeedDictionary(true); // Show tooltip
+
+				const selectedText = selection.toString().trim();
+				getDictionary(selectedText);
+
+				const rect = selection.getRangeAt(0).getBoundingClientRect();
+				tooltip.style.display = "block";
+				// prettier-ignore
+				tooltip.style.left = `${rect.left + rect.width / 2 - tooltip.clientWidth / 2}px`;
+				tooltip.style.top = `${rect.top - tooltip.clientHeight}px`;
 			}
-			const range = selection?.getRangeAt(0);
-			const rect = range?.getBoundingClientRect();
-			setNeedDictionary(true); // Show tooltip
-			setTooltipPosition({ top: rect.top, left: rect.left });
-			if (tooltip) {
-				tooltip.styles.left = `${rect.left}px`;
-				tooltip.style.top = `${rect.top}px`;
-			}
+		};
 
-			const text = selection.toString();
-			getDictionary(text);
-		});
+		// Add event listener when the component mounts
+		document.addEventListener("mouseup", handleMouseUp);
 
-		//Remove event listener when component unmounts
+		// Remove event listener when the component unmounts
 		return () => {
-			document.removeEventListener("mouseup", (event: MouseEvent) => {
-				event.preventDefault();
-				setNeedDictionary(false);
-				setTextDefinition("");
-				setTooltipPosition({ top: 0, left: 0 });
-			});
+			document.removeEventListener("mouseup", handleMouseUp);
 		};
 	}, []);
-
 	const { isLoaded, user } = useUser();
 	return (
 		<>
@@ -174,10 +173,37 @@ export default function Home() {
 
 			{isLoaded && user && (
 				<Box>
-					<div className={styles.tooltipGlossary}>
-						<div className={styles.tooltipItem}>
-							<Text className={styles.tooltipContent}>Definition Here</Text>
-						</div>
+					<div
+						ref={tooltipRef}
+						style={{
+							position: "absolute",
+							zIndex: 100,
+							backgroundColor: "#1a1910",
+							borderRadius: "5px",
+							padding: "0px 10px",
+							color: "white",
+							display: "none", // Uncomment this line once no errors
+						}}
+					>
+						<p
+							style={{
+								fontSize: "14px",
+								padding: "5px 10px",
+							}}
+						>
+							{needDictionary ? textDefinition : "Select a word to define"}
+						</p>
+						<div
+							style={{
+								content: '""',
+								display: "block",
+								border: "5px solid",
+								borderColor: "#1a1910 transparent transparent transparent",
+								position: "absolute",
+								left: "50%",
+								transform: "translateX(-50%)",
+							}}
+						></div>
 					</div>
 
 					{mobileScreen ? <HeaderMobile onReset={handleReset} /> : <Header />}
