@@ -7,9 +7,10 @@ import { useState, useEffect, useRef } from 'react';
 import { chatRouter } from '~/server/api/routers/chats/create-chat';
 import { api } from '../../utils/api';
 import { TRPCError } from '@trpc/server';
+import { Author } from '~/utils/types';
 
 type Props = {
-  onUpdate: (prompt: string, chatId: string) => void;
+  onUpdate: (prompt: string, chatId: string, author: Author) => void;
   waiting?: boolean;
   userId: string; // Add userId prop here
 };
@@ -100,7 +101,12 @@ export const ChatInput = ({ onUpdate, waiting, userId }: Props) => {
                         generateTextData.generatedText
                       );
                       if (chatIdFromResult) {
-                        onUpdate(prompt, chatIdFromResult);
+                        onUpdate(prompt, chatIdFromResult, 'User'); // Update the author to 'User' for user input
+                        onUpdate(
+                          generateTextData.generatedText,
+                          chatIdFromResult,
+                          'AI' // Update the author to 'AI' for AI-generated text
+                        );
                       }
                     } else {
                       console.error(
@@ -121,11 +127,10 @@ export const ChatInput = ({ onUpdate, waiting, userId }: Props) => {
           }
         );
       } catch (error) {
-        console.error('Error creating chat:', error);
+        console.error('Failed to create chat:', error);
       }
     }
   };
-
   const handleKeyDown = (e: React.KeyboardEvent<HTMLTextAreaElement>) => {
     if (e.key === 'Enter' && !e.shiftKey) {
       e.preventDefault();
