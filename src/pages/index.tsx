@@ -78,6 +78,7 @@ export default function Home() {
 	// START HOVER DEFINITION FUNCTIONALITY
 	// TODO: Decide if this should be a separate component
 	const [needDictionary, setNeedDictionary] = useState<boolean>(false);
+	const [word, setWord] = useState("");
 	const [textDefinition, setTextDefinition] = useState("");
 	// Create a ref for the tooltip
 	const tooltipRef = useRef<HTMLDivElement | null>(null);
@@ -109,18 +110,15 @@ export default function Home() {
 					definitions: Array<{ definition: string }>;
 				}) => {
 					const partOfSpeech = info.partOfSpeech;
-					const styledPartOfSpeech = partOfSpeech.charAt(0).toUpperCase() + partOfSpeech.slice(1);
+					const styledPartOfSpeech =
+						partOfSpeech.charAt(0).toUpperCase() + partOfSpeech.slice(1);
 					const definition = info.definitions?.map((item) => item.definition);
 					return `${styledPartOfSpeech} - ${definition}`;
 				}
 			);
 
-
-			const definition = definedText.join("; ");
-			const word = text.toUpperCase();
-
-			setTextDefinition(`${word}: ${definition}`);
-
+			setWord(text.toUpperCase());
+			setTextDefinition(definedText.join("; "));
 		} catch (error) {
 			console.error("Error fetching definition: ", error);
 			setTextDefinition(
@@ -151,8 +149,20 @@ export default function Home() {
 				setNeedDictionary(true); // Show tooltip
 				const rect = selection.getRangeAt(0).getBoundingClientRect();
 				tooltip.style.display = "block";
-				// prettier-ignore
-				tooltip.style.left = `${rect.left + rect.width / 2 - tooltip.clientWidth / 2}px`;
+				// Calculate the left position of the tooltip
+				let left = rect.left + rect.width / 2 - tooltip.clientWidth / 2;
+
+				// If the tooltip is off the left side of the viewport, move it to the right
+				if (left < 0) {
+					left = 10; // 10px from the left side of the viewport
+				}
+
+				// If the tooltip is off the right side of the viewport, move it to the left
+				if (left + tooltip.clientWidth > window.innerWidth) {
+					left = window.innerWidth - tooltip.clientWidth - 10; // 10px from the right side of the viewport
+				}
+
+				tooltip.style.left = `${left}px`;
 				tooltip.style.top = `${rect.top - tooltip.clientHeight}px`;
 			}
 		};
@@ -165,6 +175,7 @@ export default function Home() {
 			document.removeEventListener("mouseup", handleMouseUp);
 			setNeedDictionary(false);
 			setTextDefinition("");
+			setWord("");
 		};
 	}, []);
 	const { isLoaded, user } = useUser();
@@ -185,7 +196,7 @@ export default function Home() {
 						ref={tooltipRef}
 						style={{
 							position: "absolute",
-							zIndex: 100,
+							zIndex: 5000,
 							backgroundColor: "white",
 							borderRadius: "5px",
 							boxShadow: "0 0 10px rgba(0, 0, 0, 0.1)",
@@ -195,17 +206,31 @@ export default function Home() {
 							visibility: needDictionary ? "visible" : "hidden",
 						}}
 					>
-						<p
-							style={{
-								fontSize: "14px",
-								lineHeight: "1.5",
-								margin: "10px",
-								color: "#1a1910",
-							}}
-						>
-							{needDictionary ? textDefinition : ""}
-						</p>
-						{/* <div
+						<div className={styles.scrollArea}>
+							<div className={styles.signup_header}>
+								<p
+									style={{
+										fontSize: "14px",
+										lineHeight: "1.5",
+										margin: "10px",
+										color: "#1a1910",
+										fontWeight: "bold",
+									}}
+								>
+									{word}
+								</p>
+							</div>
+							<p
+								style={{
+									fontSize: "14px",
+									lineHeight: "1.5",
+									margin: "10px",
+									color: "#1a1910",
+								}}
+							>
+								{needDictionary ? textDefinition : ""}
+							</p>
+							{/* <div
 							style={{
 								content: '""',
 								display: "block",
@@ -217,6 +242,7 @@ export default function Home() {
 								transform: "translateX(-50%)",
 							}} 
 						></div>*/}
+						</div>
 					</div>
 
 					{mobileScreen ? <HeaderMobile onReset={handleReset} /> : <Header />}
