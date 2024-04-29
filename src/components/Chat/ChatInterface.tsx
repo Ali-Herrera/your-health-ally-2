@@ -11,6 +11,7 @@ import { Sidebar } from '../sidebar';
 import { HeaderMobile } from '../header/mobileHeader';
 import { Header } from '../header';
 import { Author } from '~/utils/types';
+import { set } from 'zod';
 
 interface ChatInterfaceProps {
   userId: string; // Define the userId prop
@@ -27,8 +28,7 @@ const ChatInterface: React.FC<ChatInterfaceProps> = ({ userId }) => {
     // userId: string // Include userId as a parameter
     author: Author
   ) => {
-    console.log('Updating chat items...');
-    console.log('Previous chat items:', chatItems);
+    setWaiting(true);
 
     // const orderField =
     //   chatItems.length > 0
@@ -44,6 +44,8 @@ const ChatInterface: React.FC<ChatInterfaceProps> = ({ userId }) => {
     ]);
 
     // Any other logic related to updating chatItems can be added here
+
+    setWaiting(false);
   };
 
   const resetMutation = api.ai.reset.useMutation();

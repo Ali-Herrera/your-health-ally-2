@@ -6,26 +6,27 @@ import {
 } from '~/server/api/trpc';
 import { PrismaClient, Chat } from '@prisma/client';
 import { Author, AI_AUTHOR_ID } from '~/utils/types';
+import { addUserDataToChats } from '~/utils/chat-utils';
 
 const prisma = new PrismaClient();
 
-const addUserDataToChats = async (chats: Chat[]) => {
-  const userIds = chats.map((chat) => chat.userId);
-  const users = await prisma.chat.findMany({
-    where: {
-      userId: {
-        in: userIds,
-      },
-    },
-  });
-  return chats.map((chat) => {
-    const user = users.find((user) => user.userId === chat.userId);
-    return {
-      ...chat,
-      user,
-    };
-  });
-};
+// const addUserDataToChats = async (chats: Chat[]) => {
+//   const userIds = chats.map((chat) => chat.userId);
+//   const users = await prisma.chat.findMany({
+//     where: {
+//       userId: {
+//         in: userIds,
+//       },
+//     },
+//   });
+//   return chats.map((chat) => {
+//     const user = users.find((user) => user.userId === chat.userId);
+//     return {
+//       ...chat,
+//       user,
+//     };
+//   });
+// };
 
 export const chatRouter = createTRPCRouter({
   getById: publicProcedure
@@ -51,6 +52,8 @@ export const chatRouter = createTRPCRouter({
   create: privateProcedure
     .input(
       z.object({
+        title: z.string(),
+        description: z.string(),
         message: z.string(),
         chatId: z.string().optional(),
         userId: z.string(),
@@ -63,7 +66,8 @@ export const chatRouter = createTRPCRouter({
         const newChat = await ctx.prisma.chat.create({
           data: {
             userId: input.userId,
-            title: 'New Chat',
+            title: input.title,
+            description: input.description,
           },
         });
         chatId = newChat.id;
@@ -83,7 +87,7 @@ export const chatRouter = createTRPCRouter({
     const chat = await ctx.prisma.chat.create({
       data: {
         userId: ctx.session.userId!,
-        title: 'New Chat',
+        title: 'New Chat', // Add a value for the 'title' property
       },
     });
     return { chatId: chat.id };

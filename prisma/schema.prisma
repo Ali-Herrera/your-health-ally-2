@@ -26,5 +26,4 @@ model Message {
     content    String
     createdAt  DateTime @default(now())
     orderField Int      @default(0)
-    // author     String // Add the author field
 }
