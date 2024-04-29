@@ -17,15 +17,9 @@ const openai = new OpenAIApi(configuration);
 type Message = {
   role: 'user' | 'system';
   content: string;
-  // author: Author; // Add the author field
 };
 
 const messages: Message[] = [];
-
-// type GenerateTextInput = {
-//   prompt: string;
-//   chatId: string;
-// };
 
 // Create TRPC router for AI operations
 export const aiRouter = createTRPCRouter({
@@ -34,11 +28,11 @@ export const aiRouter = createTRPCRouter({
     .input(
       z.object({
         prompt: z.string(),
-        chatId: z.string() /*author: z.string()*/,
+        chatId: z.string(),
       })
-    ) // Include chatId in the input schema
+    )
     .mutation(async ({ input, ctx }) => {
-      const { prompt, chatId /* author */ } = input; // Extract prompt and chatId from input
+      const { prompt, chatId } = input;
 
       try {
         // Fetch the chat by its ID to ensure it exists
@@ -55,7 +49,6 @@ export const aiRouter = createTRPCRouter({
         messages.push({
           role: 'user',
           content: prompt,
-          // author: 'User',
         });
 
         // Call createChatCompletion to generate AI text based on the prompt and context
@@ -71,9 +64,8 @@ export const aiRouter = createTRPCRouter({
         const newMessage = await ctx.prisma.message.create({
           data: {
             chatId,
-            userId: AI_AUTHOR_ID, // Replace '<AI_USER_ID>' with the ID representing the AI user
+            userId: AI_AUTHOR_ID,
             content: generatedText?.toString() ?? '',
-            // author: 'AI', // Add the author property
           },
         });
 
@@ -82,7 +74,6 @@ export const aiRouter = createTRPCRouter({
           messages.push({
             role: 'system',
             content: generatedText,
-            // author: 'AI',
           });
         }
 

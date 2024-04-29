@@ -68,7 +68,6 @@ export const chatRouter = createTRPCRouter({
         message: z.string(),
         chatId: z.string().optional(),
         userId: z.string(),
-        // author: z.union([z.literal('User'), z.literal('AI')]), // Use the Author type
         orderField: z.number(), // Include the order field
       })
     )
@@ -86,8 +85,6 @@ export const chatRouter = createTRPCRouter({
         });
         chatId = newChat.id;
       }
-      // Determine the author ID based on the author type
-      // const authorId = input.author === 'User' ? input.userId : AI_AUTHOR_ID;
 
       // Create a new message associated with the chatId
       const newMessage = await ctx.prisma.message.create({
@@ -95,7 +92,6 @@ export const chatRouter = createTRPCRouter({
           chatId,
           userId: input.userId,
           content: input.message,
-          // author: authorId, // Save the author (User or AI)
           orderField: input.orderField, // Save the order field
         },
       });

@@ -1,6 +1,8 @@
 import { Box, Stack, Group, Avatar, Skeleton, Text, List } from '@mantine/core';
 import { useMediaQuery } from '@mantine/hooks';
 import { type Author } from '~/utils/types';
+// import { UserChat } from "./User";
+// import { AIChat } from "./AI";
 import { UserButton } from '@clerk/nextjs';
 import { theme } from '~/config/theme';
 import { useState, useEffect, useRef } from 'react';
@@ -9,7 +11,6 @@ export type ChatItem = {
   author: Author;
   content?: string;
   isError?: boolean;
-  orderField: number;
 };
 
 export type Props = {
@@ -82,65 +83,39 @@ export const ChatContent = ({ chatItems, loading }: Props) => {
         {/* Render chat items */}
         {chatItems.map((chatItem: ChatItem, index: number) => (
           <Box key={index}>
-            {chatItem.author === 'User' ? (
-              <Group p='xl' sx={{ backgroundColor: '#E5E5E5' }}>
+            <Group
+              p='xl'
+              sx={{
+                backgroundColor:
+                  chatItem.author === 'User' ? '#E5E5E5' : 'transparent',
+              }}
+            >
+              {chatItem.author === 'User' ? (
                 <UserButton />
-                {chatItem.content?.includes('\n') ? (
-                  <Text
-                    component='pre'
-                    sx={{ wordWrap: 'break-word', whiteSpace: 'pre-wrap' }}
-                  >
-                    {chatItem.content}
-                  </Text>
-                ) : chatItem.content?.startsWith('- ') ? (
-                  <List>
-                    {chatItem.content.split('\n').map((item, idx) => (
-                      <List.Item key={idx}>{item}</List.Item>
-                    ))}
-                  </List>
-                ) : (
-                  <Text>{chatItem.content}</Text>
-                )}
-              </Group>
-            ) : (
-              <Group p='xl'>
+              ) : (
                 <Avatar size={32} alt='ChatGBT' variant='gradient' mb='sm'>
                   AI
                 </Avatar>
-                {chatItem.content?.includes('\n') ? (
-                  <Text
-                    component='pre'
-                    sx={{ wordWrap: 'break-word', whiteSpace: 'pre-wrap' }}
-                  >
-                    {chatItem.content}
-                  </Text>
-                ) : chatItem.content?.startsWith('- ') ? (
-                  <List>
-                    {chatItem.content.split('\n').map((item, idx) => (
-                      <List.Item key={idx}>{item}</List.Item>
-                    ))}
-                  </List>
-                ) : (
-                  <Text>{chatItem.content}</Text>
-                )}
-              </Group>
-            )}
+              )}
+              {chatItem.content?.includes('\n') ? (
+                <Text
+                  component='pre'
+                  sx={{ wordWrap: 'break-word', whiteSpace: 'pre-wrap' }}
+                >
+                  {chatItem.content}
+                </Text>
+              ) : chatItem.content?.startsWith('- ') ? (
+                <List>
+                  {chatItem.content.split('\n').map((item, idx) => (
+                    <List.Item key={idx}>{item}</List.Item>
+                  ))}
+                </List>
+              ) : (
+                <Text>{chatItem.content}</Text>
+              )}
+            </Group>
           </Box>
         ))}
-
-        {/* Display skeleton loading animation below loaded chat end if loading */}
-        {loading && (
-          <Group p='xl'>
-            <Skeleton height={32} circle />
-            <Skeleton height={8} radius='xl' />
-            <Skeleton height={8} radius='xl' width='70%' />
-          </Group>
-        )}
-
-        {/* NOT INLINE WITH REST OF COMPONENT: Display Definition Component if text is selected
-				{definitionNeeded && selectedText && (
-					<DefinitionTool selected={definitionNeeded} text={selectedText} />
-				)} */}
 
         {/* Empty div to scroll to when necessary */}
         <div ref={endOfChatRef} />

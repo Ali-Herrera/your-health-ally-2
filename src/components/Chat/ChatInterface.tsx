@@ -23,28 +23,27 @@ const ChatInterface: React.FC<ChatInterfaceProps> = ({ userId }) => {
 
   const handleUpdate = (
     prompt: string,
-    chatId: string /* author: Author */
+    chatId: string,
+    // userId: string // Include userId as a parameter
+    author: Author
   ) => {
     console.log('Updating chat items...');
     console.log('Previous chat items:', chatItems);
 
-    // Determine the order field for the new message
-    const handleUpdate = (prompt: string, chatId: string, author: Author) => {
-      const orderField =
-        chatItems.length > 0
-          ? (chatItems[chatItems.length - 1]?.orderField ?? 0) + 1
-          : 0;
+    // const orderField =
+    //   chatItems.length > 0
+    //     ? chatItems[chatItems.length - 1]?.orderField ?? 0 + 1
+    //     : 0;
 
-      // Update the chatItems state by adding the new chat item
-      setChatItems((prevChatItems) => {
-        const updatedChatItems = [
-          ...prevChatItems,
-          { content: prompt, author: author, orderField: orderField }, // Make sure to include orderField
-        ];
-        console.log('Updated chat items:', updatedChatItems);
-        return updatedChatItems; // Return the updated chat items
-      });
-    };
+    // Determine the author based on the userId
+    // const author = userId === user?.id ? 'User' : 'AI';
+
+    setChatItems((prevChatItems) => [
+      ...prevChatItems,
+      { content: prompt, author: author },
+    ]);
+
+    // Any other logic related to updating chatItems can be added here
   };
 
   const resetMutation = api.ai.reset.useMutation();
@@ -80,7 +79,6 @@ const ChatInterface: React.FC<ChatInterfaceProps> = ({ userId }) => {
             waiting={waiting}
             userId={user.id}
           />
-          <Footer />
         </>
       )}
     </Box>

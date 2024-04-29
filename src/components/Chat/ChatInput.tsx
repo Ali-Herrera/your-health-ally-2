@@ -10,7 +10,7 @@ import { TRPCError } from '@trpc/server';
 import { Author } from '~/utils/types';
 
 type Props = {
-  onUpdate: (prompt: string, chatId: string /* author: Author */) => void;
+  onUpdate: (prompt: string, chatId: string, author: 'User' | 'AI') => void;
   waiting?: boolean;
   userId: string; // Add userId prop here
 };
@@ -68,7 +68,6 @@ export const ChatInput = ({ onUpdate, waiting, userId }: Props) => {
               message: prompt,
               userId: userId,
               orderField: 0,
-              // author: 'User',
             },
             {
               onSuccess: async (data) => {
@@ -86,7 +85,6 @@ export const ChatInput = ({ onUpdate, waiting, userId }: Props) => {
                   {
                     prompt: prompt,
                     chatId: chatIdFromResult ?? '',
-                    // author: 'User', // Include the author property here
                   },
                   {
                     onSuccess: (generateTextData) => {
@@ -98,11 +96,11 @@ export const ChatInput = ({ onUpdate, waiting, userId }: Props) => {
                           'GenerateText successful. Response:',
                           generateTextData.generatedText
                         );
-                        onUpdate(prompt, chatIdFromResult! /*'User'*/);
+                        onUpdate(prompt, chatIdFromResult!, 'User');
                         onUpdate(
                           generateTextData.generatedText,
-                          chatIdFromResult!
-                          /*'AI'*/
+                          chatIdFromResult!,
+                          'AI'
                         );
                       } else {
                         console.error(
