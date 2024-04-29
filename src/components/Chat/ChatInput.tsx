@@ -1,4 +1,4 @@
-// // ChatInput.tsx
+// ChatInput.tsx
 import { Button, Group, Textarea } from '@mantine/core';
 import { useMediaQuery } from '@mantine/hooks';
 import { IconSend } from '@tabler/icons-react';
@@ -12,7 +12,7 @@ import { Author } from '~/utils/types';
 type Props = {
   onUpdate: (prompt: string, chatId: string, author: 'User' | 'AI') => void;
   waiting?: boolean;
-  userId: string; // Add userId prop here
+  userId: string;
 };
 
 const useStartNewChat = () => {
@@ -42,22 +42,22 @@ export const ChatInput = ({ onUpdate, waiting, userId }: Props) => {
 
   useEffect(() => {
     if (data) {
-      setChatId(data.chatId);
-      chatIdRef.current = data.chatId;
+      if ('chatId' in data) {
+        setChatId(data.chatId);
+        chatIdRef.current = data.chatId;
+      }
     }
   }, [data]);
 
-  //add error handling for the chatId using TRPCError
   useEffect(() => {
     if (chatIdError) {
       console.error('Failed to create chat:', chatIdError.message);
-      // Display an error message to the user
-      // Or handle it in some other way
     }
   }, [chatIdError]);
 
   const CreateChatMutation = api.chat.create.useMutation();
   const GenerateTextMutation = api.ai.generateText.useMutation();
+  const ContinueChatMutation = api.chat.continueChat.useMutation();
 
   const handleSubmit = async () => {
     if (prompt.trim()) {
@@ -81,13 +81,13 @@ export const ChatInput = ({ onUpdate, waiting, userId }: Props) => {
                   chatIdFromResult
                 );
 
-                const generateTextResult = await GenerateTextMutation.mutate(
+                await GenerateTextMutation.mutate(
                   {
                     prompt: prompt,
                     chatId: chatIdFromResult ?? '',
                   },
                   {
-                    onSuccess: (generateTextData) => {
+                    onSuccess: async (generateTextData) => {
                       if (
                         generateTextData &&
                         generateTextData.generatedText !== undefined
@@ -102,11 +102,44 @@ export const ChatInput = ({ onUpdate, waiting, userId }: Props) => {
                           chatIdFromResult!,
                           'AI'
                         );
-                      } else {
-                        console.error(
-                          'Failed to generate text:',
-                          generateTextData
-                        );
+                      }
+                    },
+                  }
+                );
+              },
+            }
+          );
+        } else {
+          await ContinueChatMutation.mutate(
+            {
+              message: prompt,
+              chatId: chatId,
+              userId: userId,
+              orderField: 0,
+            },
+            {
+              onSuccess: async (data) => {
+                console.log('Chat continuation successful. Response:', data);
+                setPrompt('');
+
+                console.log(
+                  'Calling GenerateTextMutation with chatId:',
+                  chatId
+                );
+
+                await GenerateTextMutation.mutate(
+                  {
+                    prompt: prompt,
+                    chatId: chatId,
+                  },
+                  {
+                    onSuccess: (generateTextData) => {
+                      if (
+                        generateTextData &&
+                        generateTextData.generatedText !== undefined
+                      ) {
+                        onUpdate(prompt, chatId, 'User');
+                        onUpdate(generateTextData.generatedText, chatId, 'AI');
                       }
                     },
                     onError: (generateTextError) => {
@@ -119,15 +152,13 @@ export const ChatInput = ({ onUpdate, waiting, userId }: Props) => {
                 );
               },
               onError: (error) => {
-                console.error('Failed to create chat:', error);
+                console.error('Failed to continue chat:', error);
               },
             }
           );
-        } else {
-          console.log('Chat already exists. No need to create a new one.');
         }
       } catch (error) {
-        console.error('Error:', error);
+        console.error('Failed to handle submit:', error);
       }
     }
   };
