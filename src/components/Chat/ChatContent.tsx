@@ -107,7 +107,6 @@ export const ChatContent = ({ chatItems, loading }: Props) => {
                 <Avatar size={32} alt='ChatGBT' variant='gradient' mb='sm'>
                   AI
                 </Avatar>
-                {/* <Text c={black}>{chatItem.content}</Text> */}
                 {chatItem.content?.includes('\n') ? (
                   <Text
                     component='pre'
@@ -128,6 +127,20 @@ export const ChatContent = ({ chatItems, loading }: Props) => {
             )}
           </Box>
         ))}
+
+        {/* Display skeleton loading animation below loaded chat end if loading */}
+        {loading && (
+          <Group p='xl'>
+            <Skeleton height={32} circle />
+            <Skeleton height={8} radius='xl' />
+            <Skeleton height={8} radius='xl' width='70%' />
+          </Group>
+        )}
+
+        {/* NOT INLINE WITH REST OF COMPONENT: Display Definition Component if text is selected
+				{definitionNeeded && selectedText && (
+					<DefinitionTool selected={definitionNeeded} text={selectedText} />
+				)} */}
 
         {/* Empty div to scroll to when necessary */}
         <div ref={endOfChatRef} />
