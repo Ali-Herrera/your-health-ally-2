@@ -1,4 +1,12 @@
-import { Box, Stack, Group, Avatar, Skeleton, Text } from "@mantine/core";
+import {
+	Box,
+	Stack,
+	Group,
+	Avatar,
+	Skeleton,
+	Text,
+	List,
+} from "@mantine/core";
 import { useMediaQuery } from "@mantine/hooks";
 import { type Author } from "~/utils/types";
 import { UserButton } from "@clerk/nextjs";
@@ -52,7 +60,6 @@ export const ChatContent = ({ chatItems, loading }: Props) => {
 			h="65vh"
 			sx={{ overflowY: "scroll", maxWidth: "100%" }}
 		>
-			{" "}
 			<Stack spacing="md">
 				{/* Render initial prompt only if no user messages exist */}
 				{!userMessageExists && (
@@ -60,43 +67,43 @@ export const ChatContent = ({ chatItems, loading }: Props) => {
 						<Avatar size={32} alt="ChatGBT" variant="gradient" mb="sm">
 							AI
 						</Avatar>
-
-						<Text c={black}>
-							I am an intelligent advisor that can provide information regarding
-							people's health. I answer questions about health-related
-							conditions and symptoms, and how to prepare for doctors
-							appointments. This is for educational purposes only. Please see
-							your healthcare provider for medical treatment.
-						</Text>
+							<Text c={black}>
+								I am an intelligent advisor that can provide information
+								regarding people's health. I answer questions about
+								health-related conditions and symptoms, and how to prepare for
+								doctors appointments. This is for educational purposes only.
+								Please see your healthcare provider for medical treatment.
+							</Text>
 					</Group>
 				)}
+
 				{/* Render chat items */}
-				{chatItems.map((chatItem: ChatItem, index: number) => {
-					return (
-						<Box key={index} data-id={index}>
-							{chatItem.author === "User" ? (
-								<Group
-									p="xl"
-									sx={{ backgroundColor: "#E5E5E5" }}
-									data-id={index}
-								>
+				{chatItems.map((chatItem: ChatItem, index: number) => (
+					<Box key={index}>
+						{chatItem.author === "User" ? (
+
+								<Group p="xl" sx={{ backgroundColor: "#E5E5E5" }}>
 									<UserButton />
 									{chatItem.content?.includes("\n") ? (
 										<Text
 											component="pre"
-											sx={{
-												wordWrap: "break-word",
-												whiteSpace: "pre-wrap",
-											}}
+											sx={{ wordWrap: "break-word", whiteSpace: "pre-wrap" }}
 										>
 											{chatItem.content}
 										</Text>
+									) : chatItem.content?.startsWith("- ") ? (
+										<List>
+											{chatItem.content.split("\n").map((item, idx) => (
+												<List.Item key={idx}>{item}</List.Item>
+											))}
+										</List>
 									) : (
 										<Text>{chatItem.content}</Text>
 									)}
 								</Group>
-							) : (
-								<Group p="xl" data-id={index}>
+						) : (
+
+								<Group p="xl">
 									<Avatar size={32} alt="ChatGBT" variant="gradient" mb="sm">
 										AI
 									</Avatar>
@@ -107,14 +114,19 @@ export const ChatContent = ({ chatItems, loading }: Props) => {
 										>
 											{chatItem.content}
 										</Text>
+									) : chatItem.content?.startsWith("- ") ? (
+										<List>
+											{chatItem.content.split("\n").map((item, idx) => (
+												<List.Item key={idx}>{item}</List.Item>
+											))}
+										</List>
 									) : (
 										<Text>{chatItem.content}</Text>
 									)}
 								</Group>
-							)}
-						</Box>
-					);
-				})}
+						)}
+					</Box>
+				))}
 
 				{/* Display skeleton loading animation below loaded chat end if loading */}
 				{loading && (
@@ -124,6 +136,11 @@ export const ChatContent = ({ chatItems, loading }: Props) => {
 						<Skeleton height={8} radius="xl" width="70%" />
 					</Group>
 				)}
+
+				{/* NOT INLINE WITH REST OF COMPONENT: Display Definition Component if text is selected
+				{definitionNeeded && selectedText && (
+					<DefinitionTool selected={definitionNeeded} text={selectedText} />
+				)} */}
 
 				{/* Empty div to scroll to when necessary */}
 				<div ref={endOfChatRef} />
