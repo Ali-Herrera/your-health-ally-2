@@ -12,7 +12,11 @@ import { HeaderMobile } from '../header/mobileHeader';
 import { Header } from '../header';
 import { Author } from '~/utils/types';
 
-const ChatInterface = () => {
+interface ChatInterfaceProps {
+  userId: string; // Define the userId prop
+}
+
+const ChatInterface: React.FC<ChatInterfaceProps> = ({ userId }) => {
   const mobileScreen = useMediaQuery('(max-width: 480px)');
   const [chatItems, setChatItems] = useState([] as ChatItem[]);
   const [waiting, setWaiting] = useState<boolean>(false);
@@ -46,6 +50,8 @@ const ChatInterface = () => {
   };
 
   const { isLoaded, user } = useUser();
+
+  console.log('User ID:', user?.id);
 
   return (
     <Box>
