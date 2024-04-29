@@ -22,10 +22,9 @@ export const ChatInput = ({ onUpdate, waiting }: Props) => {
   }, [prompt]);
 
   const handleUpdate = () => {
-    if (!prompt.trim()) {
+      console.log('CLICKED'); 
       onUpdate(prompt);
       setPrompt('');
-    }
   };
 
   const handleKeyDown = (e: React.KeyboardEvent<HTMLTextAreaElement>) => {
