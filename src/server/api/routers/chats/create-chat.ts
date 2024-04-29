@@ -10,24 +10,6 @@ import { addUserDataToChats } from '~/utils/chat-utils';
 
 const prisma = new PrismaClient();
 
-// const addUserDataToChats = async (chats: Chat[]) => {
-//   const userIds = chats.map((chat) => chat.userId);
-//   const users = await prisma.chat.findMany({
-//     where: {
-//       userId: {
-//         in: userIds,
-//       },
-//     },
-//   });
-//   return chats.map((chat) => {
-//     const user = users.find((user) => user.userId === chat.userId);
-//     return {
-//       ...chat,
-//       user,
-//     };
-//   });
-// };
-
 export const chatRouter = createTRPCRouter({
   getById: publicProcedure
     .input(z.object({ id: z.string() }))
