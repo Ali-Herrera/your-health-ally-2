@@ -17,7 +17,7 @@ const openai = new OpenAIApi(configuration);
 type Message = {
   role: 'user' | 'system';
   content: string;
-  author: Author; // Add the author field
+  // author: Author; // Add the author field
 };
 
 const messages: Message[] = [];
@@ -31,9 +31,14 @@ const messages: Message[] = [];
 export const aiRouter = createTRPCRouter({
   // Mutation to generate text based on a prompt and chat context
   generateText: publicProcedure
-    .input(z.object({ prompt: z.string(), chatId: z.string() })) // Include chatId in the input schema
+    .input(
+      z.object({
+        prompt: z.string(),
+        chatId: z.string() /*author: z.string()*/,
+      })
+    ) // Include chatId in the input schema
     .mutation(async ({ input, ctx }) => {
-      const { prompt, chatId } = input; // Extract prompt and chatId from input
+      const { prompt, chatId /* author */ } = input; // Extract prompt and chatId from input
 
       try {
         // Fetch the chat by its ID to ensure it exists
@@ -50,7 +55,7 @@ export const aiRouter = createTRPCRouter({
         messages.push({
           role: 'user',
           content: prompt,
-          author: 'User',
+          // author: 'User',
         });
 
         // Call createChatCompletion to generate AI text based on the prompt and context
@@ -68,7 +73,7 @@ export const aiRouter = createTRPCRouter({
             chatId,
             userId: AI_AUTHOR_ID, // Replace '<AI_USER_ID>' with the ID representing the AI user
             content: generatedText?.toString() ?? '',
-            author: 'AI', // Add the author property
+            // author: 'AI', // Add the author property
           },
         });
 
@@ -77,7 +82,7 @@ export const aiRouter = createTRPCRouter({
           messages.push({
             role: 'system',
             content: generatedText,
-            author: 'AI',
+            // author: 'AI',
           });
         }
 

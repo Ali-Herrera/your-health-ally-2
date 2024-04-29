@@ -10,7 +10,7 @@ import { TRPCError } from '@trpc/server';
 import { Author } from '~/utils/types';
 
 type Props = {
-  onUpdate: (prompt: string, chatId: string, author: Author) => void;
+  onUpdate: (prompt: string, chatId: string /* author: Author */) => void;
   waiting?: boolean;
   userId: string; // Add userId prop here
 };
@@ -68,7 +68,7 @@ export const ChatInput = ({ onUpdate, waiting, userId }: Props) => {
               message: prompt,
               userId: userId,
               orderField: 0,
-              author: 'User',
+              // author: 'User',
             },
             {
               onSuccess: async (data) => {
@@ -86,6 +86,7 @@ export const ChatInput = ({ onUpdate, waiting, userId }: Props) => {
                   {
                     prompt: prompt,
                     chatId: chatIdFromResult ?? '',
+                    // author: 'User', // Include the author property here
                   },
                   {
                     onSuccess: (generateTextData) => {
@@ -97,11 +98,11 @@ export const ChatInput = ({ onUpdate, waiting, userId }: Props) => {
                           'GenerateText successful. Response:',
                           generateTextData.generatedText
                         );
-                        onUpdate(prompt, chatIdFromResult!, 'User');
+                        onUpdate(prompt, chatIdFromResult! /*'User'*/);
                         onUpdate(
                           generateTextData.generatedText,
-                          chatIdFromResult!,
-                          'AI'
+                          chatIdFromResult!
+                          /*'AI'*/
                         );
                       } else {
                         console.error(
@@ -125,33 +126,7 @@ export const ChatInput = ({ onUpdate, waiting, userId }: Props) => {
             }
           );
         } else {
-          // If there's already a chatId, use it directly for GenerateTextMutation
-          const generateTextResult = await GenerateTextMutation.mutate(
-            {
-              prompt: prompt,
-              chatId: chatId,
-            },
-            {
-              onSuccess: (generateTextData) => {
-                if (
-                  generateTextData &&
-                  generateTextData.generatedText !== undefined
-                ) {
-                  console.log(
-                    'GenerateText successful. Response:',
-                    generateTextData.generatedText
-                  );
-                  onUpdate(prompt, chatId!, 'User');
-                  onUpdate(generateTextData.generatedText, chatId!, 'AI');
-                } else {
-                  console.error('Failed to generate text:', generateTextData);
-                }
-              },
-              onError: (generateTextError) => {
-                console.error('Failed to generate text:', generateTextError);
-              },
-            }
-          );
+          console.log('Chat already exists. No need to create a new one.');
         }
       } catch (error) {
         console.error('Error:', error);
