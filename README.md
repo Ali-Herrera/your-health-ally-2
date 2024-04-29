@@ -156,7 +156,7 @@ Health Literacy is defined by the National Library of Medicine as, “The degree
 
 **In the works**
 
-The PDF conversion allows user's chats to be savable and printable, ensuring they have tangible records for their healthcare journey. _Note:_ Users have the option to delete their chats should they choose to.
+PDF conversion allows user's chats to be savable and printable, ensuring they have tangible records for their healthcare journey. _Note:_ Users have the option to delete their chats should they choose to.
 
 ### Stack Overview
 
