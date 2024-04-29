@@ -41,7 +41,14 @@
             <a href="#about-the-project">About The Project</a>
             <ul>
                 <li><a href="#description">Description</a></li>
-                <li><a href="#features">Features</a></li>
+                <li><a href="#features">Features</a>
+                      <ul>
+                        <li><a href="#basic-features">Basic Features</a></li>
+                        <li><a href="#ai-chatbot-for-informed-queries">AI Chatbot for Informed Queries</a></li>
+                        <li><a href="#interactive-glossary-for-health-literacy">Interactive Glossary for Health Literacy</a></li>
+                        <li><a href="#pdf-conversion-for-record-keeping"> PDF Conversion for Record Keeping</a></li>
+                     </ul>
+                </li>
                 <li><a href="#stack-overview">Stack Overview</a>
                     <ul>
                         <li><a href="#prerequisites">Prerequisites</a></li>
@@ -115,6 +122,8 @@ Additionally, proficiency in health literacy improves health status, reduces hea
 
 ### Features
 
+#### Basic Features
+
 - Responsive design
 - Intuitive navigation
 - Authentication
@@ -143,11 +152,11 @@ Our integrated glossary defines medical, health-related and other unfamiliar ter
 
 Health Literacy is defined by the National Library of Medicine as, “The degree to which individuals have the capacity to obtain, process, and understand basic health information and services needed to make appropriate health decisions” [^5]
 
-#### Chat-to-PDF Conversion
+#### PDF Conversion for Record Keeping
 
 **In the works**
 
-The Chat-to-PDF Conversion makes user's chats savable and printable, ensuring they have tangible records for their healthcare journey. _Note:_ Users have the option to delete their chats should they choose to.
+The PDF conversion allows user's chats to be savable and printable, ensuring they have tangible records for their healthcare journey. _Note:_ Users have the option to delete their chats should they choose to.
 
 ### Stack Overview
 
