@@ -27,7 +27,7 @@ export type Props = {
 
 export const ChatContent = ({ chatItems, loading }: Props) => {
 	const mobileScreen = useMediaQuery("(max-width: 480px)");
-	const { black, colors } = theme;
+	const { black } = theme;
 
 	// State to track if any user messages exist
 	const [userMessageExists, setUserMessageExists] = useState(false);

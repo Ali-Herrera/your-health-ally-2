@@ -6,7 +6,6 @@ import {
 	Skeleton,
 	Text,
 	List,
-	Tooltip,
 } from "@mantine/core";
 import { useMediaQuery } from "@mantine/hooks";
 import { type Author } from "~/utils/types";
@@ -55,72 +54,6 @@ export const ChatContent = ({ chatItems, loading }: Props) => {
 		scrollToBottom();
 	}, [chatItems]);
 
-	// START HOVER DEFINITION FUNCTIONALITY
-	// TODO: Decide if this should be a separate component
-	// TODO: Decide if Tooltip should be rendered for entire element or inline with the selected text
-	const [needDictionary, setNeedDictionary] = useState<boolean>(false);
-	const [textDefinition, setTextDefinition] = useState("");
-	const [selected, setSelected] = useState({ text: '', element: null });
-
-
-	const getDictionary = async (text: string) => {
-		try {
-			const response = await fetch(
-				`https://api.dictionaryapi.dev/api/v2/entries/en/${text}`
-			);
-			const data = await response.json();
-			if (!data) {
-				setTextDefinition(
-					"Hmm. No definition found. You can try again at later time or head to the web instead."
-				);
-			}
-
-			console.log("dictionaryapi response: ", data);
-
-			const definedText = data[0].meanings.map(
-				(info: {
-					partOfSpeech: string;
-					definitions: Array<{ definition: string }>;
-				}) => {
-					const partOfSpeech = info.partOfSpeech;
-					const definition = info.definitions?.map((item) => item.definition);
-					return `${partOfSpeech}: ${definition}`;
-				}
-			);
-
-			console.log("definedText: ", definedText);
-
-			setTextDefinition(definedText.join(" | "));
-
-			console.log("dictionary: ", textDefinition);
-		} catch (error) {
-			console.error("Error fetching definition: ", error);
-			setTextDefinition(
-				"Whoops! Error fetching definition. You can try again at later time or head to the web instead."
-			);
-		}
-	};
-
-	const handleSelectedText = (event: MouseEvent) => {
-		event.preventDefault();
-		const selection = window.getSelection()?.toString();
-		if (selection != "" && selection != null) {
-			setNeedDictionary(true);
-			getDictionary(selection);
-		} else {
-			setNeedDictionary(false);
-			return;
-		}
-	};
-
-	useEffect(() => {
-		document.addEventListener("mouseup", handleSelectedText);
-
-		return () => {
-			document.removeEventListener("mouseup", handleSelectedText);
-		};
-	}, []);
-
 	return (
 		<Box
 			ml={mobileScreen ? "0" : "250px"}
@@ -134,17 +67,6 @@ export const ChatContent = ({ chatItems, loading }: Props) => {
 						<Avatar size={32} alt="ChatGBT" variant="gradient" mb="sm">
 							AI
 						</Avatar>
-
-						<Tooltip
-							label={textDefinition}
-							color={black}
-							position="top"
-							closeDelay={900}
-							multiline
-							withArrow
-							opened={needDictionary}
-							events={{ hover: false, focus: true, touch: true }}
-						>
 							<Text c={black}>
 								I am an intelligent advisor that can provide information
 								regarding people's health. I answer questions about
@@ -152,7 +74,6 @@ export const ChatContent = ({ chatItems, loading }: Props) => {
 								doctors appointments. This is for educational purposes only.
 								Please see your healthcare provider for medical treatment.
 							</Text>
-						</Tooltip>
 					</Group>
 				)}
 
@@ -160,16 +81,7 @@ export const ChatContent = ({ chatItems, loading }: Props) => {
 				{chatItems.map((chatItem: ChatItem, index: number) => (
 					<Box key={index}>
 						{chatItem.author === "User" ? (
-							<Tooltip
-								label={textDefinition}
-								color={black}
-								position="top"
-								closeDelay={900}
-								multiline
-								withArrow
-								opened={needDictionary}
-								events={{ hover: false, focus: false, touch: false }}
-							>
+
 								<Group p="xl" sx={{ backgroundColor: "#E5E5E5" }}>
 									<UserButton />
 									{chatItem.content?.includes("\n") ? (
@@ -189,18 +101,8 @@ export const ChatContent = ({ chatItems, loading }: Props) => {
 										<Text>{chatItem.content}</Text>
 									)}
 								</Group>
-							</Tooltip>
 						) : (
-							<Tooltip
-								label={textDefinition}
-								color={black}
-								position="top"
-								closeDelay={900}
-								multiline
-								withArrow
-								opened={needDictionary}
-								events={{ hover: false, focus: false, touch: false }}
-							>
+
 								<Group p="xl">
 									<Avatar size={32} alt="ChatGBT" variant="gradient" mb="sm">
 										AI
@@ -222,7 +124,6 @@ export const ChatContent = ({ chatItems, loading }: Props) => {
 										<Text>{chatItem.content}</Text>
 									)}
 								</Group>
-							</Tooltip>
 						)}
 					</Box>
 				))}
