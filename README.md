@@ -143,6 +143,9 @@ Additionally, the Journal of General Internal Medicine found that on average, pa
 [![Clerkjs](https://img.shields.io/badge/%20ClerkJS%20-6d50fb?style=for-the-badge)](https://clerk.com/docs)
 [![OpenAI](https://img.shields.io/badge/OpenAI-74aa9c?style=for-the-badge&logo=openai&logoColor=white)](https://openai.com/)
 [![tRPC](https://img.shields.io/badge/tRPC-%232596BE.svg?style=for-the-badge&logo=tRPC&logoColor=white)](https://trpc.io/)
+[![Free Dictionary API](https://img.shields.io/badge/Free_Dictionary_API-API?style=for-the-badge&logoSize=!&labelColor=233043&color=233043)
+](https://dictionaryapi.dev/)
+
 
 #### Backing Services
 
@@ -371,6 +374,7 @@ _For more examples, please refer to the [Documentation](https://example.com)_
 [Emojipedia](https://emojipedia.org/)  
 [Img Shields](https://shields.io)  
 [GitHub Emoji Cheat Sheet](https://www.webpagefx.com/tools/emoji-cheat-sheet)  
+[How to Implement a Tooltip to Share Selected Text With Vanilla JavaScript](https://www.youtube.com/watch?v=oUUJvDF2tiU)  
 [Markdown Cheat Sheet](https://www.markdownguide.org/cheat-sheet/)  
 [Nextjs 14 Custom Chatbot](https://www.youtube.com/watch?v=mkJbEP5GeRA)
 
