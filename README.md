@@ -41,7 +41,14 @@
             <a href="#about-the-project">About The Project</a>
             <ul>
                 <li><a href="#description">Description</a></li>
-                <li><a href="#features">Features</a></li>
+                <li><a href="#features">Features</a>
+                      <ul>
+                        <li><a href="#basic-features">Basic Features</a></li>
+                        <li><a href="#ai-chatbot-for-informed-queries">AI Chatbot for Informed Queries</a></li>
+                        <li><a href="#interactive-glossary-for-health-literacy">Interactive Glossary for Health Literacy</a></li>
+                        <li><a href="#pdf-conversion-for-record-keeping"> PDF Conversion for Record Keeping</a></li>
+                     </ul>
+                </li>
                 <li><a href="#stack-overview">Stack Overview</a>
                     <ul>
                         <li><a href="#prerequisites">Prerequisites</a></li>
@@ -104,19 +111,52 @@ A study in 2022 found that **52%** of individuals in the U.S. feel their symptom
 
 These statistics increase depending on the patient's race/ethnicity, sexual orientation (LGBTQIA+ community), gender identity (female, transgender and non-binary individuals), chronic health conditions, or disabilities. [^1]
 
-Additionally, the Journal of General Internal Medicine found that on average, patients get **11 seconds** to explain the reason for their visit **before** they are interrupted by their doctors [^4]. This can lead to delays in proper diagnosis and treatment for patients.
+Additionally, the Journal of General Internal Medicine found that on average, patients get **11 seconds** to explain the reason for their visit **before** they are interrupted by their doctors [^6]. This can lead to delays in proper diagnosis and treatment for patients.
 
 ![average number of years to diagnosis for common chronic diseases](public/graphs/avgyearstodiagnosisBAR.png)
-[^2] [^3] [^7] [^7]
+[^2] [^3] [^8]
+
+Additionally, proficiency in health literacy improves health status, reduces health-service use and costs, and extends lives.
+
+“The degree to which individuals have the capacity to obtain, process, and understand basic health information and services needed to make appropriate health decisions” [^5]
 
 ### Features
+
+#### Basic Features
 
 - Responsive design
 - Intuitive navigation
 - Authentication
-- AI Chatbot
-- Interactive Glossary
-- Chat-to-PDF Conversion
+
+#### AI Chatbot for Informed Queries
+
+Users can input health-related questions into our ChatBot (powered by OpenAI) and receive tailored responses.  
+Responses may include:
+
+- Lists of questions to bring to the doctor
+- Suggestions for potential types of healthcare providers
+- Readiness checklist before going to an appointment
+
+Currently, we have prompt-engineered our ChatBot with the following text:
+
+```
+You are an intelligent advisor that can provide information regarding people's health. You answer their questions about health-related conditions and symptoms, and what type of doctors they may want to see, and what types of questions to bring to the doctor with them and provide them with readiness checklists for appointments.
+
+```
+
+**Stretch-goal:** Machine learning and model training. [(Read more.](https://www.databricks.com/glossary/machine-learning-models)
+
+#### Interactive Glossary for Health Literacy
+
+Our integrated glossary defines medical, health-related and other unfamiliar terms to promote understanding and address health literacy concerns.
+
+Health Literacy is defined by the National Library of Medicine as, “The degree to which individuals have the capacity to obtain, process, and understand basic health information and services needed to make appropriate health decisions” [^5]
+
+#### PDF Conversion for Record Keeping
+
+**In the works**
+
+PDF conversion allows user's chats to be savable and printable, ensuring they have tangible records for their healthcare journey. _Note:_ Users have the option to delete their chats should they choose to.
 
 ### Stack Overview
 
@@ -143,6 +183,7 @@ Additionally, the Journal of General Internal Medicine found that on average, pa
 [![Clerkjs](https://img.shields.io/badge/%20ClerkJS%20-6d50fb?style=for-the-badge)](https://clerk.com/docs)
 [![OpenAI](https://img.shields.io/badge/OpenAI-74aa9c?style=for-the-badge&logo=openai&logoColor=white)](https://openai.com/)
 [![tRPC](https://img.shields.io/badge/tRPC-%232596BE.svg?style=for-the-badge&logo=tRPC&logoColor=white)](https://trpc.io/)
+[![Free Dictionary API](https://img.shields.io/badge/Free_Dictionary_API-API?style=for-the-badge&color=d7433b)](https://dictionaryapi.dev/)
 
 #### Backing Services
 
@@ -371,6 +412,7 @@ _For more examples, please refer to the [Documentation](https://example.com)_
 [Emojipedia](https://emojipedia.org/)  
 [Img Shields](https://shields.io)  
 [GitHub Emoji Cheat Sheet](https://www.webpagefx.com/tools/emoji-cheat-sheet)  
+[How to Implement a Tooltip to Share Selected Text With Vanilla JavaScript](https://www.youtube.com/watch?v=oUUJvDF2tiU)  
 [Markdown Cheat Sheet](https://www.markdownguide.org/cheat-sheet/)  
 [Nextjs 14 Custom Chatbot](https://www.youtube.com/watch?v=mkJbEP5GeRA)
 
@@ -380,8 +422,9 @@ _For more examples, please refer to the [Documentation](https://example.com)_
 
 [^1]: Harris poll: Many patients feel ignored or doubted when seeking medical treatment . MITRE. (2022, December 20). https://www.mitre.org/news-insights/news-release/mitre-harris-poll-many-patients-feel-ignored-or-doubted#:~:text=MCLEAN%2C%20Va.%2C%20%26%20BEDFORD,believed%E2%80%9D%20when%20seeking%20medical%20treatment
 [^2]: Ibrahim, A. (2021, September 1). Signs of ms may start five years before diagnosis. MS International Federation. https://www.msif.org/news/2018/08/26/signs-of-ms-may-start-five-years-before-diagnosis/
-[^3]: Lupus facts and statistics. Lupus Foundation of America. (n.d.). https://www.lupus.org/resources/lupus-facts-and-statistics#:~:text=Lupus%20symptoms%20can%20also%20be,first%20notice%20their%20lupus%20symptoms.
-[^4]: Singh Ospina, N., Phillips, K.A., Rodriguez-Gutierrez, R. et al. Eliciting the Patient’s Agenda- Secondary Analysis of Recorded Clinical Encounters. J GEN INTERN MED 34, 36–40 (2019). https://doi.org/10.1007/s11606-018-4540-5
-[^5]: Ten early signs. Parkinson’s Foundation. (n.d.). https://www.parkinson.org/understanding-parkinsons/10-early-signs
-[^6]: Twenty things you might not know about celiac disease. Celiac Disease Foundation. (2022, August 24). https://celiac.org/about-the-foundation/featured-news/2016/08/20-things-you-might-not-know-about-celiac-disease/#:~:text=There%20is%20an%20average%20delay,miscarriage%2C%20epilepsy%2C%20and%20more.
-[^7]: Yale Medicine. (2024, January 19). Endometriosis. Yale Medicine. https://www.yalemedicine.org/conditions/endometriosis#:~:text=On%20average%2C%20women%20in%20the,are%20found%20to%20
+[^3]: Lupus facts and statistics. Lupus Foundation of America. (n.d.). https://www.lupus.org/resources/lupus-facts-and-statistics#:~:text=Lupus%20symptoms%20can%20also%20be,first%20notice%20their%20lupus%20symptoms
+[^4]: Ratzan SC, Parker RM. 2000. Introduction. In: National Library of Medicine Current Bibliographies in Medicine: Health Literacy. Selden CR, editor; , Zorn M, editor; , Ratzan SC, editor; , Parker RM, editor. , Editors. NLM Pub. No. CBM 2000-1. Bethesda, MD: National Institutes of Health, U.S. Department of Health and Human Services.
+[^5]: Singh Ospina, N., Phillips, K.A., Rodriguez-Gutierrez, R. et al. Eliciting the Patient’s Agenda- Secondary Analysis of Recorded Clinical Encounters. J GEN INTERN MED 34, 36–40 (2019). https://doi.org/10.1007/s11606-018-4540-5
+[^6]: Ten early signs. Parkinson’s Foundation. (n.d.). https://www.parkinson.org/understanding-parkinsons/10-early-signs
+[^7]: Twenty things you might not know about celiac disease. Celiac Disease Foundation. (2022, August 24). https://celiac.org/about-the-foundation/featured-news/2016/08/20-things-you-might-not-know-about-celiac-disease/#:~:text=There%20is%20an%20average%20delay,miscarriage%2C%20epilepsy%2C%20and%20more.
+[^8]: Yale Medicine. (2024, January 19). Endometriosis. Yale Medicine. https://www.yalemedicine.org/conditions/endometriosis#:~:text=On%20average%2C%20women%20in%20the,are%20found%20to%20
