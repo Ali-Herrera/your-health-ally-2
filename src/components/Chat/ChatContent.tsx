@@ -1,8 +1,6 @@
 import { Box, Stack, Group, Avatar, Skeleton, Text, List } from '@mantine/core';
 import { useMediaQuery } from '@mantine/hooks';
 import { type Author } from '~/utils/types';
-// import { UserChat } from "./User";
-// import { AIChat } from "./AI";
 import { UserButton } from '@clerk/nextjs';
 import { theme } from '~/config/theme';
 import { useState, useEffect, useRef } from 'react';

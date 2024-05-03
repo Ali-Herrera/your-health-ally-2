@@ -30,20 +30,10 @@ const ChatInterface: React.FC<ChatInterfaceProps> = ({ userId }) => {
   ) => {
     setWaiting(true);
 
-    // const orderField =
-    //   chatItems.length > 0
-    //     ? chatItems[chatItems.length - 1]?.orderField ?? 0 + 1
-    //     : 0;
-
-    // Determine the author based on the userId
-    // const author = userId === user?.id ? 'User' : 'AI';
-
     setChatItems((prevChatItems) => [
       ...prevChatItems,
       { content: prompt, author: author },
     ]);
-
-    // Any other logic related to updating chatItems can be added here
 
     setWaiting(false);
   };
@@ -88,72 +78,3 @@ const ChatInterface: React.FC<ChatInterfaceProps> = ({ userId }) => {
 };
 
 export default ChatInterface;
-
-// const generatedTextMutation = api.ai.generateText.useMutation({
-//   onError: (error) => {
-//     setChatItems((prevChatItems) => [
-//       ...prevChatItems,
-//       {
-//         content: error.message ?? 'An error occurred',
-//         author: 'AI',
-//         isError: true,
-//       },
-//     ]);
-//   },
-//   onSettled: () => {
-//     setWaiting(false);
-//   },
-// });
-
-// const handleUpdate = async (prompt: string, chatId: string) => {
-//   setWaiting(true);
-
-//   // Update chatItems with the user's prompt
-//   setChatItems((prevChatItems) => [
-//     ...prevChatItems,
-//     {
-//       content: prompt.replace(/\n/g, '\n\n'),
-//       author: 'User',
-//     },
-//   ]);
-
-//   try {
-//     // Call the AI mutation to generate text
-//     const generateTextResult = await generatedTextMutation.mutateAsync({
-//       prompt,
-//       chatId,
-//     });
-
-//     if (generateTextResult.generatedText) {
-//       // Check if the AI response is the same as the last message in chatItems
-//       const lastMessage = chatItems[chatItems.length - 1];
-//       if (
-//         lastMessage &&
-//         lastMessage.author === 'AI' &&
-//         lastMessage.content === generateTextResult.generatedText
-//       ) {
-//         console.log(
-//           'AI response already exists in chatItems. Skipping addition.'
-//         );
-//       } else {
-//         // Update chatItems with the generated text
-//         setChatItems((prevChatItems) => [
-//           ...prevChatItems,
-//           {
-//             content: generateTextResult.generatedText,
-//             author: 'AI',
-//           },
-//         ]);
-//       }
-//     } else {
-//       console.error('Error generating text');
-//       // Handle error if needed
-//     }
-//   } catch (error) {
-//     console.error('Error generating text:', error);
-//     // Handle error if needed
-//   } finally {
-//     // Set waiting to false regardless of success or error
-//     setWaiting(false);
-//   }
-// };
