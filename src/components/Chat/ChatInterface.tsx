@@ -10,54 +10,35 @@ import { useUser } from '@clerk/nextjs';
 import { Sidebar } from '../sidebar';
 import { HeaderMobile } from '../header/mobileHeader';
 import { Header } from '../header';
+import { Author } from '~/utils/types';
+import { set } from 'zod';
 
-const ChatInterface = () => {
+interface ChatInterfaceProps {
+  userId: string; // Define the userId prop
+}
+
+const ChatInterface: React.FC<ChatInterfaceProps> = ({ userId }) => {
   const mobileScreen = useMediaQuery('(max-width: 480px)');
-  const [chatItems, setChatItems] = useState<ChatItem[]>([]);
+  const [chatItems, setChatItems] = useState([] as ChatItem[]);
   const [waiting, setWaiting] = useState<boolean>(false);
 
-  const generatedTextMutation = api.ai.generateText.useMutation({
-    onSuccess: (data) => {
-      setChatItems([
-        ...chatItems,
-        {
-          content: data.generatedText,
-          author: 'AI',
-        },
-      ]);
-    },
-
-    onError: (error) => {
-      setChatItems([
-        ...chatItems,
-        {
-          content: error.message ?? 'An error occurred',
-          author: 'AI',
-          isError: true,
-        },
-      ]);
-    },
-
-    onSettled: () => {
-      setWaiting(false);
-    },
-  });
-
-  const resetMutation = api.ai.reset.useMutation();
-
-  const handleUpdate = (prompt: string) => {
+  const handleUpdate = (
+    prompt: string,
+    chatId: string,
+    // userId: string // Include userId as a parameter
+    author: Author
+  ) => {
     setWaiting(true);
 
-    setChatItems([
-      ...chatItems,
-      {
-        content: prompt.replace(/\n/g, '\n\n'),
-        author: 'User',
-      },
+    setChatItems((prevChatItems) => [
+      ...prevChatItems,
+      { content: prompt, author: author },
     ]);
 
-    generatedTextMutation.mutate({ prompt });
+    setWaiting(false);
   };
+
+  const resetMutation = api.ai.reset.useMutation();
 
   const handleReset = () => {
     setChatItems([]);
@@ -66,19 +47,30 @@ const ChatInterface = () => {
 
   const { isLoaded, user } = useUser();
 
+  console.log('User ID:', user?.id);
+
   return (
     <Box>
       {isLoaded && user && (
         <>
           {mobileScreen ? <HeaderMobile onReset={handleReset} /> : <Header />}
-          {mobileScreen ? null : <Sidebar onReset={handleReset} />}
+          {mobileScreen ? null : (
+            <Sidebar
+              onStartNewChat={function (): void {
+                throw new Error('Function not implemented.');
+              }} /*onReset={handleReset}*/
+            />
+          )}
           <ChatContent
             chatItems={chatItems}
-            onReset={handleReset}
+            // onReset={handleReset}
             loading={waiting}
           />
-          <ChatInput onUpdate={handleUpdate} waiting={waiting} />
-          <Footer />
+          <ChatInput
+            onUpdate={handleUpdate}
+            waiting={waiting}
+            userId={user.id}
+          />
         </>
       )}
     </Box>
