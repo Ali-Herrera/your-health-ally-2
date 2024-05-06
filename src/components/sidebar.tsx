@@ -70,86 +70,46 @@ export const Sidebar = ({ onStartNewChat }: Props) => {
 					Previous Chats
 				</Title>
 
-				<Flex align="center" justify="center" sx={{ padding: "5px" }}>
-					<Text truncate="end" fz={14} fw={500} c={white} mr={10}>
-						Lorem ipsum dolor sit amet
-					</Text>
-					{/* 
-    <Menu position="left-start" */}
-					<Menu
-						position="left-start"
-						offset={-1}
-						withArrow
-						arrowOffset={15}
-						width={200}
-						shadow="lg"
-						radius="lg"
-					>
-						<Menu.Target>
-							<Button
-								p={0}
-								m={0}
-								sx={{ color: white, backgroundColor: "transparent" }}
+				{chatsData ? (
+					chatsData.map((chat: any) => (
+						//    {chat.slug}
+						<Flex
+							key={chat.id}
+							align="center"
+							justify="center"
+							sx={{ padding: "5px" }}
+						>
+							<Text truncate="end" fz={14} fw={500} c={white} mr={10}>
+								{chat.title}
+							</Text>
+							<Menu
+								position="left-start"
+								offset={-1}
+								withArrow
+								arrowOffset={15}
+								width={200}
+								shadow="lg"
+								radius="lg"
 							>
-								<IconDotsVertical style={{ width: "20px", height: "20px" }} />
-							</Button>
-						</Menu.Target>
-						<Menu.Dropdown>
-							<Menu.Label>Description</Menu.Label>
-							<Menu.Item>
-								Duis aute irure dolor in reprehenderit in voluptate velit esse
-								cillum dolore eu fugiat nulla pariatur.
-							</Menu.Item>
-							<Menu.Divider />
-							<Menu.Label>Options</Menu.Label>
-							<Menu.Item
-								icon={<IconMessage style={{ width: "16px", height: "16px" }} />}
-							>
-								Revisit Chat
-							</Menu.Item>
-							<Menu.Item
-								icon={
-									<IconFileDownload style={{ width: "16px", height: "16px" }} />
-								}
-							>
-								Save Chat to PDF
-							</Menu.Item>
-							<Menu.Item
-								icon={<IconTrash style={{ width: "16px", height: "16px" }} />}
-							>
-								Delete Chat
-							</Menu.Item>
-						</Menu.Dropdown>
-					</Menu>
-				</Flex>
-			</Box>
-
-			{chatsData ? (
-				<Flex
-					justify="flex-start"
-					align="center"
-					direction="column"
-					sx={{
-						width: "100%",
-					}}
-				>
-					{chatsData.map((chat: any) => (
-						<Paper key={chat.id} m={10} sx={{ width: "100%" }}>
-							<Text truncate="end">{chat.title}</Text>
-							<Text truncate="end">{chat.description}</Text>
-
-							<Menu shadow="md" openDelay={100} closeDelay={400}>
 								<Menu.Target>
-									<Button>Toggle menu</Button>
+									<Button
+										p={0}
+										m={0}
+										sx={{ color: white, backgroundColor: "transparent" }}
+									>
+										<IconDotsVertical
+											style={{ width: "20px", height: "20px" }}
+										/>
+									</Button>
 								</Menu.Target>
-
 								<Menu.Dropdown>
+									<Menu.Label>Description</Menu.Label>
+									<Menu.Item>{chat.description}</Menu.Item>
+									<Menu.Divider />
 									<Menu.Label>Options</Menu.Label>
 									<Menu.Item
 										icon={
-											<IconMessageQuestion
-												style={{ width: "16px", height: "16px" }}
-											/>
+											<IconMessage style={{ width: "16px", height: "16px" }} />
 										}
 									>
 										Revisit Chat
@@ -172,22 +132,22 @@ export const Sidebar = ({ onStartNewChat }: Props) => {
 									</Menu.Item>
 								</Menu.Dropdown>
 							</Menu>
-						</Paper>
-					))}
-				</Flex>
-			) : (
-				<Flex
-					justify="flex-start"
-					align="center"
-					direction="column"
-					m={10}
-					sx={{
-						width: "100%",
-					}}
-				>
-					<Loader color={white} />
-				</Flex>
-			)}
+						</Flex>
+					))
+				) : (
+					<Flex
+						justify="flex-start"
+						align="center"
+						direction="column"
+						m={10}
+						sx={{
+							width: "100%",
+						}}
+					>
+						<Loader color={white} />
+					</Flex>
+				)}
+			</Box>
 		</Flex>
 	);
 };
