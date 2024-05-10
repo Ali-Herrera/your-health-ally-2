@@ -31,19 +31,6 @@ export const Sidebar = ({ onStartNewChat }: Props) => {
   // Use useQuery to fetch the list of chats
   const { data: chatsData, error: chatsError } = api.chat.getAll.useQuery();
 
-  const startNewChatMutation = api.chat.startNewChat.useMutation();
-
-  // Create a function that calls the mutation when the button is clicked
-  const handleStartNewChat = async () => {
-    try {
-      await startNewChatMutation.mutate();
-      // Handle success (e.g., show a success message or refresh the chat list)
-    } catch (error) {
-      // Handle error (e.g., show an error message)
-      console.error('Error starting new chat:', error);
-    }
-  };
-
   useEffect(() => {
     if (chatsError) {
       console.error('Error fetching chats:', chatsError);

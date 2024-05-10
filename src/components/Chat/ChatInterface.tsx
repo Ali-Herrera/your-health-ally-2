@@ -21,6 +21,9 @@ const ChatInterface: React.FC<ChatInterfaceProps> = ({ userId }) => {
   const mobileScreen = useMediaQuery('(max-width: 480px)');
   const [chatItems, setChatItems] = useState([] as ChatItem[]);
   const [waiting, setWaiting] = useState<boolean>(false);
+  const { isLoaded, user } = useUser();
+  const [currentChat, setCurrentChat] = useState<string | null>(null); // Update the type of currentChat
+  const startNewChatMutation = api.chat.startNewChat.useMutation();
 
   const handleUpdate = (
     prompt: string,
@@ -45,7 +48,19 @@ const ChatInterface: React.FC<ChatInterfaceProps> = ({ userId }) => {
     resetMutation.mutate();
   };
 
-  const { isLoaded, user } = useUser();
+  const handleStartNewChat = async () => {
+    try {
+      // Call the startNewChat mutation to create a new chat on the server
+      await startNewChatMutation.mutate();
+      const newChatId = startNewChatMutation.data?.chatId ?? '';
+      setCurrentChat(newChatId);
+
+      // Reset the chatItems state to clear the UI
+      setChatItems([]);
+    } catch (error) {
+      console.error('Failed to start new chat:', error);
+    }
+  };
 
   console.log('User ID:', user?.id);
 
@@ -55,11 +70,7 @@ const ChatInterface: React.FC<ChatInterfaceProps> = ({ userId }) => {
         <>
           {mobileScreen ? <HeaderMobile onReset={handleReset} /> : <Header />}
           {mobileScreen ? null : (
-            <Sidebar
-              onStartNewChat={function (): void {
-                throw new Error('Function not implemented.');
-              }} /*onReset={handleReset}*/
-            />
+            <Sidebar onStartNewChat={handleStartNewChat} />
           )}
           <ChatContent
             chatItems={chatItems}

@@ -67,7 +67,7 @@ export const chatRouter = createTRPCRouter({
     const chat = await ctx.prisma.chat.create({
       data: {
         userId: ctx.session.userId!,
-        title: 'New Chat', // This is a placeholder title
+        title: '', // This is a placeholder title
       },
     });
     return { chatId: chat.id };

@@ -83,11 +83,6 @@ export const ChatInput = ({ onUpdate, waiting, userId }: Props) => {
                 setPrompt('');
                 setChatId(chatIdFromResult ?? null);
 
-                console.log(
-                  'Calling GenerateTextMutation with chatId:',
-                  chatIdFromResult
-                );
-
                 await GenerateTextMutation.mutate(
                   {
                     prompt: prompt,
