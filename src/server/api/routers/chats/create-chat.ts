@@ -94,4 +94,23 @@ export const chatRouter = createTRPCRouter({
         message: newMessage,
       };
     }),
+
+  update: privateProcedure
+    .input(
+      z.object({
+        id: z.string(),
+        title: z.string(),
+        description: z.string(),
+      })
+    )
+    .mutation(async ({ ctx, input }) => {
+      const updatedChat = await ctx.prisma.chat.update({
+        where: { id: input.id },
+        data: {
+          title: input.title,
+          description: input.description,
+        },
+      });
+      return updatedChat;
+    }),
 });
