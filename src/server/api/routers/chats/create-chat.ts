@@ -25,7 +25,7 @@ export const chatRouter = createTRPCRouter({
 
   getAll: publicProcedure.query(async ({ ctx }) => {
     const chats = await ctx.prisma.chat.findMany({
-      take: 10,
+      take: 15,
       orderBy: { createdAt: 'desc' },
     });
     return addUserDataToChats(chats);
