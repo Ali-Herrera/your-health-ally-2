@@ -7,15 +7,26 @@ import {
   Space,
   Stack,
   Title,
+  Loader,
+  Menu,
 } from '@mantine/core';
 import { useDisclosure, useMediaQuery } from '@mantine/hooks';
 import { SignedIn, UserButton } from '@clerk/nextjs';
-import { IconMenu2, IconPlus } from '@tabler/icons-react';
+import {
+  IconDotsVertical,
+  IconFileDownload,
+  IconMenu2,
+  IconMessage,
+  IconPlus,
+  IconTrash,
+} from '@tabler/icons-react';
 import PinkLogo from '../../../public/logo/logo-pink-dark.png';
 import logoIcon from '../../../public/icon/heart-pink.png';
 import Image from 'next/image';
 import { ReactNode } from 'react';
 import { theme } from '~/config/theme';
+import { api } from '~/utils/api';
+import { MenuItem } from '@mantine/core/lib/Menu/MenuItem/MenuItem';
 
 type HeaderProps = {
   children?: ReactNode;
@@ -30,6 +41,7 @@ export const HeaderMobile: React.FC<HeaderProps> = ({
   const [opened, { open, close }] = useDisclosure(false);
   const { white, black } = theme;
   const iconPlus = <IconPlus size={15} />;
+  const { data: chatsData, error: chatsError } = api.chat.getAll.useQuery();
 
   return (
     <MantineHeader height={80} ml={mobileScreen ? 'px' : '250px'}>
@@ -103,6 +115,98 @@ export const HeaderMobile: React.FC<HeaderProps> = ({
             <Space />
 
             <Title order={3}>Previous Chats</Title>
+            {chatsData ? (
+              chatsData.map((chat: any) => (
+                //    {chat.slug}
+                <Flex
+                  key={chat.id}
+                  align='center'
+                  justify='center'
+                  sx={{ padding: '5px' }}
+                >
+                  <span
+                    style={{
+                      fontSize: '14px',
+                      fontWeight: 500,
+                      color: 'black',
+                      marginRight: '10px',
+                    }}
+                  >
+                    {chat.title}
+                  </span>
+                  <Menu
+                    position='left-start'
+                    offset={-1}
+                    withArrow
+                    arrowOffset={15}
+                    width={200}
+                    shadow='lg'
+                    radius='lg'
+                  >
+                    <Menu.Target>
+                      <Button
+                        p={0}
+                        m={0}
+                        sx={{ color: black, backgroundColor: 'transparent' }}
+                      >
+                        <IconDotsVertical
+                          style={{ width: '20px', height: '20px' }}
+                        />
+                      </Button>
+                    </Menu.Target>
+                    <Menu.Dropdown
+                      sx={{
+                        transform: 'translateX(30%)',
+                      }}
+                    >
+                      <Menu.Label>Description</Menu.Label>
+                      <Menu.Item>{chat.description}</Menu.Item>
+                      <Menu.Divider />
+                      <Menu.Label>Options</Menu.Label>
+                      <Menu.Item
+                        icon={
+                          <IconMessage
+                            style={{ width: '16px', height: '16px' }}
+                          />
+                        }
+                      >
+                        Revisit Chat
+                      </Menu.Item>
+                      <Menu.Item
+                        icon={
+                          <IconFileDownload
+                            style={{ width: '16px', height: '16px' }}
+                          />
+                        }
+                      >
+                        Save Chat to PDF
+                      </Menu.Item>
+                      <Menu.Item
+                        icon={
+                          <IconTrash
+                            style={{ width: '16px', height: '16px' }}
+                          />
+                        }
+                      >
+                        Delete Chat
+                      </Menu.Item>
+                    </Menu.Dropdown>
+                  </Menu>
+                </Flex>
+              ))
+            ) : (
+              <Flex
+                justify='flex-start'
+                align='center'
+                direction='column'
+                m={10}
+                sx={{
+                  width: '100%',
+                }}
+              >
+                <Loader color={black} />
+              </Flex>
+            )}
           </Stack>
         </Drawer>
 
