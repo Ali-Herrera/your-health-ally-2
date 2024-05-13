@@ -68,7 +68,11 @@ const ChatInterface: React.FC<ChatInterfaceProps> = ({ userId }) => {
     <Box>
       {isLoaded && user && (
         <>
-          {mobileScreen ? <HeaderMobile onReset={handleReset} /> : <Header />}
+          {mobileScreen ? (
+            <HeaderMobile onStartNewChat={handleStartNewChat} />
+          ) : (
+            <Header />
+          )}
           {mobileScreen ? null : (
             <Sidebar onStartNewChat={handleStartNewChat} />
           )}
