@@ -6,7 +6,15 @@ import ChatPdfDocument from "./index";
 const Viewer = () => {
 	return (
 		<PDFViewer>
-			<ChatPdfDocument />
+			<ChatPdfDocument
+				messages={[]}
+				id={""}
+				title={""}
+				description={null}
+				createdAt={new Date()}
+				updatedAt={new Date()}
+				userId={""}
+			/>
 		</PDFViewer>
 	);
 };
