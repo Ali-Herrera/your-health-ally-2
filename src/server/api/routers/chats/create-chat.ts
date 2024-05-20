@@ -25,7 +25,7 @@ export const chatRouter = createTRPCRouter({
 
   getAll: publicProcedure.query(async ({ ctx }) => {
     const chats = await ctx.prisma.chat.findMany({
-      take: 10,
+      take: 15,
       orderBy: { createdAt: 'desc' },
     });
     return addUserDataToChats(chats);
@@ -39,7 +39,6 @@ export const chatRouter = createTRPCRouter({
         message: z.string(),
         chatId: z.string().optional(),
         userId: z.string(),
-        orderField: z.number(),
       })
     )
     .mutation(async ({ ctx, input }) => {
@@ -59,7 +58,6 @@ export const chatRouter = createTRPCRouter({
           chatId,
           userId: input.userId,
           content: input.message,
-          orderField: input.orderField,
         },
       });
       return { chatId, message: newMessage };
@@ -69,7 +67,7 @@ export const chatRouter = createTRPCRouter({
     const chat = await ctx.prisma.chat.create({
       data: {
         userId: ctx.session.userId!,
-        title: 'New Chat', // Add a value for the 'title' property
+        title: '', // This is a placeholder title
       },
     });
     return { chatId: chat.id };
@@ -81,7 +79,6 @@ export const chatRouter = createTRPCRouter({
         message: z.string(),
         chatId: z.string(),
         userId: z.string(),
-        orderField: z.number(),
       })
     )
     .mutation(async ({ ctx, input }) => {
@@ -90,12 +87,30 @@ export const chatRouter = createTRPCRouter({
           chatId: input.chatId,
           userId: input.userId,
           content: input.message,
-          orderField: input.orderField,
         },
       });
       return {
         chatId: input.chatId,
         message: newMessage,
       };
+    }),
+
+  update: privateProcedure
+    .input(
+      z.object({
+        id: z.string(),
+        title: z.string(),
+        description: z.string(),
+      })
+    )
+    .mutation(async ({ ctx, input }) => {
+      const updatedChat = await ctx.prisma.chat.update({
+        where: { id: input.id },
+        data: {
+          title: input.title,
+          description: input.description,
+        },
+      });
+      return updatedChat;
     }),
 });

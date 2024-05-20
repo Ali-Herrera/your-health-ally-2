@@ -41,13 +41,27 @@ export const ChatInput = ({ onUpdate, waiting, userId }: Props) => {
   }, [prompt]);
 
   useEffect(() => {
-    if (data) {
-      if ('chatId' in data) {
-        setChatId(data.chatId);
-        chatIdRef.current = data.chatId;
+    if (data && 'chatId' in data) {
+      const newChatId = data.chatId;
+      setChatId(newChatId);
+      chatIdRef.current = newChatId;
+
+      if (prompt.trim()) {
+        // Use the first few words of the prompt as the title
+        const title = prompt.split(' ').slice(0, 3).join(' ');
+
+        // Use the first sentence of the prompt as the description
+        const description = prompt.split(' ').slice(0, 10).join(' ');
+
+        // Update the chat with the new title and description
+        updateChatMutation.mutate({
+          id: newChatId,
+          title: title,
+          description: description,
+        });
       }
     }
-  }, [data]);
+  }, [data, prompt]);
 
   useEffect(() => {
     if (chatIdError) {
@@ -58,6 +72,7 @@ export const ChatInput = ({ onUpdate, waiting, userId }: Props) => {
   const CreateChatMutation = api.chat.create.useMutation();
   const GenerateTextMutation = api.ai.generateText.useMutation();
   const ContinueChatMutation = api.chat.continueChat.useMutation();
+  const updateChatMutation = api.chat.update.useMutation();
 
   const handleSubmit = async () => {
     if (prompt.trim()) {
@@ -75,19 +90,13 @@ export const ChatInput = ({ onUpdate, waiting, userId }: Props) => {
               description: description,
               message: prompt,
               userId: userId,
-              orderField: 0,
             },
             {
               onSuccess: async (data) => {
                 console.log('Chat creation successful. Response:', data);
                 const chatIdFromResult = data?.chatId;
                 setPrompt('');
-                setChatId(chatIdFromResult);
-
-                console.log(
-                  'Calling GenerateTextMutation with chatId:',
-                  chatIdFromResult
-                );
+                setChatId(chatIdFromResult ?? null);
 
                 await GenerateTextMutation.mutate(
                   {
@@ -123,7 +132,6 @@ export const ChatInput = ({ onUpdate, waiting, userId }: Props) => {
               message: prompt,
               chatId: chatId,
               userId: userId,
-              orderField: 0,
             },
             {
               onSuccess: async (data) => {

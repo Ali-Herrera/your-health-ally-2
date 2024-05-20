@@ -1,35 +1,70 @@
+import { useState, useEffect } from "react";
+import Image from "next/image";
 import {
 	Header as MantineHeader,
-	Flex,
-	Button,
+	Accordion,
+	Box,
+	Divider,
 	Drawer,
 	Group,
-	Space,
-	Stack,
+	Flex,
+	Loader,
+	Text,
 	Title,
+	UnstyledButton,
 } from "@mantine/core";
-import { useDisclosure, useMediaQuery } from "@mantine/hooks";
+import { useDisclosure } from "@mantine/hooks";
 import { SignedIn, UserButton } from "@clerk/nextjs";
-import { IconMenu2, IconPlus } from "@tabler/icons-react";
+import {
+	IconHistory,
+	IconFileDownload,
+	IconMenu2,
+	IconMessage,
+	IconPlus,
+	IconTrash,
+} from "@tabler/icons-react";
 import PinkLogo from "../../../public/logo/logo-pink-dark.png";
 import logoIcon from "../../../public/icon/heart-pink.png";
-import Image from "next/image";
 import { ReactNode } from "react";
 import { theme } from "~/config/theme";
+import { api } from "~/utils/api";
 
 type HeaderProps = {
 	children?: ReactNode;
-	onReset?: () => void;
+	onStartNewChat: () => void;
 };
 
-export const HeaderMobile: React.FC<HeaderProps> = ({ children, onReset }) => {
-	const mobileScreen = useMediaQuery("(max-width: 480px)");
+export const HeaderMobile: React.FC<HeaderProps> = ({
+	children,
+	onStartNewChat,
+}) => {
+	const { white, black, colors } = theme;
 	const [opened, { open, close }] = useDisclosure(false);
-	const { white, black } = theme;
-	const iconPlus = <IconPlus size={15} />;
+	const [noPreviousChats, setNoPreviousChats] = useState(false);
+	const [errorMessage, setErrorMessage] = useState("");
+
+	// Use useQuery to fetch the list of chats
+	const { data: chatsData, error: chatsError } = api.chat.getAll.useQuery();
+
+	useEffect(() => {
+		if (chatsError) {
+			console.error("Error fetching chats:", chatsError);
+			setNoPreviousChats(true);
+			setErrorMessage("Error fetching data from server.");
+		}
+	}, [chatsError]);
+
+	// If there are no previous chats, display a message
+	useEffect(() => {
+		const timer = setTimeout(() => {
+			setNoPreviousChats(true);
+		}, 3000);
+
+		return () => clearTimeout(timer);
+	}, [chatsData]);
 
 	return (
-		<MantineHeader height={80} ml={mobileScreen ? "px" : "250px"}>
+		<MantineHeader height={80}>
 			<Flex m="md" direction="row" align="center" justify="space-between">
 				<Image
 					src={PinkLogo}
@@ -53,6 +88,8 @@ export const HeaderMobile: React.FC<HeaderProps> = ({ children, onReset }) => {
 					sx={{
 						root: {
 							backgroundColor: white,
+							margin: "0",
+							padding: "0",
 						},
 						// HEADER + CLOSE BUTTON STYLES
 						"& .mantine-Drawer-header": {
@@ -86,21 +123,155 @@ export const HeaderMobile: React.FC<HeaderProps> = ({ children, onReset }) => {
 						},
 					}}
 				>
-					<Stack justify="center" align="center" spacing="md">
-						<Space h="lg" />
+					<Box>
+						<Group position="apart" p={10}>
+							<Title order={3}>Account</Title>
 
-						<Group position="apart" sx={{ alignContent: "center" }}>
 							<SignedIn>
-								<UserButton  />
+								<UserButton />
 							</SignedIn>
-							<Button ml="lg" leftIcon={iconPlus} onClick={onReset}>
-								New Chat
-							</Button>
 						</Group>
-						<Space />
 
-						<Title order={3}>Previous Chats</Title>
-					</Stack>
+						<Divider my="sm" color={black} sx={{ opacity: ".25" }} />
+					</Box>
+
+					<Box>
+						<UnstyledButton
+							onClick={onStartNewChat}
+							sx={{
+								width: "100%",
+								padding: "10px",
+								cursor: "pointer",
+								"&:active": { backgroundColor: "#E5E5E5", borderRadius: "5px" },
+							}}
+						>
+							<Group position="apart" w="100%">
+								<Title order={3} color={black}>
+									Start New Chat
+								</Title>
+								<IconPlus
+									stroke={1.5}
+									style={{ height: "30px", width: "30px" }}
+								/>
+							</Group>
+						</UnstyledButton>
+
+						<Divider my="sm" color={black} sx={{ opacity: ".25" }} />
+					</Box>
+
+					<Box>
+						<Group position="apart" p={10}>
+							<Title order={3}>Previous Chats</Title>
+							<IconHistory
+								stroke={1.5}
+								style={{ height: "30px", width: "30px" }}
+							/>
+						</Group>
+					</Box>
+
+					{errorMessage && (
+						<Box pt={10} pb={10} ml="lg" mr="lg">
+							<Title order={4} color={colors?.red?.[6]}>
+								{errorMessage}
+							</Title>
+						</Box>
+					)}
+
+					{chatsData &&
+						chatsData.map((chat: any) => (
+							<Accordion key={chat.id}>
+								<Accordion.Item
+									value={`${chat.description}` || "Chat description is missing"}
+								>
+									<Accordion.Control>
+										<Text truncate="end" fw={700} c={black} tt={"capitalize"}>
+											{chat.description}
+										</Text>
+									</Accordion.Control>
+
+									<Accordion.Panel sx={{ textIndent: "none", padding: "0px" }}>
+										{/* SAVE TO PDF */}
+										<UnstyledButton
+											sx={{
+												color: black,
+												cursor: "pointer",
+												padding: "5px",
+												margin: "2px",
+												"&:active": {
+													backgroundColor: "#E5E5E5",
+													borderRadius: "5px",
+												},
+											}}
+										>
+											<Group spacing={2} align="center" position="center">
+												<IconFileDownload
+													style={{ width: "16px", height: "16px" }}
+												/>
+												<Text fz={16}>Save to PDF</Text>
+											</Group>
+										</UnstyledButton>
+
+										{/* REVISIT */}
+										<UnstyledButton
+											sx={{
+												color: black,
+												cursor: "pointer",
+												padding: "5px",
+												margin: "2px",
+												"&:active": {
+													backgroundColor: "#E5E5E5",
+													borderRadius: "5px",
+												},
+											}}
+										>
+											<Group spacing={2} align="center" position="center">
+												<IconMessage
+													style={{ width: "16px", height: "16px" }}
+												/>
+												<Text fz={16}>Revisit Chat</Text>
+											</Group>
+										</UnstyledButton>
+
+										{/* DELETE */}
+										<UnstyledButton
+											sx={{
+												color: black,
+												cursor: "pointer",
+												padding: "5px",
+												margin: "2px",
+												"&:active": {
+													backgroundColor: "#E5E5E5",
+													borderRadius: "5px",
+												},
+											}}
+										>
+											<Group spacing={2} align="center" position="center">
+												<IconTrash
+													style={{
+														width: "16px",
+														height: "16px",
+													}}
+												/>
+												<Text fz={16}>Delete Chat</Text>
+											</Group>
+										</UnstyledButton>
+									</Accordion.Panel>
+								</Accordion.Item>
+							</Accordion>
+						))}
+
+					{!chatsData &&
+						(noPreviousChats ? (
+							<Box pt={10} pb={10} ml="lg" mr="lg">
+								<Title order={4} color="rgba( 26, 25, 16, .75)">
+									No chat history found.
+								</Title>
+							</Box>
+						) : (
+							<Flex justify="center" align="center" mt={10}>
+								<Loader color={black} size="md" />
+							</Flex>
+						))}
 				</Drawer>
 
 				{/* DRAWER CLOSED - DEFAULT */}
