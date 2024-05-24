@@ -21,7 +21,6 @@ const ChatInterface: React.FC<ChatInterfaceProps> = ({ userId }) => {
   const { isLoaded, user } = useUser();
   const [currentChat, setCurrentChat] = useState<string | null>(null);
   const startNewChatMutation = api.chat.startNewChat.useMutation();
-  const updateChatMutation = api.chat.update.useMutation();
 
   const handleUpdate = (prompt: string, chatId: string, author: Author) => {
     setWaiting(true);
@@ -71,7 +70,10 @@ const ChatInterface: React.FC<ChatInterfaceProps> = ({ userId }) => {
       {isLoaded && user && (
         <>
           {mobileScreen ? (
-            <HeaderMobile onStartNewChat={handleStartNewChat} />
+            <HeaderMobile
+              onStartNewChat={handleStartNewChat}
+              onRevisitChat={handleRevisitChat}
+            />
           ) : (
             <Header />
           )}
