@@ -1,73 +1,45 @@
-// ChatInput.tsx
 import { Button, Group, Textarea } from '@mantine/core';
 import { useMediaQuery } from '@mantine/hooks';
 import { IconSend } from '@tabler/icons-react';
 import { theme } from '../../config/theme';
 import { useState, useEffect, useRef } from 'react';
-import { chatRouter } from '~/server/api/routers/chats/create-chat';
 import { api } from '../../utils/api';
-import { TRPCError } from '@trpc/server';
-import { Author } from '~/utils/types';
 
 type Props = {
   onUpdate: (prompt: string, chatId: string, author: 'User' | 'AI') => void;
   waiting?: boolean;
   userId: string;
+  currentChat: string | null;
+  onStartNewChat: () => Promise<void>;
 };
 
-const useStartNewChat = () => {
-  return api.chat.startNewChat.useMutation();
-};
-
-export const ChatInput = ({ onUpdate, waiting, userId }: Props) => {
+export const ChatInput = ({
+  onUpdate,
+  waiting,
+  userId,
+  currentChat,
+  onStartNewChat,
+}: Props) => {
   const mobileScreen = useMediaQuery('(max-width: 480px)');
   const { colors } = theme;
 
   const [prompt, setPrompt] = useState<string>('');
   const [rows, setRows] = useState<number>(2);
-  const [chatId, setChatId] = useState<string | null>(null);
+  const [titleUpdated, setTitleUpdated] = useState<boolean>(false);
 
-  const chatIdRef = useRef<string | null>(null);
+  const chatIdRef = useRef<string | null>(currentChat);
 
-  const {
-    data: data,
-    error: chatIdError,
-    isLoading: chatIdLoading,
-  } = useStartNewChat();
+  useEffect(() => {
+    if (currentChat !== chatIdRef.current) {
+      chatIdRef.current = currentChat;
+      setTitleUpdated(false);
+    }
+  }, [currentChat]);
 
   useEffect(() => {
     const lines = prompt.split(/\r*\n/).length;
     setRows(Math.max(2, Math.min(lines, 8)));
   }, [prompt]);
-
-  useEffect(() => {
-    if (data && 'chatId' in data) {
-      const newChatId = data.chatId;
-      setChatId(newChatId);
-      chatIdRef.current = newChatId;
-
-      if (prompt.trim()) {
-        // Use the first few words of the prompt as the title
-        const title = prompt.split(' ').slice(0, 3).join(' ');
-
-        // Use the first sentence of the prompt as the description
-        const description = prompt.split(' ').slice(0, 10).join(' ');
-
-        // Update the chat with the new title and description
-        updateChatMutation.mutate({
-          id: newChatId,
-          title: title,
-          description: description,
-        });
-      }
-    }
-  }, [data, prompt]);
-
-  useEffect(() => {
-    if (chatIdError) {
-      console.error('Failed to create chat:', chatIdError.message);
-    }
-  }, [chatIdError]);
 
   const CreateChatMutation = api.chat.create.useMutation();
   const GenerateTextMutation = api.ai.generateText.useMutation();
@@ -77,17 +49,11 @@ export const ChatInput = ({ onUpdate, waiting, userId }: Props) => {
   const handleSubmit = async () => {
     if (prompt.trim()) {
       try {
-        if (!chatId) {
-          // Use the first few words of the prompt as the title
-          const title = prompt.split(' ').slice(0, 3).join(' ');
-
-          // Use the first sentence of the prompt as the description
-          const description = prompt.split(' ').slice(0, 10).join(' ');
-
+        if (!chatIdRef.current) {
           await CreateChatMutation.mutate(
             {
-              title: title,
-              description: description,
+              title: '',
+              description: '',
               message: prompt,
               userId: userId,
             },
@@ -96,33 +62,8 @@ export const ChatInput = ({ onUpdate, waiting, userId }: Props) => {
                 console.log('Chat creation successful. Response:', data);
                 const chatIdFromResult = data?.chatId;
                 setPrompt('');
-                setChatId(chatIdFromResult ?? null);
-
-                await GenerateTextMutation.mutate(
-                  {
-                    prompt: prompt,
-                    chatId: chatIdFromResult ?? '',
-                  },
-                  {
-                    onSuccess: async (generateTextData) => {
-                      if (
-                        generateTextData &&
-                        generateTextData.generatedText !== undefined
-                      ) {
-                        console.log(
-                          'GenerateText successful. Response:',
-                          generateTextData.generatedText
-                        );
-                        onUpdate(prompt, chatIdFromResult!, 'User');
-                        onUpdate(
-                          generateTextData.generatedText,
-                          chatIdFromResult!,
-                          'AI'
-                        );
-                      }
-                    },
-                  }
-                );
+                chatIdRef.current = chatIdFromResult;
+                await handleGenerateText(chatIdFromResult ?? '');
               },
             }
           );
@@ -130,42 +71,14 @@ export const ChatInput = ({ onUpdate, waiting, userId }: Props) => {
           await ContinueChatMutation.mutate(
             {
               message: prompt,
-              chatId: chatId,
+              chatId: chatIdRef.current,
               userId: userId,
             },
             {
               onSuccess: async (data) => {
                 console.log('Chat continuation successful. Response:', data);
                 setPrompt('');
-
-                console.log(
-                  'Calling GenerateTextMutation with chatId:',
-                  chatId
-                );
-
-                await GenerateTextMutation.mutate(
-                  {
-                    prompt: prompt,
-                    chatId: chatId,
-                  },
-                  {
-                    onSuccess: (generateTextData) => {
-                      if (
-                        generateTextData &&
-                        generateTextData.generatedText !== undefined
-                      ) {
-                        onUpdate(prompt, chatId, 'User');
-                        onUpdate(generateTextData.generatedText, chatId, 'AI');
-                      }
-                    },
-                    onError: (generateTextError) => {
-                      console.error(
-                        'Failed to generate text:',
-                        generateTextError
-                      );
-                    },
-                  }
-                );
+                await handleGenerateText(chatIdRef.current!);
               },
               onError: (error) => {
                 console.error('Failed to continue chat:', error);
@@ -177,6 +90,47 @@ export const ChatInput = ({ onUpdate, waiting, userId }: Props) => {
         console.error('Failed to handle submit:', error);
       }
     }
+  };
+
+  const handleGenerateText = async (currentChatId: string) => {
+    console.log('Generating text for chat ID:', currentChatId);
+    await GenerateTextMutation.mutate(
+      {
+        prompt: prompt,
+        chatId: currentChatId,
+      },
+      {
+        onSuccess: async (generateTextData) => {
+          if (
+            generateTextData &&
+            generateTextData.generatedText !== undefined
+          ) {
+            console.log(
+              'GenerateText successful. Response:',
+              generateTextData.generatedText
+            );
+            onUpdate(prompt, currentChatId, 'User');
+            onUpdate(generateTextData.generatedText, currentChatId, 'AI');
+
+            if (!titleUpdated) {
+              const title = prompt.split(' ').slice(0, 3).join(' ');
+              const description = prompt.split(' ').slice(0, 10).join(' ');
+
+              await updateChatMutation.mutate({
+                id: currentChatId,
+                title: title,
+                description: description,
+              });
+
+              setTitleUpdated(true);
+            }
+          }
+        },
+        onError: (generateTextError) => {
+          console.error('Failed to generate text:', generateTextError);
+        },
+      }
+    );
   };
 
   const handleKeyDown = (e: React.KeyboardEvent<HTMLTextAreaElement>) => {
@@ -198,23 +152,15 @@ export const ChatInput = ({ onUpdate, waiting, userId }: Props) => {
         value={prompt}
         onChange={(e) => setPrompt(e.currentTarget.value)}
         onKeyDown={handleKeyDown}
-        disabled={waiting || chatIdLoading}
+        disabled={waiting}
         rows={rows}
       />
       <Button
-        size='sm'
-        radius='md'
-        aria-label='Send message'
-        sx={{
-          backgroundColor: colors?.darkPink?.[6],
-        }}
         onClick={handleSubmit}
-        disabled={waiting || !prompt.trim() || chatIdLoading}
+        disabled={waiting || prompt.trim().length === 0}
       >
-        <IconSend size={20} style={{ bottom: '5px', alignSelf: 'center' }} />
+        <IconSend size={18} />
       </Button>
     </Group>
   );
 };
-
-export default ChatInput;
