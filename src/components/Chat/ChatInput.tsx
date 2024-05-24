@@ -112,17 +112,21 @@ export const ChatInput = ({
             onUpdate(prompt, currentChatId, 'User');
             onUpdate(generateTextData.generatedText, currentChatId, 'AI');
 
+            // Check if the title has not been updated previously
             if (!titleUpdated) {
               const title = prompt.split(' ').slice(0, 3).join(' ');
               const description = prompt.split(' ').slice(0, 10).join(' ');
 
-              await updateChatMutation.mutate({
-                id: currentChatId,
-                title: title,
-                description: description,
-              });
+              if (title.trim() === '') {
+                await updateChatMutation.mutate({
+                  id: currentChatId,
+                  title: title,
+                  description: description,
+                });
 
-              setTitleUpdated(true);
+                // Set the titleUpdated state to true to prevent further updates
+                setTitleUpdated(true);
+              }
             }
           }
         },

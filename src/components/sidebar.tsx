@@ -21,9 +21,10 @@ import {
 
 type Props = {
   onStartNewChat: () => void;
+  onRevisitChat: (chatId: string) => void;
 };
 
-export const Sidebar = ({ onStartNewChat }: Props) => {
+export const Sidebar = ({ onStartNewChat, onRevisitChat }: Props) => {
   const { colors, white, black } = theme;
   const [noPreviousChats, setNoPreviousChats] = useState(false);
   const [errorMessage, setErrorMessage] = useState('');
@@ -151,6 +152,7 @@ export const Sidebar = ({ onStartNewChat }: Props) => {
                     icon={
                       <IconMessage style={{ width: '16px', height: '16px' }} />
                     }
+                    onClick={() => onRevisitChat(chat.id)}
                   >
                     Revisit Chat
                   </Menu.Item>

@@ -3,7 +3,7 @@ import { useMediaQuery } from '@mantine/hooks';
 import { ChatContent, type ChatItem } from '~/components/Chat/ChatContent';
 import { ChatInput } from '~/components/Chat/ChatInput';
 import { api } from '~/utils/api';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { useUser } from '@clerk/nextjs';
 import { Sidebar } from '../sidebar';
 import { HeaderMobile } from '../header/mobileHeader';
@@ -21,6 +21,7 @@ const ChatInterface: React.FC<ChatInterfaceProps> = ({ userId }) => {
   const { isLoaded, user } = useUser();
   const [currentChat, setCurrentChat] = useState<string | null>(null);
   const startNewChatMutation = api.chat.startNewChat.useMutation();
+  const updateChatMutation = api.chat.update.useMutation();
 
   const handleUpdate = (prompt: string, chatId: string, author: Author) => {
     setWaiting(true);
@@ -37,10 +38,33 @@ const ChatInterface: React.FC<ChatInterfaceProps> = ({ userId }) => {
       const newChatId = newChat?.chatId ?? '';
       setCurrentChat(newChatId);
       setChatItems([]);
+      // Logic to set initial chat title if needed
     } catch (error) {
       console.error('Failed to start new chat:', error);
     }
   };
+
+  const handleRevisitChat = (chatId: string) => {
+    setCurrentChat(chatId);
+    // You can fetch the chat title here if needed
+  };
+
+  const getMessagesByChatId = api.chat.getMessagesByChatId.useQuery(
+    { chatId: currentChat || '' },
+    { enabled: !!currentChat }
+  );
+
+  useEffect(() => {
+    if (getMessagesByChatId.data) {
+      const messages: ChatItem[] = getMessagesByChatId.data.map(
+        (message: any) => ({
+          author: message.userId === userId ? 'User' : 'AI',
+          content: message.content,
+        })
+      );
+      setChatItems([...messages]);
+    }
+  }, [getMessagesByChatId.data]);
 
   return (
     <Box>
@@ -51,7 +75,12 @@ const ChatInterface: React.FC<ChatInterfaceProps> = ({ userId }) => {
           ) : (
             <Header />
           )}
-          {!mobileScreen && <Sidebar onStartNewChat={handleStartNewChat} />}
+          {!mobileScreen && (
+            <Sidebar
+              onStartNewChat={handleStartNewChat}
+              onRevisitChat={handleRevisitChat}
+            />
+          )}
           <ChatContent chatItems={chatItems} loading={waiting} />
           <ChatInput
             onUpdate={handleUpdate}

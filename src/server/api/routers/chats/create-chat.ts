@@ -113,4 +113,14 @@ export const chatRouter = createTRPCRouter({
       });
       return updatedChat;
     }),
+
+  getMessagesByChatId: publicProcedure
+    .input(z.object({ chatId: z.string() }))
+    .query(async ({ ctx, input }) => {
+      const messages = await ctx.prisma.message.findMany({
+        where: { chatId: input.chatId },
+        orderBy: { createdAt: 'asc' }, // or any other order you want
+      });
+      return messages;
+    }),
 });
