@@ -37,7 +37,6 @@ const ChatInterface: React.FC<ChatInterfaceProps> = ({ userId }) => {
       const newChatId = newChat?.chatId ?? '';
       setCurrentChat(newChatId);
       setChatItems([]);
-      // Logic to set initial chat title if needed
     } catch (error) {
       console.error('Failed to start new chat:', error);
     }
