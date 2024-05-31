@@ -46,6 +46,11 @@ export const ChatInput = ({
   const ContinueChatMutation = api.chat.continueChat.useMutation();
   const updateChatMutation = api.chat.update.useMutation();
 
+  const { data: existingChatData } = api.chat.getById.useQuery(
+    { id: chatIdRef.current ?? '' },
+    { enabled: !!chatIdRef.current }
+  );
+
   const handleSubmit = async () => {
     if (prompt.trim()) {
       try {
@@ -92,6 +97,7 @@ export const ChatInput = ({
     }
   };
 
+  // Function to handle generating text and updating chat details
   const handleGenerateText = async (currentChatId: string) => {
     console.log('Generating text for chat ID:', currentChatId);
     await GenerateTextMutation.mutate(
@@ -112,21 +118,17 @@ export const ChatInput = ({
             onUpdate(prompt, currentChatId, 'User');
             onUpdate(generateTextData.generatedText, currentChatId, 'AI');
 
-            // Check if the title has not been updated previously
-            if (!titleUpdated) {
+            if (!existingChatData?.title || !existingChatData?.description) {
+              // For new chats or if title and description are empty, update them
               const title = prompt.split(' ').slice(0, 3).join(' ');
               const description = prompt.split(' ').slice(0, 10).join(' ');
 
-              if (title.trim() === '') {
-                await updateChatMutation.mutate({
-                  id: currentChatId,
-                  title: title,
-                  description: description,
-                });
-
-                // Set the titleUpdated state to true to prevent further updates
-                setTitleUpdated(true);
-              }
+              await updateChatMutation.mutate({
+                id: currentChatId,
+                title: title.trim() !== '' ? title : 'Untitled',
+                description:
+                  description.trim() !== '' ? description : 'No description',
+              });
             }
           }
         },
