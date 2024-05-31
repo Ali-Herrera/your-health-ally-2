@@ -64,7 +64,6 @@ export const ChatInput = ({
             },
             {
               onSuccess: async (data) => {
-                console.log('Chat creation successful. Response:', data);
                 const chatIdFromResult = data?.chatId;
                 setPrompt('');
                 chatIdRef.current = chatIdFromResult;
@@ -81,7 +80,6 @@ export const ChatInput = ({
             },
             {
               onSuccess: async (data) => {
-                console.log('Chat continuation successful. Response:', data);
                 setPrompt('');
                 await handleGenerateText(chatIdRef.current!);
               },
@@ -97,9 +95,7 @@ export const ChatInput = ({
     }
   };
 
-  // Function to handle generating text and updating chat details
   const handleGenerateText = async (currentChatId: string) => {
-    console.log('Generating text for chat ID:', currentChatId);
     await GenerateTextMutation.mutate(
       {
         prompt: prompt,
@@ -111,15 +107,10 @@ export const ChatInput = ({
             generateTextData &&
             generateTextData.generatedText !== undefined
           ) {
-            console.log(
-              'GenerateText successful. Response:',
-              generateTextData.generatedText
-            );
             onUpdate(prompt, currentChatId, 'User');
             onUpdate(generateTextData.generatedText, currentChatId, 'AI');
 
             if (!existingChatData?.title || !existingChatData?.description) {
-              // For new chats or if title and description are empty, update them
               const title = prompt.split(' ').slice(0, 3).join(' ');
               const description = prompt.split(' ').slice(0, 10).join(' ');
 
@@ -152,9 +143,7 @@ export const ChatInput = ({
         placeholder='What questions do you have?'
         aria-label='Type your message here'
         radius='md'
-        style={{
-          width: '90%',
-        }}
+        style={{ width: '90%' }}
         value={prompt}
         onChange={(e) => setPrompt(e.currentTarget.value)}
         onKeyDown={handleKeyDown}

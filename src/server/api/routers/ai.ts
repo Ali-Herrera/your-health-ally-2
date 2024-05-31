@@ -3,9 +3,7 @@ import { createTRPCRouter, publicProcedure } from '../trpc';
 import { Configuration, OpenAIApi } from 'openai';
 import { TRPCError } from '@trpc/server';
 import axios from 'axios';
-import { chatRouter } from './chats/create-chat';
-import { api } from '~/utils/api';
-import { AI_AUTHOR_ID, Author } from '~/utils/types';
+import { AI_AUTHOR_ID } from '~/utils/types';
 
 const configuration = new Configuration({
   apiKey: process.env.NEXT_PUBLIC_OPENAI_API_KEY,
@@ -13,17 +11,14 @@ const configuration = new Configuration({
 
 const openai = new OpenAIApi(configuration);
 
-//Message type to store the conversation context
+// Define the Message type to store the conversation context
 type Message = {
   role: 'user' | 'system';
   content: string;
 };
 
-const messages: Message[] = [];
-
 // Create TRPC router for AI operations
 export const aiRouter = createTRPCRouter({
-  // Mutation to generate text based on a prompt and chat context
   generateText: publicProcedure
     .input(
       z.object({
@@ -40,12 +35,23 @@ export const aiRouter = createTRPCRouter({
           where: { id: chatId },
         });
 
-        // Check if the chat exists
         if (!chat) {
           throw new Error('Chat not found');
         }
 
-        // Provides context to the AI model by pushing the user's message to the conversation context
+        // Fetch previous messages for the chat to use as context
+        const previousMessages = await ctx.prisma.message.findMany({
+          where: { chatId },
+          orderBy: { createdAt: 'asc' },
+        });
+
+        // Create a messages array to provide context to the AI model
+        const messages: Message[] = previousMessages.map((message) => ({
+          role: message.userId === AI_AUTHOR_ID ? 'system' : 'user',
+          content: message.content,
+        }));
+
+        // Add the new user message to the context
         messages.push({
           role: 'user',
           content: prompt,
@@ -57,7 +63,6 @@ export const aiRouter = createTRPCRouter({
           messages,
         });
 
-        // Extract the generated text from the completion
         const generatedText = completion.data.choices[0]?.message?.content;
 
         // Save the generated AI response to the database
@@ -69,20 +74,12 @@ export const aiRouter = createTRPCRouter({
           },
         });
 
-        // Push the AI response to the conversation context
-        if (generatedText) {
-          messages.push({
-            role: 'system',
-            content: generatedText,
-          });
-        }
-
-        // Return the generated text
+        // Return the generated text and previous messages
         return {
           generatedText,
+          previousMessages,
         };
       } catch (error: unknown) {
-        // Handle errors
         if (axios.isAxiosError(error)) {
           throw new TRPCError({
             code: 'INTERNAL_SERVER_ERROR',
@@ -96,84 +93,4 @@ export const aiRouter = createTRPCRouter({
         });
       }
     }),
-
-  // Mutation to reset conversation context
-  reset: publicProcedure.mutation(() => {
-    // Reset conversation context logic
-    messages.length = 0; // Clear the messages array
-  }),
 });
-
-// export const aiRouter = createTRPCRouter({
-//   generateText: publicProcedure
-
-//     .input(z.object({ prompt: z.string() /* chatId: z.string() */ })) // Add chatId to the input schema
-//     .mutation(async ({ input, ctx }) => {
-//       const { prompt } = input;
-//       console.log('Input received:', input);
-
-//       // Call startNewChat to generate a new chatId
-//       const { chatId } = await api.chat.startNewChat.useMutation();
-
-//       console.log(prompt);
-
-//       // Prompt engineering
-//       messages.push({
-//         role: 'system',
-//         content:
-//           "You are an intelligent advisor that can provide information regarding people's health. You answer their questions about health-related conditions and symptoms, and what type of doctors they may want to see, and what types of questions to bring to the doctor with them and provide them with readiness checklists for appointments.",
-//       });
-
-//       //Provides context to the AI model by pushing the user's message to the conversation context
-//       messages.push({
-//         role: 'user',
-//         content: prompt,
-//       });
-
-//       try {
-//         const completion = await openai.createChatCompletion({
-//           model: 'gpt-3.5-turbo',
-//           messages,
-//         });
-
-//         const generatedText = completion.data.choices[0]?.message?.content;
-
-//         //Pushes the AI response to the conversation context
-//         if (generatedText) {
-//           messages.push({
-//             role: 'system',
-//             content: generatedText,
-//           });
-//         }
-
-//         // Save the user's message and AI response to the database
-//         // await ctx.prisma.message.createMany({
-//         //   data: [
-//         //     { content: prompt, chatId, role: 'user' as 'user' }, // Add 'role' property with value 'user'
-//         //     { content: generatedText || '', chatId, role: 'system' as 'system' }, // Add 'role' property with value 'system'
-//         //   ],
-//         // });
-
-//         return {
-//           generatedText,
-//         };
-//       } catch (error: unknown) {
-//         if (axios.isAxiosError(error)) {
-//           throw new TRPCError({
-//             code: 'INTERNAL_SERVER_ERROR',
-//             message: error.response?.data?.error?.message,
-//           });
-//         }
-
-//         throw new TRPCError({
-//           code: 'INTERNAL_SERVER_ERROR',
-//           message: error instanceof Error ? error.message : 'Unknown error',
-//         });
-//       }
-//     }),
-
-//   //Resets the conversation context
-//   reset: publicProcedure.mutation(() => {
-//     messages.length = 0;
-//   }),
-// });
