@@ -88,6 +88,7 @@ const ChatInterface: React.FC<ChatInterfaceProps> = ({ userId }) => {
             <HeaderMobile
               onStartNewChat={handleStartNewChat}
               onRevisitChat={handleRevisitChat}
+              onDeleteChat={handleDeleteChat}
             />
           ) : (
             <Header />
