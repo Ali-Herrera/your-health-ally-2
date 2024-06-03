@@ -13,7 +13,6 @@ export type ChatItem = {
 
 export type Props = {
   chatItems: ChatItem[];
-  // onReset: () => void;
   loading: boolean;
 };
 
