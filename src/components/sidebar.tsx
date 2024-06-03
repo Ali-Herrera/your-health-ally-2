@@ -21,9 +21,11 @@ import {
 
 type Props = {
   onStartNewChat: () => void;
+  onDeleteChat: (chatId: string) => void;
+  chats: any;
 };
 
-export const Sidebar = ({ onStartNewChat }: Props) => {
+export const Sidebar = ({ onStartNewChat, onDeleteChat }: Props) => {
   const { colors, white, black } = theme;
   const [noPreviousChats, setNoPreviousChats] = useState(false);
   const [errorMessage, setErrorMessage] = useState('');
@@ -37,7 +39,7 @@ export const Sidebar = ({ onStartNewChat }: Props) => {
       setNoPreviousChats(true);
       setErrorMessage('Error fetching data from server.');
     }
-  }, [chatsError]);
+  }, [chatsError, chatsData]);
 
   // If there are no previous chats, display a message
   useEffect(() => {
@@ -167,6 +169,7 @@ export const Sidebar = ({ onStartNewChat }: Props) => {
                     icon={
                       <IconTrash style={{ width: '16px', height: '16px' }} />
                     }
+                    onClick={() => onDeleteChat(chat.id)}
                   >
                     Delete Chat
                   </Menu.Item>

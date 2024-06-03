@@ -2,6 +2,7 @@
 import { createTRPCRouter } from '~/server/api/trpc';
 import { aiRouter } from './routers/ai';
 import { chatRouter } from './routers/chats/create-chat';
+import { deleteRouter } from './routers/chats/delete-chat';
 import { TRPCError } from '~/server/api/trpc';
 
 /**
@@ -13,6 +14,7 @@ import { TRPCError } from '~/server/api/trpc';
 export const appRouter = createTRPCRouter({
   chat: chatRouter,
   ai: aiRouter,
+  delete: deleteRouter,
 });
 
 export type AppRouter = typeof appRouter;
