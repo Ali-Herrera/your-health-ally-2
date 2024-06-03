@@ -3,7 +3,7 @@ import { useMediaQuery } from '@mantine/hooks';
 import { ChatContent, type ChatItem } from '~/components/Chat/ChatContent';
 import { ChatInput } from '~/components/Chat/ChatInput';
 import { api } from '~/utils/api';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { useUser } from '@clerk/nextjs';
 import { Sidebar } from '../sidebar';
 import { HeaderMobile } from '../header/mobileHeader';
@@ -58,12 +58,37 @@ const ChatInterface: React.FC<ChatInterfaceProps> = ({ userId }) => {
     }
   };
 
+  const handleRevisitChat = (chatId: string) => {
+    setCurrentChat(chatId);
+    // You can fetch the chat title here if needed
+  };
+
+  const getMessagesByChatId = api.chat.getMessagesByChatId.useQuery(
+    { chatId: currentChat || '' },
+    { enabled: !!currentChat }
+  );
+
+  useEffect(() => {
+    if (getMessagesByChatId.data) {
+      const messages: ChatItem[] = getMessagesByChatId.data.map(
+        (message: any) => ({
+          author: message.userId === userId ? 'User' : 'AI',
+          content: message.content,
+        })
+      );
+      setChatItems([...messages]);
+    }
+  }, [getMessagesByChatId.data]);
+
   return (
     <Box>
       {isLoaded && user && (
         <>
           {mobileScreen ? (
-            <HeaderMobile onStartNewChat={handleStartNewChat} />
+            <HeaderMobile
+              onStartNewChat={handleStartNewChat}
+              onRevisitChat={handleRevisitChat}
+            />
           ) : (
             <Header />
           )}
@@ -71,6 +96,8 @@ const ChatInterface: React.FC<ChatInterfaceProps> = ({ userId }) => {
             <Sidebar
               onStartNewChat={handleStartNewChat}
               onDeleteChat={handleDeleteChat}
+              onRevisitChat={handleRevisitChat}
+              chats={undefined}
             />
           )}
           <ChatContent chatItems={chatItems} loading={waiting} />

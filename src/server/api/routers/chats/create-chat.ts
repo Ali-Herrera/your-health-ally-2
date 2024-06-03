@@ -4,11 +4,7 @@ import {
   privateProcedure,
   publicProcedure,
 } from '~/server/api/trpc';
-import { PrismaClient, Chat } from '@prisma/client';
-import { Author, AI_AUTHOR_ID } from '~/utils/types';
-import { addUserDataToChats } from '~/utils/chat-utils';
-
-const prisma = new PrismaClient();
+import { AI_AUTHOR_ID } from '~/utils/types';
 
 export const chatRouter = createTRPCRouter({
   getById: publicProcedure
@@ -20,7 +16,7 @@ export const chatRouter = createTRPCRouter({
       if (!chat) {
         throw new Error('Chat not found');
       }
-      return (await addUserDataToChats([chat]))[0];
+      return chat;
     }),
 
   getAll: publicProcedure.query(async ({ ctx }) => {
@@ -28,7 +24,7 @@ export const chatRouter = createTRPCRouter({
       take: 15,
       orderBy: { createdAt: 'desc' },
     });
-    return addUserDataToChats(chats);
+    return chats;
   }),
 
   create: privateProcedure
@@ -63,11 +59,11 @@ export const chatRouter = createTRPCRouter({
       return { chatId, message: newMessage };
     }),
 
-  startNewChat: privateProcedure.mutation(async ({ ctx, input = {} }) => {
+  startNewChat: privateProcedure.mutation(async ({ ctx }) => {
     const chat = await ctx.prisma.chat.create({
       data: {
         userId: ctx.session.userId!,
-        title: '', // This is a placeholder title
+        title: '', // Placeholder title
       },
     });
     return { chatId: chat.id };
@@ -82,16 +78,31 @@ export const chatRouter = createTRPCRouter({
       })
     )
     .mutation(async ({ ctx, input }) => {
+      // Fetch the chat including its associated messages
+      const chatWithMessages = await ctx.prisma.chat.findUnique({
+        where: { id: input.chatId },
+        include: { messages: true },
+      });
+
+      if (!chatWithMessages) {
+        throw new Error('Chat not found');
+      }
+
+      // Create the new message
       const newMessage = await ctx.prisma.message.create({
         data: {
-          chatId: input.chatId,
+          chat: {
+            connect: { id: input.chatId }, // Associate the message with the chat
+          },
           userId: input.userId,
           content: input.message,
         },
       });
+
       return {
         chatId: input.chatId,
         message: newMessage,
+        previousMessages: chatWithMessages.messages, // Return the array of previous messages
       };
     }),
 
@@ -112,5 +123,15 @@ export const chatRouter = createTRPCRouter({
         },
       });
       return updatedChat;
+    }),
+
+  getMessagesByChatId: publicProcedure
+    .input(z.object({ chatId: z.string() }))
+    .query(async ({ ctx, input }) => {
+      const messages = await ctx.prisma.message.findMany({
+        where: { chatId: input.chatId },
+        orderBy: { createdAt: 'asc' },
+      });
+      return messages;
     }),
 });

@@ -46,6 +46,11 @@ export const ChatInput = ({
   const ContinueChatMutation = api.chat.continueChat.useMutation();
   const updateChatMutation = api.chat.update.useMutation();
 
+  const { data: existingChatData } = api.chat.getById.useQuery(
+    { id: chatIdRef.current ?? '' },
+    { enabled: !!chatIdRef.current }
+  );
+
   const handleSubmit = async () => {
     if (prompt.trim()) {
       try {
@@ -59,7 +64,6 @@ export const ChatInput = ({
             },
             {
               onSuccess: async (data) => {
-                console.log('Chat creation successful. Response:', data);
                 const chatIdFromResult = data?.chatId;
                 setPrompt('');
                 chatIdRef.current = chatIdFromResult;
@@ -76,7 +80,6 @@ export const ChatInput = ({
             },
             {
               onSuccess: async (data) => {
-                console.log('Chat continuation successful. Response:', data);
                 setPrompt('');
                 await handleGenerateText(chatIdRef.current!);
               },
@@ -93,7 +96,6 @@ export const ChatInput = ({
   };
 
   const handleGenerateText = async (currentChatId: string) => {
-    console.log('Generating text for chat ID:', currentChatId);
     await GenerateTextMutation.mutate(
       {
         prompt: prompt,
@@ -105,24 +107,19 @@ export const ChatInput = ({
             generateTextData &&
             generateTextData.generatedText !== undefined
           ) {
-            console.log(
-              'GenerateText successful. Response:',
-              generateTextData.generatedText
-            );
             onUpdate(prompt, currentChatId, 'User');
             onUpdate(generateTextData.generatedText, currentChatId, 'AI');
 
-            if (!titleUpdated) {
+            if (!existingChatData?.title || !existingChatData?.description) {
               const title = prompt.split(' ').slice(0, 3).join(' ');
               const description = prompt.split(' ').slice(0, 10).join(' ');
 
               await updateChatMutation.mutate({
                 id: currentChatId,
-                title: title,
-                description: description,
+                title: title.trim() !== '' ? title : 'Untitled',
+                description:
+                  description.trim() !== '' ? description : 'No description',
               });
-
-              setTitleUpdated(true);
             }
           }
         },
@@ -146,9 +143,7 @@ export const ChatInput = ({
         placeholder='What questions do you have?'
         aria-label='Type your message here'
         radius='md'
-        style={{
-          width: '90%',
-        }}
+        style={{ width: '90%' }}
         value={prompt}
         onChange={(e) => setPrompt(e.currentTarget.value)}
         onKeyDown={handleKeyDown}
