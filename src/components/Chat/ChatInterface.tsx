@@ -10,8 +10,7 @@ import { HeaderMobile } from "../header/mobileHeader";
 import { Header } from "../header";
 import { Author } from "~/utils/types";
 import { useQueryClient } from "@tanstack/react-query";
-const { jsPDF } = require("jspdf"); // will automatically load the node version
-
+const { jsPDF } = require("jspdf");
 interface ChatInterfaceProps {
 	userId: string;
 }
@@ -64,10 +63,8 @@ const ChatInterface: React.FC<ChatInterfaceProps> = ({ userId }) => {
 		// You can fetch the chat title here if needed
 	};
 
+	// Generate PDF
 	const handleGeneratePDF = (chatId: string) => {
-		// setCurrentChat(chatId);
-
-		// Generate PDF
 		const doc = new jsPDF();
 		doc.text(`Chat Transcript: ${chatId}`, 10, 10);
 		chatItems.forEach((item, index) => {
