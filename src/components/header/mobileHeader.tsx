@@ -33,12 +33,14 @@ type HeaderProps = {
   children?: ReactNode;
   onStartNewChat: () => void;
   onRevisitChat: (chatId: string) => void;
+  onDeleteChat: (chatId: string) => void;
 };
 
 export const HeaderMobile: React.FC<HeaderProps> = ({
   children,
   onStartNewChat,
   onRevisitChat,
+  onDeleteChat,
 }) => {
   const { white, black, colors } = theme;
   const [opened, { open, close }] = useDisclosure(false);
@@ -252,6 +254,7 @@ export const HeaderMobile: React.FC<HeaderProps> = ({
                           borderRadius: '5px',
                         },
                       }}
+                      onClick={() => onDeleteChat(chat.id)}
                     >
                       <Group spacing={2} align='center' position='center'>
                         <IconTrash

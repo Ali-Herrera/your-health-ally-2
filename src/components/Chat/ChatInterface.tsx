@@ -9,6 +9,7 @@ import { Sidebar } from '../sidebar';
 import { HeaderMobile } from '../header/mobileHeader';
 import { Header } from '../header';
 import { Author } from '~/utils/types';
+import { useQueryClient } from '@tanstack/react-query';
 
 interface ChatInterfaceProps {
   userId: string;
@@ -20,7 +21,11 @@ const ChatInterface: React.FC<ChatInterfaceProps> = ({ userId }) => {
   const [waiting, setWaiting] = useState<boolean>(false);
   const { isLoaded, user } = useUser();
   const [currentChat, setCurrentChat] = useState<string | null>(null);
+  const queryClient = useQueryClient();
+
+  // TRPC mutations
   const startNewChatMutation = api.chat.startNewChat.useMutation();
+  const deleteChatMutation = api.delete.deleteChat.useMutation();
 
   const handleUpdate = (prompt: string, chatId: string, author: Author) => {
     setWaiting(true);
@@ -39,6 +44,17 @@ const ChatInterface: React.FC<ChatInterfaceProps> = ({ userId }) => {
       setChatItems([]);
     } catch (error) {
       console.error('Failed to start new chat:', error);
+    }
+  };
+
+  const handleDeleteChat = async (chatId: string) => {
+    try {
+      await deleteChatMutation.mutateAsync({ chatId });
+      // Invalidate the query to refetch the chat list
+      queryClient.invalidateQueries(['api.chat.getAll']);
+    } catch (error) {
+      console.error('Error deleting chat:', error);
+      // Handle error
     }
   };
 
@@ -72,6 +88,7 @@ const ChatInterface: React.FC<ChatInterfaceProps> = ({ userId }) => {
             <HeaderMobile
               onStartNewChat={handleStartNewChat}
               onRevisitChat={handleRevisitChat}
+              onDeleteChat={handleDeleteChat}
             />
           ) : (
             <Header />
@@ -79,7 +96,9 @@ const ChatInterface: React.FC<ChatInterfaceProps> = ({ userId }) => {
           {!mobileScreen && (
             <Sidebar
               onStartNewChat={handleStartNewChat}
+              onDeleteChat={handleDeleteChat}
               onRevisitChat={handleRevisitChat}
+              chats={undefined}
             />
           )}
           <ChatContent chatItems={chatItems} loading={waiting} />
