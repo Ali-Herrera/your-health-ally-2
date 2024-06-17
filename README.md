@@ -20,9 +20,8 @@
     <br />
     <br />
       <!-- TODO: Replace link with deployed site -->
-      <a href="https://www.youtube.com/watch?v=dQw4w9WgXcQ" target="_blank"> Deployed App (TBD) </a>
-      🔭
-      <a href="https://github.com/Ali-Herrera/your-health-ally-2" target="_blank"> GitHub Repository</a>
+      <!-- <a href="https://www.youtube.com/watch?v=dQw4w9WgXcQ" target="_blank"> Deployed App (TBD) </a> -->
+    <a href="https://github.com/Ali-Herrera/your-health-ally-2" target="_blank">🔭 GitHub Repository</a>
     <br />
     <br /> 
     <!-- TODO: Make demo? -->
@@ -154,8 +153,6 @@ Health Literacy is defined by the National Library of Medicine as, “The degree
 
 #### PDF Conversion for Record Keeping
 
-**In the works**
-
 PDF conversion allows user's chats to be savable and printable, ensuring they have tangible records for their healthcare journey. _Note:_ Users have the option to delete their chats should they choose to.
 
 ### Stack Overview
@@ -168,6 +165,7 @@ PDF conversion allows user's chats to be savable and printable, ensuring they ha
 
 #### Frameworks and Libraries
 
+[![jsPDF](https://img.shields.io/badge/%20jsPDF%20-black?style=for-the-badge&label)](https://artskydj.github.io/jsPDF/docs/index.html)
 [![Mantine](https://img.shields.io/badge/Mantine-339af0?style=for-the-badge&logo=Mantine&logoColor=white)](https://v6.mantine.dev/)
 [![Next JS](https://img.shields.io/badge/Next-black?style=for-the-badge&logo=next.js&logoColor=white)](https://nextjs.org/)
 [![NPM](https://img.shields.io/badge/NPM-%23CB3837.svg?style=for-the-badge&logo=npm&logoColor=white)](https://www.npmjs.com/)
